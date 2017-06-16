@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <!-- Copyright 2017 Eduard Berloso Clarà <eduard.bc.95@gmail.com> -->
+    <component type="desktop">
+      <id>com.github.bcedu.MuseIC.desktop</id>
+      <metadata_license>CC0</metadata_license>
+      <name>MuseIC</name>
+      <summary>MuseIC</summary>
+      <description>
+        <p>MuseIC</p>
+      </description>
+    </component>
+    
