@@ -1,5 +1,5 @@
 
-public class AppWindow : Gtk.Window {
+public class AppWindow : Gtk.ApplicationWindow {
 
     public Gtk.Button play_button;
     public Gtk.Button pause_button;
@@ -15,34 +15,34 @@ public class AppWindow : Gtk.Window {
     public int act_file = 0;
     public int nfiles = 0;
     public StreamPlayer streamplayer;
-    
-    public AppWindow(string[] args) {
-        this.title = "museIC";
+
+    public AppWindow(Gtk.Application app, string[] args) {
+        Object (application: app, title: "museIC");
         this.set_border_width (10);
         this.set_position (Gtk.WindowPosition.CENTER);
-        
+
         // Create grid
         var grid = new Gtk.Grid();
         grid.orientation = Gtk.Orientation.VERTICAL;
         grid.row_spacing = 10;
         grid.column_spacing = 2;
-        
-        // Open file and folder buttons        
+
+        // Open file and folder buttons
         var toolbar = new Gtk.Toolbar ();
-        toolbar.get_style_context ().add_class (Gtk.STYLE_CLASS_PRIMARY_TOOLBAR);     
+        toolbar.get_style_context ().add_class (Gtk.STYLE_CLASS_PRIMARY_TOOLBAR);
         this.open_button_file = new Gtk.ToolButton (new Gtk.Image.from_icon_name ("document-open", Gtk.IconSize.SMALL_TOOLBAR), "Open File");
         this.open_button_folder = new Gtk.ToolButton (new Gtk.Image.from_icon_name ("folder-open", Gtk.IconSize.SMALL_TOOLBAR), "Open Folder");
         toolbar.add (this.open_button_file);
-   		toolbar.add (this.open_button_folder);
-   		this.open_button_file.show ();
-   		this.open_button_folder.show ();
+   		  toolbar.add (this.open_button_folder);
+   		  this.open_button_file.show ();
+   		  this.open_button_folder.show ();
         toolbar.set_hexpand(true);
         grid.add (toolbar);
-               
+
         // Status label
-        this.status_label = new Gtk.Label ("Stoped");       
+        this.status_label = new Gtk.Label ("Stoped");
         grid.add (status_label);
-        
+
         // Play and Pause buttons
         this.play_button = new Gtk.Button.with_label ("Play");
         this.pause_button = new Gtk.Button.with_label ("Pause");
@@ -57,7 +57,7 @@ public class AppWindow : Gtk.Window {
         button_grid.add (this.seg_button);
         button_grid.add (this.ant_button);
         grid.add (button_grid);
-        
+
         // File Tree
         var tree_view = new Gtk.TreeView ();
         this.filelist = new Gtk.ListStore (4, typeof (string), typeof (string), typeof (string), typeof (string));
@@ -68,25 +68,25 @@ public class AppWindow : Gtk.Window {
         scroll.set_min_content_height (400);
         scroll.add (tree_view);
         grid.add (scroll);
-        
+
         this.add (grid);
         set_button_actions(args);
     }
-    
+
     private void set_button_actions(string[] args) {
          this.streamplayer = new StreamPlayer (args);
          this.play_button.clicked.connect (action_play_file);
          this.pause_button.clicked.connect (action_pause_file);
          this.seg_button.clicked.connect (action_seg_file);
          this.ant_button.clicked.connect (action_ant_file);
-         this.destroy.connect (action_destroy);        
+         this.destroy.connect (action_destroy);
          this.open_button_file.clicked.connect (action_open_file);
          this.open_button_folder.clicked.connect (action_open_folder);
     }
-    
+
     private void action_open_file () {
         var file_chooser = new Gtk.FileChooserDialog ("Open File", this, Gtk.FileChooserAction.OPEN, "_Cancel", Gtk.ResponseType.CANCEL, "_Open", Gtk.ResponseType.ACCEPT);
-        
+
         if (file_chooser.run () == Gtk.ResponseType.ACCEPT) {
             var aux = file_chooser.get_filename ().split("/");
             this.folder = string.joinv("/", aux[0:aux.length-1])+"/";
@@ -99,11 +99,11 @@ public class AppWindow : Gtk.Window {
         }
         file_chooser.destroy ();
     }
-    
+
     private void action_open_folder () {
         var file_chooser = new Gtk.FileChooserDialog ("Open File", this, Gtk.FileChooserAction.OPEN, "_Cancel", Gtk.ResponseType.CANCEL, "_Open", Gtk.ResponseType.ACCEPT);
         file_chooser.action = Gtk.FileChooserAction.SELECT_FOLDER;
-        
+
         if (file_chooser.run () == Gtk.ResponseType.ACCEPT) {
             var aux = file_chooser.get_filename ().split("/");
             this.folder = string.joinv("/", aux)+"/";
@@ -114,7 +114,7 @@ public class AppWindow : Gtk.Window {
         }
         file_chooser.destroy ();
     }
-    
+
     private string[] get_files_from_folder(string folder) {
         string[] files = new string[2000];
         try {
@@ -138,20 +138,20 @@ public class AppWindow : Gtk.Window {
         }
         return files;
     }
-    
-    private void action_play_file () {    
-        this.file_selected = this.files[this.act_file]; 
+
+    private void action_play_file () {
+        this.file_selected = this.files[this.act_file];
         this.status_label.label = this.file_selected;
         this.play_button.set_sensitive (false);
         this.streamplayer.play_file ("file://"+this.folder+this.file_selected);
     }
-    
+
     private void action_pause_file () {
         this.status_label.label = "Paused";
         this.play_button.set_sensitive (true);
         this.streamplayer.pause_file ();
     }
-    
+
     private void action_seg_file () {
         this.streamplayer.exit ();
         this.act_file = this.act_file + 1;
@@ -160,7 +160,7 @@ public class AppWindow : Gtk.Window {
         }
         action_play_file ();
     }
-    
+
     private void action_ant_file () {
         this.streamplayer.exit ();
         this.act_file = this.act_file - 1;
@@ -169,15 +169,13 @@ public class AppWindow : Gtk.Window {
         }
         action_play_file ();
     }
-    
+
     private void action_destroy () {
         this.streamplayer.exit ();
         Gtk.main_quit();
     }
-    
+
     public void start () {
         this.show_all ();
-        Gtk.main ();
     }
 }
-

@@ -2,11 +2,11 @@ using Gst;
 public class StreamPlayer {
     private MainLoop loop;
     public dynamic Element player;
-    
+
     public StreamPlayer (string[] args) {
         Gst.init (ref args);
     }
-    
+
     private void foreach_tag (Gst.TagList list, string tag) {
         switch (tag) {
         case "title":
@@ -18,7 +18,7 @@ public class StreamPlayer {
         break;
         }
     }
-    
+
     private bool bus_callback (Gst.Bus bus, Gst.Message message) {
         switch (message.type) {
         case MessageType.ERROR:
@@ -49,7 +49,7 @@ public class StreamPlayer {
         }
         return true;
     }
-    
+
     public void play_file (string stream) {
         if (this.player == null) {
             this.player = ElementFactory.make ("playbin", "play");
@@ -65,11 +65,11 @@ public class StreamPlayer {
             this.player.set_state (State.PLAYING);
         }
     }
-    
+
     public void pause_file () {
         this.player.set_state (State.PAUSED);
     }
-    
+
     public void exit () {
         this.player.set_state (Gst.State.READY);
     }
