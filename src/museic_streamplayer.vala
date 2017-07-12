@@ -1,9 +1,10 @@
 using Gst;
-public class StreamPlayer {
+public class MuseicStreamPlayer {
     private MainLoop loop;
     public dynamic Element player;
+    public string state = "pause";
 
-    public StreamPlayer (string[] args) {
+    public MuseicStreamPlayer (string[] args) {
         Gst.init (ref args);
     }
 
@@ -64,13 +65,15 @@ public class StreamPlayer {
             this.player.uri = stream;
             this.player.set_state (State.PLAYING);
         }
+        this.state = "play";
     }
 
     public void pause_file () {
         this.player.set_state (State.PAUSED);
+        this.state = "pause";
     }
 
     public void exit () {
-        this.player.set_state (Gst.State.READY);
+        this.player.set_state (State.READY);
     }
 }
