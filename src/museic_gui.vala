@@ -55,10 +55,15 @@ public class MuseicGui : Gtk.ApplicationWindow {
     public void action_open_file (Gtk.Button button) {
         var file_chooser = new Gtk.FileChooserDialog ("Open File", this, Gtk.FileChooserAction.OPEN, "_Cancel", Gtk.ResponseType.CANCEL, "_Open", Gtk.ResponseType.ACCEPT);
         if (file_chooser.run () == Gtk.ResponseType.ACCEPT) {
-            this.museic_app.file = file_chooser.get_filename ();
+            this.museic_app.open_file(file_chooser.get_filename ());
             (builder.get_object ("statusLabel") as Gtk.Label).set_label (this.museic_app.file);
         }
         file_chooser.destroy ();
+    }
+
+    [CCode(instance_pos=-1)]
+    public void action_change_time (Gtk.Scale slider) {
+        (this.builder.get_object ("progresbar") as Gtk.ProgressBar).set_fraction (slider.adjustment.value);
     }
 
 }

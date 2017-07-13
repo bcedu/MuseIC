@@ -2,6 +2,11 @@
 <!-- Generated with glade 3.18.3 -->
 <interface>
   <requires lib="gtk+" version="3.12"/>
+  <object class="GtkAdjustment" id="adjustment">
+    <property name="upper">1</property>
+    <property name="step_increment">0.01</property>
+    <property name="page_increment">0.1</property>
+  </object>
   <object class="GtkBox" id="mainBox">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -63,6 +68,34 @@
       </packing>
     </child>
     <child>
+      <object class="GtkScale" id="scalebar">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="adjustment">adjustment</property>
+        <property name="round_digits">2</property>
+        <property name="digits">2</property>
+        <property name="draw_value">False</property>
+        <signal name="value-changed" handler="museic_gui_action_change_time" swapped="no"/>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">2</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkProgressBar" id="progresbar">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="pulse_step">0.01</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">3</property>
+      </packing>
+    </child>
+    <child>
       <object class="GtkButtonBox" id="statusButtons">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
@@ -120,17 +153,8 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
-        <property name="position">2</property>
+        <property name="position">4</property>
       </packing>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
-    <child>
-      <placeholder/>
     </child>
     <child>
       <placeholder/>
