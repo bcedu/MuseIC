@@ -41,7 +41,7 @@ public class MuseIC : Gtk.Application {
     }
 
     public void play_file () {
-        if (this.file != null) this.streamplayer.play_file ("file://"+this.file);
+        if (this.file != null) this.streamplayer.play_file ();
     }
 
     public void pause_file () {
@@ -51,5 +51,12 @@ public class MuseIC : Gtk.Application {
     public string state() {
         // Returns state of streamplayer. It can be: "play" or "pause"
         return this.streamplayer.state;
+    }
+
+    public void open_file (string filename) {
+        // store filename
+        this.file = filename;
+        // preapre file in streamplayer
+        this.streamplayer.ready_file("file://"+this.file);
     }
 }

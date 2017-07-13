@@ -51,20 +51,8 @@ public class MuseicStreamPlayer {
         return true;
     }
 
-    public void play_file (string stream) {
-        if (this.player == null) {
-            this.player = ElementFactory.make ("playbin", "play");
-            this.player.uri = stream;
-
-            Gst.Bus bus = this.player.get_bus ();
-            bus.add_watch (0, bus_callback);
-
-            this.player.set_state (State.PLAYING);
-
-        }else {
-            this.player.uri = stream;
-            this.player.set_state (State.PLAYING);
-        }
+    public void play_file () {
+        this.player.set_state (State.PLAYING);
         this.state = "play";
     }
 
@@ -75,5 +63,13 @@ public class MuseicStreamPlayer {
 
     public void exit () {
         this.player.set_state (State.READY);
+    }
+
+    public void ready_file(string stream) {
+        this.player = ElementFactory.make ("playbin", "play");
+        this.player.uri = stream;
+        Gst.Bus bus = this.player.get_bus ();
+        bus.add_watch (0, bus_callback);
+        this.pause_file ();
     }
 }
