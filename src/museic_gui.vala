@@ -71,15 +71,15 @@ public class MuseicGui : Gtk.ApplicationWindow {
     }
 
     private bool update_stream_status() {
+        StreamTimeInfo pos_info = this.museic_app.get_position_str();
+        StreamTimeInfo dur_info = this.museic_app.get_duration_str();
         // Update time label
-        (this.builder.get_object ("timeLabel") as Gtk.Label).set_label (this.museic_app.get_position_str()+"/"+this.museic_app.get_duration_str());
+        (this.builder.get_object ("timeLabel") as Gtk.Label).set_label (pos_info.minutes+"/"+dur_info.minutes);
         // Update progres bar
-        ulong position = this.museic_app.get_position();
-        ulong duration = this.museic_app.get_duration();
-        double progres = (double)position/(double)duration;
+        double progres = (double)pos_info.nanoseconds/(double)dur_info.nanoseconds;
         (this.builder.get_object ("scalebar") as Gtk.Scale).set_value (progres);
         // Check if stream, has ended
-        if ((duration-position) < 100) return false;
+        if ((dur_info.nanoseconds-pos_info.nanoseconds) < 100) return false;
         else return true;
     }
 
