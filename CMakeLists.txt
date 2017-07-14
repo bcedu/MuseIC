@@ -23,7 +23,7 @@
         find_package(PkgConfig)
 
         # now let's actually check for the required dependencies
-        pkg_check_modules(DEPS REQUIRED gtk+-3.0)
+        pkg_check_modules(DEPS REQUIRED gtk+-3.0 gio-2.0 gmodule-2.0 gstreamer-1.0)
 
         add_definitions(${DEPS_CFLAGS})
         link_libraries(${DEPS_LIBRARIES})
@@ -39,11 +39,16 @@
         # files we want to compile
         include(ValaPrecompile)
         vala_precompile(VALA_C ${EXEC_NAME}
-            src/muse_ic.vala
+            src/museic.vala
+            src/museic_gui.vala
+            src/museic_streamplayer.vala
 
         # tell what libraries to use when compiling
         PACKAGES
             gtk+-3.0
+            gio-2.0
+            gmodule-2.0
+            gstreamer-1.0
         )
 
         # tell cmake what to call the executable we just made
@@ -57,10 +62,8 @@
 
         # install our .appdata.xml file so AppCenter will see it
         install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.bcedu.MuseIC.appdata.xml DESTINATION ${DATADIR}/metainfo/)
-        
+
         # Translation files
         set (GETTEXT_PACKAGE "${CMAKE_PROJECT_NAME}")
         add_definitions (-DGETTEXT_PACKAGE="${GETTEXT_PACKAGE}")
         add_subdirectory (po)
-        
-    
