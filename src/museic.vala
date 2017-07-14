@@ -19,7 +19,11 @@
     * Authored by: Eduard Berloso Clarà <eduard.bc.95@gmail.com>
     */
 
-const string DEFAULT_STREAM = "file:///home/bcedu/Projects/museIC/src/ex.mp3";
+public struct StreamTimeInfo {
+    public ulong nanoseconds;
+    public string minutes;
+}
+
 public class MuseIC : Gtk.Application {
 
     public string[] argsv;
@@ -60,14 +64,16 @@ public class MuseIC : Gtk.Application {
         this.streamplayer.ready_file("file://"+this.file);
     }
 
-    public string get_duration_str() {
-		// Returns duration of current file in strinf format %M:%S
-        return nanoseconds_to_minutes_string(this.streamplayer.get_duration());
+    public StreamTimeInfo get_duration_str() {
+        // Returns a struct with duration of current file in nanoseconds and string format %M:%S
+        ulong dur = this.streamplayer.get_duration();
+        return {dur, nanoseconds_to_minutes_string(dur)};
     }
 
-    public string get_position_str() {
-        // Returns position of current file in strinf format %M:%S
-        return nanoseconds_to_minutes_string(this.streamplayer.get_position());
+    public StreamTimeInfo get_position_str() {
+        // Returns a struct with position of current file in nanoseconds and string format %M:%S
+        ulong pos = this.streamplayer.get_position();
+        return {pos, nanoseconds_to_minutes_string(pos)};
     }
 
     public ulong get_duration() {
