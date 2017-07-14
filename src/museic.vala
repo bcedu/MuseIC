@@ -45,11 +45,11 @@ public class MuseIC : Gtk.Application {
     }
 
     public void play_file () {
-        if (this.file != null) this.streamplayer.play_file ();
+        if (this.file != "") this.streamplayer.play_file ();
     }
 
     public void pause_file () {
-        if (this.file != null) this.streamplayer.pause_file ();
+        if (this.file != "") this.streamplayer.pause_file ();
     }
 
     public string state() {

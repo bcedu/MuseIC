@@ -8,6 +8,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         museic_app = app;
         // Define main window
         this.set_position (Gtk.WindowPosition.CENTER);
+        this.icon = new Gdk.Pixbuf.from_file ("museic_logo_64.png");
         // Load interface from file
         this.builder = new Gtk.Builder ();
         builder.add_from_file ("/home/bcedu/Documents/Projects/MuseIC/src/museic_window.glade");
@@ -23,8 +24,8 @@ public class MuseicGui : Gtk.ApplicationWindow {
     [CCode(instance_pos=-1)]
     public void action_ant_file (Gtk.Button button) {
         var notification = new Notification ("MuseIC");
-        var image = new Gtk.Image.from_icon_name ("dialog-warning", Gtk.IconSize.DIALOG);
-        notification.set_icon (image.gicon);
+        // Doesn't work :(
+        notification.set_icon ( new Gdk.Pixbuf.from_file ("museic_logo_64.png"));
         notification.set_body ("Previous File");
         this.museic_app.send_notification (this.museic_app.application_id, notification);
     }
@@ -32,15 +33,15 @@ public class MuseicGui : Gtk.ApplicationWindow {
     [CCode(instance_pos=-1)]
     public void action_seg_file (Gtk.Button button) {
         var notification = new Notification ("MuseIC");
-        var image = new Gtk.Image.from_icon_name ("dialog-warning", Gtk.IconSize.DIALOG);
-        notification.set_icon (image.gicon);
+        // Doesn't work :(
+        notification.set_icon ( new Gdk.Pixbuf.from_file ("museic_logo_64.png"));
         notification.set_body ("Next File");
         this.museic_app.send_notification (this.museic_app.application_id, notification);
     }
 
     [CCode(instance_pos=-1)]
     public void action_play_file (Gtk.Button button) {
-        if (this.museic_app.file != null) {
+        if (this.museic_app.file != "") {
             if (museic_app.state() == "pause")  {
                 this.museic_app.play_file();
                 button.set_label("gtk-media-pause");
