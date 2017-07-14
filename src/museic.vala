@@ -93,4 +93,8 @@ public class MuseIC : Gtk.Application {
     public string get_current_file() {
         return this.file.split("/")[this.file.split("/").length-1];
     }
+
+    public void set_position(float value) {
+        this.streamplayer.player.seek_simple (Gst.Format.TIME, Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT, (int64)(value * get_duration()));
+    }
 }

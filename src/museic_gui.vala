@@ -67,7 +67,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     [CCode(instance_pos=-1)]
     public void action_change_time (Gtk.Scale slider) {
-
+        this.museic_app.set_position((float)slider.adjustment.value);
     }
 
     private bool update_stream_status() {
