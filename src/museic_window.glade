@@ -81,7 +81,7 @@
             <property name="round_digits">2</property>
             <property name="digits">2</property>
             <property name="draw_value">False</property>
-            <signal name="value-changed" handler="museic_gui_action_change_time" swapped="no"/>
+            <signal name="change-value" handler="museic_gui_action_change_time" swapped="no"/>
           </object>
           <packing>
             <property name="expand">True</property>
