@@ -23,8 +23,8 @@ const string DEFAULT_STREAM = "file:///home/bcedu/Projects/museIC/src/ex.mp3";
 public class MuseIC : Gtk.Application {
 
     public string[] argsv;
-    public MuseicStreamPlayer streamplayer;
-    public string file;
+    private MuseicStreamPlayer streamplayer;
+    public string file = "";
 
     public MuseIC (string[] args) {
         Object (application_id: "com.github.bcedu.MuseIC", flags: ApplicationFlags.FLAGS_NONE);
@@ -58,5 +58,39 @@ public class MuseIC : Gtk.Application {
         this.file = filename;
         // preapre file in streamplayer
         this.streamplayer.ready_file("file://"+this.file);
+    }
+
+    public string get_duration_str() {
+		// Returns duration of current file in strinf format %M:%S
+        return nanoseconds_to_minutes_string(this.streamplayer.get_duration());
+    }
+
+    public string get_position_str() {
+        // Returns position of current file in strinf format %M:%S
+        return nanoseconds_to_minutes_string(this.streamplayer.get_position());
+    }
+
+    public ulong get_duration() {
+		// Returns duration
+        return this.streamplayer.get_duration();
+    }
+
+    public ulong get_position() {
+        // Returns position
+        return this.streamplayer.get_position();
+    }
+
+    private string nanoseconds_to_minutes_string(ulong nanoseconds) {
+        // Given nanoseconds, transform to minutes and seconds and returns in string with format %M:%S
+        int total_seconds = (int)(nanoseconds / 1000000000);
+        int minutes = total_seconds / 60;
+        int seconds = total_seconds % 60;
+        string smin = minutes < 10 ? "0"+minutes.to_string () : minutes.to_string ();
+        string ssec = seconds < 10 ? "0"+seconds.to_string () : seconds.to_string ();
+        return smin+":"+ssec;
+    }
+
+    public string get_current_file() {
+        return this.file.split("/")[this.file.split("/").length-1];
     }
 }
