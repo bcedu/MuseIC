@@ -7,6 +7,6 @@ And to enable translations:
     cmake -DCMAKE_INSTALL_PREFIX=/usr ../
     make pot
 
-To uninstall your application, run the script "cmake_uninstaller.py" in the build folder.
-    It must be run as sudo:
+To uninstall your application, run the script "cmake_uninstaller.py".
+It must be run as sudo:
     sudo python cmake_uninstaller.py
