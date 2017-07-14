@@ -10,6 +10,8 @@
   <object class="GtkBox" id="mainBox">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
+    <property name="margin_left">2</property>
+    <property name="margin_right">2</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkToolbar" id="mainToolbar">
@@ -49,6 +51,8 @@
           <object class="GtkLabel" id="statusLabel">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="hexpand">True</property>
+            <property name="justify">center</property>
             <property name="ellipsize">middle</property>
           </object>
           <packing>
@@ -56,9 +60,6 @@
             <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
-        </child>
-        <child>
-          <placeholder/>
         </child>
       </object>
       <packing>
@@ -68,31 +69,48 @@
       </packing>
     </child>
     <child>
-      <object class="GtkScale" id="scalebar">
+      <object class="GtkBox" id="progresBox">
         <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="adjustment">adjustment</property>
-        <property name="round_digits">2</property>
-        <property name="digits">2</property>
-        <property name="draw_value">False</property>
-        <signal name="value-changed" handler="museic_gui_action_change_time" swapped="no"/>
+        <property name="can_focus">False</property>
+        <child>
+          <object class="GtkScale" id="scalebar">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="hexpand">False</property>
+            <property name="adjustment">adjustment</property>
+            <property name="round_digits">2</property>
+            <property name="digits">2</property>
+            <property name="draw_value">False</property>
+            <signal name="value-changed" handler="museic_gui_action_change_time" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="timeLabel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="halign">end</property>
+            <property name="margin_left">5</property>
+            <property name="vexpand">True</property>
+            <property name="label" translatable="yes">00:00 / 00:00</property>
+            <property name="justify">right</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="pack_type">end</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
         <property name="position">2</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkProgressBar" id="progresbar">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="pulse_step">0.01</property>
-      </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">3</property>
       </packing>
     </child>
     <child>
@@ -153,8 +171,11 @@
       <packing>
         <property name="expand">False</property>
         <property name="fill">True</property>
-        <property name="position">4</property>
+        <property name="position">3</property>
       </packing>
+    </child>
+    <child>
+      <placeholder/>
     </child>
     <child>
       <placeholder/>

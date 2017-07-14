@@ -55,15 +55,32 @@ public class MuseicGui : Gtk.ApplicationWindow {
     public void action_open_file (Gtk.Button button) {
         var file_chooser = new Gtk.FileChooserDialog ("Open File", this, Gtk.FileChooserAction.OPEN, "_Cancel", Gtk.ResponseType.CANCEL, "_Open", Gtk.ResponseType.ACCEPT);
         if (file_chooser.run () == Gtk.ResponseType.ACCEPT) {
+            // Pass file to prepare it for stream
             this.museic_app.open_file(file_chooser.get_filename ());
-            (builder.get_object ("statusLabel") as Gtk.Label).set_label (this.museic_app.file);
+            // Update status label with filename
+            (builder.get_object ("statusLabel") as Gtk.Label).set_label (this.museic_app.get_current_file());
+            // Update info about duration and position each second
+            GLib.Timeout.add_seconds (1, update_stream_status);
         }
         file_chooser.destroy ();
     }
 
     [CCode(instance_pos=-1)]
     public void action_change_time (Gtk.Scale slider) {
-        (this.builder.get_object ("progresbar") as Gtk.ProgressBar).set_fraction (slider.adjustment.value);
+
+    }
+
+    private bool update_stream_status() {
+        // Update time label
+        (this.builder.get_object ("timeLabel") as Gtk.Label).set_label (this.museic_app.get_position_str()+"/"+this.museic_app.get_duration_str());
+        // Update progres bar
+        ulong position = this.museic_app.get_position();
+        ulong duration = this.museic_app.get_duration();
+        double progres = (double)position/(double)duration;
+        (this.builder.get_object ("scalebar") as Gtk.Scale).set_value (progres);
+        // Check if stream, has ended
+        if ((duration-position) < 100) return false;
+        else return true;
     }
 
 }
