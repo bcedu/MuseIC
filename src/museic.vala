@@ -97,7 +97,8 @@ public class MuseIC : Gtk.Application {
     }
 
     public string get_current_file() {
-        return this.file.split("/")[this.file.split("/").length-1];
+        if (this.file.split("/").length > 1) return this.file.split("/")[this.file.split("/").length-1];
+        else return this.file;
     }
 
     public void set_position(float value) {
