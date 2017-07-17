@@ -58,11 +58,9 @@ public class MuseIC : Gtk.Application {
         return this.streamplayer.state;
     }
 
-    public void open_file (string filename) {
-        // store filename
-        this.file = filename;
-        // preapre file in streamplayer
-        this.streamplayer.ready_file("file://"+this.file);
+    public void open_files (string[] filenames, bool clean_filelist) {
+        this.filelist.add_files(filenames, clean_filelist);
+        if (clean_filelist) this.streamplayer.ready_file("file://"+this.filelist.get_current_file());
     }
 
     public StreamTimeInfo get_duration_str() {
@@ -105,5 +103,9 @@ public class MuseIC : Gtk.Application {
 
     public void set_position(float value) {
         this.streamplayer.player.seek_simple (Gst.Format.TIME, Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT, (int64)(value * get_duration()));
+    }
+
+    public bool has_files() {
+        return get_current_file() != "";
     }
 }

@@ -27,6 +27,8 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Show window
         this.show_all ();
         this.show ();
+        // Start time function to update info about stream duration and position each second
+        GLib.Timeout.add_seconds (1, update_stream_status);
     }
 
     [CCode(instance_pos=-1)]
@@ -71,13 +73,14 @@ public class MuseicGui : Gtk.ApplicationWindow {
     [CCode(instance_pos=-1)]
     public void action_open_file (Gtk.Button button) {
         var file_chooser = new Gtk.FileChooserDialog ("Open File", this, Gtk.FileChooserAction.OPEN, "_Cancel", Gtk.ResponseType.CANCEL, "_Open", Gtk.ResponseType.ACCEPT);
+        file_chooser.set_select_multiple (true);
         if (file_chooser.run () == Gtk.ResponseType.ACCEPT) {
-            // Pass file to prepare it for stream
-            this.museic_app.open_file(file_chooser.get_filename ());
+            // Pass files to prepare it for stream
+            string[] sfiles = {};
+            foreach (string aux in file_chooser.get_filenames ()) sfiles += aux;
+            this.museic_app.open_files(sfiles, !this.museic_app.has_files());
             // Update status label with filename
             (builder.get_object ("statusLabel") as Gtk.Label).set_label (this.museic_app.get_current_file());
-            // Update info about duration and position each second
-            GLib.Timeout.add_seconds (1, update_stream_status);
         }
         file_chooser.destroy ();
     }
