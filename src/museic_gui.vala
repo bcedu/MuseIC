@@ -33,6 +33,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     [CCode(instance_pos=-1)]
     public void action_ant_file (Gtk.Button button) {
+        this.museic_app.ant_file();
         var notification = new Notification ("MuseIC");
         // Doesn't work :(
         try {
@@ -46,6 +47,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     [CCode(instance_pos=-1)]
     public void action_seg_file (Gtk.Button button) {
+        this.museic_app.seg_file();
         var notification = new Notification ("MuseIC");
         // Doesn't work :(
         try {

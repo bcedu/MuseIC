@@ -108,4 +108,20 @@ public class MuseIC : Gtk.Application {
     public bool has_files() {
         return get_current_file() != "";
     }
+
+    public void seg_file() {
+        if (has_files()) {
+            pause_file();
+            this.streamplayer.ready_file("file://"+this.filelist.seg_file());
+            play_file();
+        }
+    }
+
+    public void ant_file() {
+        if (has_files()) {
+            pause_file();
+            this.streamplayer.ready_file("file://"+this.filelist.ant_file());
+            play_file();
+        }
+    }
 }
