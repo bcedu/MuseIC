@@ -43,6 +43,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         }
         notification.set_body ("Previous File");
         this.museic_app.send_notification (this.museic_app.application_id, notification);
+        update_stream_status();
     }
 
     [CCode(instance_pos=-1)]
@@ -57,6 +58,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         }
         notification.set_body ("Next File");
         this.museic_app.send_notification (this.museic_app.application_id, notification);
+        update_stream_status();
     }
 
     [CCode(instance_pos=-1)]
@@ -81,8 +83,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             string[] sfiles = {};
             foreach (string aux in file_chooser.get_filenames ()) sfiles += aux;
             this.museic_app.open_files(sfiles, !this.museic_app.has_files());
-            // Update status label with filename
-            (builder.get_object ("statusLabel") as Gtk.Label).set_label (this.museic_app.get_current_file());
+            update_stream_status();
         }
         file_chooser.destroy ();
     }
@@ -103,6 +104,8 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Update progres bar
         double progres = (double)pos_info.nanoseconds/(double)dur_info.nanoseconds;
         (this.builder.get_object ("scalebar") as Gtk.Scale).set_value (progres);
+        // Update status label with filename
+        (builder.get_object ("statusLabel") as Gtk.Label).set_label (this.museic_app.get_current_file());
         // Check if stream, has ended
         if ((dur_info.nanoseconds-pos_info.nanoseconds) < 100) return false;
         else return true;
