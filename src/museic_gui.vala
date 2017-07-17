@@ -9,7 +9,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Define main window
         this.set_position (Gtk.WindowPosition.CENTER);
         try {
-            this.icon = new Gdk.Pixbuf.from_file ("museic_logo_64.png");
+            this.icon = new Gdk.Pixbuf.from_file ("data/museic_logo_64.png");
         }catch (GLib.Error e) {
             stdout.printf("Logo not found. Error: %s\n", e.message);
         }
@@ -34,7 +34,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         var notification = new Notification ("MuseIC");
         // Doesn't work :(
         try {
-            notification.set_icon ( new Gdk.Pixbuf.from_file ("museic_logo_64.png"));
+            notification.set_icon ( new Gdk.Pixbuf.from_file ("data/museic_logo_64.png"));
         }catch (GLib.Error e) {
             stdout.printf("Notification logo not found. Error: %s\n", e.message);
         }
@@ -47,7 +47,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         var notification = new Notification ("MuseIC");
         // Doesn't work :(
         try {
-            notification.set_icon ( new Gdk.Pixbuf.from_file ("museic_logo_64.png"));
+            notification.set_icon ( new Gdk.Pixbuf.from_file ("data/museic_logo_64.png"));
         }catch (GLib.Error e) {
             stdout.printf("Notification logo not found. Error: %s\n", e.message);
         }
