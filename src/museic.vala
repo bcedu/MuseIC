@@ -54,7 +54,7 @@ public class MuseIC : Gtk.Application {
     }
 
     public string state() {
-        // Returns state of streamplayer. It can be: "play" or "pause"
+        // Returns state of streamplayer. It can be: "play", "pause" or "endstream"
         return this.streamplayer.state;
     }
 

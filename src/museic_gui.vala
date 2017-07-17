@@ -107,8 +107,8 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Update status label with filename
         (builder.get_object ("statusLabel") as Gtk.Label).set_label (this.museic_app.get_current_file());
         // Check if stream, has ended
-        if ((dur_info.nanoseconds-pos_info.nanoseconds) < 100) return false;
-        else return true;
+        if (this.museic_app.state() == "endstream") action_seg_file((builder.get_object ("segButton") as Gtk.Button));
+        return true;
     }
 
 }
