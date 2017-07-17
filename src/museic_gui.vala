@@ -93,6 +93,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
     }
 
     private bool update_stream_status() {
+        if (!this.museic_app.has_files()) return true;
         StreamTimeInfo pos_info = this.museic_app.get_position_str();
         StreamTimeInfo dur_info = this.museic_app.get_duration_str();
         // Update time label
