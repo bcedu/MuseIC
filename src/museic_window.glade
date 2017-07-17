@@ -36,6 +36,20 @@
             <property name="homogeneous">True</property>
           </packing>
         </child>
+        <child>
+          <object class="GtkToolButton" id="addFile">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="is_important">True</property>
+            <property name="use_underline">True</property>
+            <property name="stock_id">gtk-add</property>
+            <signal name="clicked" handler="museic_gui_action_add_file" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="homogeneous">True</property>
+          </packing>
+        </child>
       </object>
       <packing>
         <property name="expand">False</property>

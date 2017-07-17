@@ -80,7 +80,25 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     [CCode(instance_pos=-1)]
     public void action_open_file (Gtk.Button button) {
-        var file_chooser = new Gtk.FileChooserDialog ("Open File", this, Gtk.FileChooserAction.OPEN, "_Cancel", Gtk.ResponseType.CANCEL, "_Open", Gtk.ResponseType.ACCEPT);
+        var file_chooser = new Gtk.FileChooserDialog ("Open File", this, Gtk.FileChooserAction.OPEN, "_Cancel", Gtk.ResponseType.CANCEL, "_Open File", Gtk.ResponseType.ACCEPT);
+        file_chooser.add_button("_Open Folder", Gtk.ResponseType.ACCEPT);
+        file_chooser.set_select_multiple (true);
+        if (file_chooser.run () == Gtk.ResponseType.ACCEPT) {
+            // If we were playing, pause
+            if (this.museic_app.state() == "play") action_play_file((builder.get_object ("playButton") as Gtk.Button));
+            // Pass files to prepare it for stream
+            string[] sfiles = {};
+            foreach (string aux in file_chooser.get_filenames ()) sfiles += aux;
+            this.museic_app.open_files(sfiles, true);
+            update_stream_status();
+        }
+        file_chooser.destroy ();
+    }
+
+    [CCode(instance_pos=-1)]
+    public void action_add_file (Gtk.Button button) {
+        var file_chooser = new Gtk.FileChooserDialog ("Add File", this, Gtk.FileChooserAction.OPEN, "_Cancel", Gtk.ResponseType.CANCEL, "_Add File", Gtk.ResponseType.ACCEPT);
+        file_chooser.add_button("_Add Folder", Gtk.ResponseType.ACCEPT);
         file_chooser.set_select_multiple (true);
         if (file_chooser.run () == Gtk.ResponseType.ACCEPT) {
             // Pass files to prepare it for stream
