@@ -33,32 +33,36 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     [CCode(instance_pos=-1)]
     public void action_ant_file (Gtk.Button button) {
-        this.museic_app.ant_file();
-        var notification = new Notification ("MuseIC");
-        // Doesn't work :(
-        try {
-            notification.set_icon ( new Gdk.Pixbuf.from_file ("data/museic_logo_64.png"));
-        }catch (GLib.Error e) {
-            stdout.printf("Notification logo not found. Error: %s\n", e.message);
+        if (this.museic_app.has_files()) {
+            this.museic_app.ant_file();
+            var notification = new Notification ("MuseIC");
+            // Doesn't work :(
+            try {
+                notification.set_icon ( new Gdk.Pixbuf.from_file ("data/museic_logo_64.png"));
+            }catch (GLib.Error e) {
+                stdout.printf("Notification logo not found. Error: %s\n", e.message);
+            }
+            notification.set_body ("Previous File\n"+this.museic_app.get_current_file());
+            this.museic_app.send_notification (this.museic_app.application_id, notification);
+            update_stream_status();
         }
-        notification.set_body ("Previous File");
-        this.museic_app.send_notification (this.museic_app.application_id, notification);
-        update_stream_status();
     }
 
     [CCode(instance_pos=-1)]
     public void action_seg_file (Gtk.Button button) {
-        this.museic_app.seg_file();
-        var notification = new Notification ("MuseIC");
-        // Doesn't work :(
-        try {
-            notification.set_icon ( new Gdk.Pixbuf.from_file ("data/museic_logo_64.png"));
-        }catch (GLib.Error e) {
-            stdout.printf("Notification logo not found. Error: %s\n", e.message);
+        if (museic_app.has_files()) {
+            this.museic_app.seg_file();
+            var notification = new Notification ("MuseIC");
+            // Doesn't work :(
+            try {
+                notification.set_icon ( new Gdk.Pixbuf.from_file ("data/museic_logo_64.png"));
+            }catch (GLib.Error e) {
+                stdout.printf("Notification logo not found. Error: %s\n", e.message);
+            }
+            notification.set_body ("Next File\n"+this.museic_app.get_current_file());
+            this.museic_app.send_notification (this.museic_app.application_id, notification);
+            update_stream_status();
         }
-        notification.set_body ("Next File");
-        this.museic_app.send_notification (this.museic_app.application_id, notification);
-        update_stream_status();
     }
 
     [CCode(instance_pos=-1)]
