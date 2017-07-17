@@ -8,10 +8,18 @@ public class MuseicGui : Gtk.ApplicationWindow {
         museic_app = app;
         // Define main window
         this.set_position (Gtk.WindowPosition.CENTER);
-        this.icon = new Gdk.Pixbuf.from_file ("museic_logo_64.png");
+        try {
+            this.icon = new Gdk.Pixbuf.from_file ("museic_logo_64.png");
+        }catch (GLib.Error e) {
+            stdout.printf("Logo not found. Error: %s\n", e.message);
+        }
         // Load interface from file
         this.builder = new Gtk.Builder ();
-        builder.add_from_file ("/home/bcedu/Documents/Projects/MuseIC/src/museic_window.glade");
+        try {
+            builder.add_from_file ("src/museic_window.glade");
+        }catch (GLib.Error e) {
+            stdout.printf("Glade file not found. Error: %s\n", e.message);
+        }
         // Connect signals
         builder.connect_signals (this);
         // Add main box to window
@@ -25,7 +33,11 @@ public class MuseicGui : Gtk.ApplicationWindow {
     public void action_ant_file (Gtk.Button button) {
         var notification = new Notification ("MuseIC");
         // Doesn't work :(
-        notification.set_icon ( new Gdk.Pixbuf.from_file ("museic_logo_64.png"));
+        try {
+            notification.set_icon ( new Gdk.Pixbuf.from_file ("museic_logo_64.png"));
+        }catch (GLib.Error e) {
+            stdout.printf("Notification logo not found. Error: %s\n", e.message);
+        }
         notification.set_body ("Previous File");
         this.museic_app.send_notification (this.museic_app.application_id, notification);
     }
@@ -34,7 +46,11 @@ public class MuseicGui : Gtk.ApplicationWindow {
     public void action_seg_file (Gtk.Button button) {
         var notification = new Notification ("MuseIC");
         // Doesn't work :(
-        notification.set_icon ( new Gdk.Pixbuf.from_file ("museic_logo_64.png"));
+        try {
+            notification.set_icon ( new Gdk.Pixbuf.from_file ("museic_logo_64.png"));
+        }catch (GLib.Error e) {
+            stdout.printf("Notification logo not found. Error: %s\n", e.message);
+        }
         notification.set_body ("Next File");
         this.museic_app.send_notification (this.museic_app.application_id, notification);
     }
