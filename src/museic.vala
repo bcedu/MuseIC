@@ -28,7 +28,7 @@ public class MuseIC : Gtk.Application {
 
     public string[] argsv;
     private MuseicStreamPlayer streamplayer;
-    public string file = "";
+    public FileList filelist;
 
     public MuseIC (string[] args) {
         Object (application_id: "com.github.bcedu.MuseIC", flags: ApplicationFlags.FLAGS_NONE);
@@ -37,6 +37,7 @@ public class MuseIC : Gtk.Application {
 
     protected override void activate () {
         this.streamplayer = new MuseicStreamPlayer(this.argsv);
+        this.filelist = new FileList();
         new MuseicGui (this);
     }
 
@@ -45,11 +46,11 @@ public class MuseIC : Gtk.Application {
     }
 
     public void play_file () {
-        if (this.file != "") this.streamplayer.play_file ();
+        if (this.filelist.get_current_file() != "") this.streamplayer.play_file ();
     }
 
     public void pause_file () {
-        if (this.file != "") this.streamplayer.pause_file ();
+        if (this.filelist.get_current_file() != "") this.streamplayer.pause_file ();
     }
 
     public string state() {
@@ -97,8 +98,9 @@ public class MuseIC : Gtk.Application {
     }
 
     public string get_current_file() {
-        if (this.file.split("/").length > 1) return this.file.split("/")[this.file.split("/").length-1];
-        else return this.file;
+        string file = this.filelist.get_current_file();
+        if (file.split("/").length > 1) return file.split("/")[file.split("/").length-1];
+        else return file;
     }
 
     public void set_position(float value) {

@@ -57,7 +57,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     [CCode(instance_pos=-1)]
     public void action_play_file (Gtk.Button button) {
-        if (this.museic_app.file != "") {
+        if (this.museic_app.get_current_file() != "") {
             if (museic_app.state() == "pause")  {
                 this.museic_app.play_file();
                 button.set_label("gtk-media-pause");
