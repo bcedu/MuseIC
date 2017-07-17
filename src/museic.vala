@@ -111,17 +111,19 @@ public class MuseIC : Gtk.Application {
 
     public void seg_file() {
         if (has_files()) {
+            bool play = state() == "play";
             pause_file();
             this.streamplayer.ready_file("file://"+this.filelist.seg_file());
-            play_file();
+            if (play) play_file();
         }
     }
 
     public void ant_file() {
         if (has_files()) {
+            bool play = state() == "play";
             pause_file();
             this.streamplayer.ready_file("file://"+this.filelist.ant_file());
-            play_file();
+            if (play) play_file();
         }
     }
 }
