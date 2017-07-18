@@ -132,7 +132,11 @@ public class MuseicGui : Gtk.ApplicationWindow {
         string[] sfiles = {};
         SList<File> files = this.chooser.get_files ();
         foreach (unowned File file in files) {
-            sfiles += file.get_path();
+            if (file.query_file_type(FileQueryInfoFlags.NOFOLLOW_SYMLINKS) == FileType.REGULAR) sfiles += file.get_path();
+            else if (file.query_file_type(FileQueryInfoFlags.NOFOLLOW_SYMLINKS) == FileType.DIRECTORY) {
+                string[] folder_files = rec_open(file);
+                foreach (unowned string aux_file in folder_files) sfiles += file.get_path()+"/"+aux_file;
+            }
         }
         this.museic_app.open_files(sfiles, this.is_open);
         update_stream_status();
@@ -142,8 +146,17 @@ public class MuseicGui : Gtk.ApplicationWindow {
         this.is_open = false;
     }
 
-    private void rec_open() {
-
+    private string[] rec_open(File file) {
+        FileEnumerator enumerator = file.enumerate_children ("standard::*", FileQueryInfoFlags.NOFOLLOW_SYMLINKS, null);
+        string[] sfiles = {};
+        FileInfo info = null;
+        while ((info = enumerator.next_file (null)) != null) {
+            if (info.get_file_type () == FileType.DIRECTORY) {
+                string[] folder_files = rec_open(file.resolve_relative_path (info.get_name ()));
+                foreach (unowned string aux_file in folder_files) sfiles += info.get_name ()+"/"+aux_file;
+            }else sfiles += info.get_name();
+        }
+        return sfiles;
     }
 
     [CCode(instance_pos=-1)]
