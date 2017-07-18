@@ -6,6 +6,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
     // Aux variables needed to open files
     private Gtk.Window files_window;
     private Gtk.FileChooserWidget chooser;
+    private bool is_open = false;
 
     public MuseicGui(MuseIC app) {
         Object (application: app, title: "MuseIC");
@@ -84,15 +85,17 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     [CCode(instance_pos=-1)]
     public void action_open_file (Gtk.Button button) {
+        // If we were playing, pause
+        if (this.museic_app.state() == "play") action_play_file((builder.get_object ("playButton") as Gtk.Button));
         create_file_open_window(true);
     }
 
     [CCode(instance_pos=-1)]
     public void action_add_file (Gtk.Button button) {
-        create_file_open_window(false);
+        create_file_open_window(!this.museic_app.has_files());
     }
 
-    private void create_file_open_window(bool is_open) {
+    private void create_file_open_window(bool is_open_files) {
         this.files_window = new Gtk.Window();
         this.files_window.window_position = Gtk.WindowPosition.CENTER;
         this.files_window.destroy.connect (Gtk.main_quit);
@@ -120,29 +123,27 @@ public class MuseicGui : Gtk.ApplicationWindow {
         vbox.add(hbox);
         // Setup buttons callbacks
         cancel.clicked.connect (() => {this.files_window.destroy ();});
-        if (is_open) select.clicked.connect (open_files);
-        else select.clicked.connect (add_files);
+        this.is_open = is_open_files;
+        select.clicked.connect (open_files);
         this.files_window.show_all ();
     }
 
     private void open_files () {
-        SList<string> uris = this.chooser.get_uris ();
-        foreach (unowned string uri in uris) {
-            stdout.printf (" %s\n", uri);
+        string[] sfiles = {};
+        SList<File> files = this.chooser.get_files ();
+        foreach (unowned File file in files) {
+            sfiles += file.get_path();
         }
+        this.museic_app.open_files(sfiles, this.is_open);
+        update_stream_status();
         this.files_window.destroy ();
         this.files_window = null;
         this.chooser = null;
+        this.is_open = false;
     }
 
-    private void add_files () {
-        SList<string> uris = this.chooser.get_uris ();
-        foreach (unowned string uri in uris) {
-            stdout.printf (" %s\n", uri);
-        }
-        this.files_window.destroy ();
-        this.files_window = null;
-        this.chooser = null;
+    private void rec_open() {
+
     }
 
     [CCode(instance_pos=-1)]
