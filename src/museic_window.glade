@@ -131,7 +131,7 @@
       <object class="GtkButtonBox" id="statusButtons">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="layout_style">start</property>
+        <property name="layout_style">center</property>
         <child>
           <object class="GtkButton" id="antButton">
             <property name="label">gtk-media-previous</property>
@@ -183,13 +183,45 @@
         </child>
       </object>
       <packing>
-        <property name="expand">True</property>
+        <property name="expand">False</property>
         <property name="fill">True</property>
         <property name="position">3</property>
       </packing>
     </child>
     <child>
-      <placeholder/>
+      <object class="GtkScrolledWindow" id="fileWindow">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="hexpand">True</property>
+        <property name="vexpand">True</property>
+        <property name="shadow_type">in</property>
+        <property name="min_content_width">1</property>
+        <property name="min_content_height">1</property>
+        <child>
+          <object class="GtkTreeView" id="fileTree">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="hexpand">False</property>
+            <property name="vexpand">False</property>
+            <property name="hscroll_policy">natural</property>
+            <property name="vscroll_policy">natural</property>
+            <property name="reorderable">True</property>
+            <property name="search_column">0</property>
+            <property name="fixed_height_mode">True</property>
+            <property name="hover_expand">True</property>
+            <property name="rubber_banding">True</property>
+            <property name="tooltip_column">0</property>
+            <child internal-child="selection">
+              <object class="GtkTreeSelection" id="treeview-selection1"/>
+            </child>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
+        <property name="position">4</property>
+      </packing>
     </child>
     <child>
       <placeholder/>

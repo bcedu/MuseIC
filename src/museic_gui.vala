@@ -29,6 +29,12 @@ public class MuseicGui : Gtk.ApplicationWindow {
         builder.connect_signals (this);
         // Add main box to window
         this.add (builder.get_object ("mainBox") as Gtk.Box);
+        // Set filelist
+        this.fileList = new Gtk.ListStore (2, typeof (string), typeof (string));
+        var tree = (this.builder.get_object ("fileTree") as Gtk.TreeView);
+        tree.set_model (this.fileList);
+        tree.insert_column_with_attributes (-1, "File Name", new Gtk.CellRendererText (), "text", 0);
+        tree.insert_column_with_attributes (-1, "Duration", new Gtk.CellRendererText (), "text", 1);
         // Show window
         this.show_all ();
         this.show ();
@@ -139,6 +145,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             }
         }
         this.museic_app.open_files(sfiles, this.is_open);
+        update_files_to_tree(this.is_open);
         update_stream_status();
         this.files_window.destroy ();
         this.files_window = null;
@@ -164,6 +171,16 @@ public class MuseicGui : Gtk.ApplicationWindow {
         this.museic_app.set_position((float)new_value);
         slider.adjustment.value = new_value;
         return true;
+    }
+
+    private void update_files_to_tree(bool clean_filelist) {
+        if (clean_filelist) fileList.clear ();
+        Gtk.TreeIter iter;
+        foreach (string filename in this.museic_app.get_all_files()) {
+            stdout.printf(filename+"\n");
+            this.fileList.append (out iter);
+            this.fileList.set (iter, 0, filename, 1, "min:sec");
+        }
     }
 
     private bool update_stream_status() {
