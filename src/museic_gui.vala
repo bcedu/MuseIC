@@ -2,6 +2,10 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     private MuseIC museic_app;
     private Gtk.Builder builder;
+    private Gtk.ListStore fileList;
+    // Aux variables needed to open files
+    private Gtk.Window files_window;
+    private Gtk.FileChooserWidget chooser;
 
     public MuseicGui(MuseIC app) {
         Object (application: app, title: "MuseIC");
@@ -80,34 +84,65 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     [CCode(instance_pos=-1)]
     public void action_open_file (Gtk.Button button) {
-        var file_chooser = new Gtk.FileChooserDialog ("Open File", this, Gtk.FileChooserAction.OPEN, "_Cancel", Gtk.ResponseType.CANCEL, "_Open File", Gtk.ResponseType.ACCEPT);
-        file_chooser.add_button("_Open Folder", Gtk.ResponseType.ACCEPT);
-        file_chooser.set_select_multiple (true);
-        if (file_chooser.run () == Gtk.ResponseType.ACCEPT) {
-            // If we were playing, pause
-            if (this.museic_app.state() == "play") action_play_file((builder.get_object ("playButton") as Gtk.Button));
-            // Pass files to prepare it for stream
-            string[] sfiles = {};
-            foreach (string aux in file_chooser.get_filenames ()) sfiles += aux;
-            this.museic_app.open_files(sfiles, true);
-            update_stream_status();
-        }
-        file_chooser.destroy ();
+        create_file_open_window(true);
     }
 
     [CCode(instance_pos=-1)]
     public void action_add_file (Gtk.Button button) {
-        var file_chooser = new Gtk.FileChooserDialog ("Add File", this, Gtk.FileChooserAction.OPEN, "_Cancel", Gtk.ResponseType.CANCEL, "_Add File", Gtk.ResponseType.ACCEPT);
-        file_chooser.add_button("_Add Folder", Gtk.ResponseType.ACCEPT);
-        file_chooser.set_select_multiple (true);
-        if (file_chooser.run () == Gtk.ResponseType.ACCEPT) {
-            // Pass files to prepare it for stream
-            string[] sfiles = {};
-            foreach (string aux in file_chooser.get_filenames ()) sfiles += aux;
-            this.museic_app.open_files(sfiles, !this.museic_app.has_files());
-            update_stream_status();
+        create_file_open_window(false);
+    }
+
+    private void create_file_open_window(bool is_open) {
+        this.files_window = new Gtk.Window();
+        this.files_window.window_position = Gtk.WindowPosition.CENTER;
+        this.files_window.destroy.connect (Gtk.main_quit);
+        // VBox:
+        Gtk.Box vbox = new Gtk.Box (Gtk.Orientation.VERTICAL, 5);
+        this.files_window.add (vbox);
+        // HeaderBar:
+        Gtk.HeaderBar hbar = new Gtk.HeaderBar ();
+        hbar.set_title ("Open Files");
+        hbar.set_subtitle ("Select Files and Folders to open");
+        this.files_window.set_titlebar (hbar);
+        // Add a chooser:
+        this.chooser = new Gtk.FileChooserWidget (Gtk.FileChooserAction.OPEN);
+        vbox.pack_start (this.chooser, true, true, 0);
+        // Multiple files can be selected:
+        this.chooser.select_multiple = true;
+        // Buttons
+        Gtk.Box hbox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 2);
+        hbox.set_halign(Gtk.Align.CENTER);
+        hbox.set_border_width(5);
+        Gtk.Button cancel = new Gtk.Button.with_label ("Cancel");
+        Gtk.Button select = new Gtk.Button.with_label ("Select");
+        hbox.add (select);
+        hbox.add (cancel);
+        vbox.add(hbox);
+        // Setup buttons callbacks
+        cancel.clicked.connect (() => {this.files_window.destroy ();});
+        if (is_open) select.clicked.connect (open_files);
+        else select.clicked.connect (add_files);
+        this.files_window.show_all ();
+    }
+
+    private void open_files () {
+        SList<string> uris = this.chooser.get_uris ();
+        foreach (unowned string uri in uris) {
+            stdout.printf (" %s\n", uri);
         }
-        file_chooser.destroy ();
+        this.files_window.destroy ();
+        this.files_window = null;
+        this.chooser = null;
+    }
+
+    private void add_files () {
+        SList<string> uris = this.chooser.get_uris ();
+        foreach (unowned string uri in uris) {
+            stdout.printf (" %s\n", uri);
+        }
+        this.files_window.destroy ();
+        this.files_window = null;
+        this.chooser = null;
     }
 
     [CCode(instance_pos=-1)]
