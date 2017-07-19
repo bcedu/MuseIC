@@ -28,7 +28,7 @@ public class MuseIC : Gtk.Application {
 
     public string[] argsv;
     private MuseicStreamPlayer streamplayer;
-    public MuseicFileList filelist;
+    private MuseicFileList museic_filelist;
 
     public MuseIC (string[] args) {
         Object (application_id: "com.github.bcedu.MuseIC", flags: ApplicationFlags.FLAGS_NONE);
@@ -37,7 +37,7 @@ public class MuseIC : Gtk.Application {
 
     protected override void activate () {
         this.streamplayer = new MuseicStreamPlayer(this.argsv);
-        this.filelist = new MuseicFileList();
+        this.museic_filelist = new MuseicFileList();
         new MuseicGui (this);
     }
 
@@ -46,11 +46,11 @@ public class MuseIC : Gtk.Application {
     }
 
     public void play_file () {
-        if (this.filelist.get_current_file() != "") this.streamplayer.play_file ();
+        if (this.museic_filelist.get_current_file() != "") this.streamplayer.play_file ();
     }
 
     public void pause_file () {
-        if (this.filelist.get_current_file() != "") this.streamplayer.pause_file ();
+        if (this.museic_filelist.get_current_file() != "") this.streamplayer.pause_file ();
     }
 
     public string state() {
@@ -58,9 +58,9 @@ public class MuseIC : Gtk.Application {
         return this.streamplayer.state;
     }
 
-    public void open_files (string[] filenames, bool clean_filelist) {
-        this.filelist.add_files(filenames, clean_filelist);
-        if (clean_filelist) this.streamplayer.ready_file("file://"+this.filelist.get_current_file());
+    public void open_files (string[] filenames, bool clean_museic_filelist) {
+        this.museic_filelist.add_files(filenames, clean_museic_filelist);
+        if (clean_museic_filelist) this.streamplayer.ready_file("file://"+this.museic_filelist.get_current_file());
     }
 
     public StreamTimeInfo get_duration_str() {
@@ -96,14 +96,14 @@ public class MuseIC : Gtk.Application {
     }
 
     public string get_current_file() {
-        string file = this.filelist.get_current_file();
+        string file = this.museic_filelist.get_current_file();
         if (file.split("/").length > 1) return file.split("/")[file.split("/").length-1];
         else return file;
     }
 
     public string[] get_all_files() {
         string[] sfiles = {};
-        foreach (string file in this.filelist.files_list[0:this.filelist.nfiles]) {
+        foreach (string file in this.museic_filelist.get_files_list()) {
             if (file.split("/").length > 1) sfiles += file.split("/")[file.split("/").length-1];
             else sfiles += file;
         }
@@ -122,7 +122,7 @@ public class MuseIC : Gtk.Application {
         if (has_files()) {
             bool play = state() == "play";
             pause_file();
-            this.streamplayer.ready_file("file://"+this.filelist.seg_file());
+            this.streamplayer.ready_file("file://"+this.museic_filelist.seg_file());
             if (play) play_file();
         }
     }
@@ -131,7 +131,7 @@ public class MuseIC : Gtk.Application {
         if (has_files()) {
             bool play = state() == "play";
             pause_file();
-            this.streamplayer.ready_file("file://"+this.filelist.ant_file());
+            this.streamplayer.ready_file("file://"+this.museic_filelist.ant_file());
             if (play) play_file();
         }
     }

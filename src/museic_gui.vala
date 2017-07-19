@@ -2,7 +2,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     private MuseIC museic_app;
     private Gtk.Builder builder;
-    private Gtk.ListStore fileList;
+    private Gtk.ListStore fileListStore;
     // Aux variables needed to open files
     private Gtk.Window files_window;
     private Gtk.FileChooserWidget chooser;
@@ -29,10 +29,10 @@ public class MuseicGui : Gtk.ApplicationWindow {
         builder.connect_signals (this);
         // Add main box to window
         this.add (builder.get_object ("mainW") as Gtk.Grid);
-        // Set filelist
-        this.fileList = new Gtk.ListStore (2, typeof (string), typeof (string));
+        // Set fileListStore
+        this.fileListStore = new Gtk.ListStore (2, typeof (string), typeof (string));
         var tree = (this.builder.get_object ("fileTree") as Gtk.TreeView);
-        tree.set_model (this.fileList);
+        tree.set_model (this.fileListStore);
         tree.insert_column_with_attributes (-1, "File Name", new Gtk.CellRendererText (), "text", 0);
         tree.insert_column_with_attributes (-1, "Duration", new Gtk.CellRendererText (), "text", 1);
         // Show window
@@ -174,11 +174,11 @@ public class MuseicGui : Gtk.ApplicationWindow {
     }
 
     private void update_files_to_tree() {
-        this.fileList.clear ();
+        this.fileListStore.clear ();
         Gtk.TreeIter iter;
         foreach (string filename in this.museic_app.get_all_files()) {
-            this.fileList.append (out iter);
-            this.fileList.set (iter, 0, filename, 1, "min:sec");
+            this.fileListStore.append (out iter);
+            this.fileListStore.set (iter, 0, filename, 1, "min:sec");
         }
     }
 
