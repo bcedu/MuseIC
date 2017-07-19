@@ -1,10 +1,10 @@
-public class FileList {
+public class MuseicFileList {
 
     public int filepos = -1;
     public string[] files_list = new string[4];
     public int nfiles = 0;
 
-    public FileList () {}
+    public MuseicFileList () {}
 
     public void add_files(string[] filenames, bool clean_filelist) {
         if (!clean_filelist) {
