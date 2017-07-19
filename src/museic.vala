@@ -28,7 +28,7 @@ public class MuseIC : Gtk.Application {
 
     public string[] argsv;
     private MuseicStreamPlayer streamplayer;
-    public string file = "";
+    public FileList filelist;
 
     public MuseIC (string[] args) {
         Object (application_id: "com.github.bcedu.MuseIC", flags: ApplicationFlags.FLAGS_NONE);
@@ -37,6 +37,7 @@ public class MuseIC : Gtk.Application {
 
     protected override void activate () {
         this.streamplayer = new MuseicStreamPlayer(this.argsv);
+        this.filelist = new FileList();
         new MuseicGui (this);
     }
 
@@ -45,23 +46,21 @@ public class MuseIC : Gtk.Application {
     }
 
     public void play_file () {
-        if (this.file != "") this.streamplayer.play_file ();
+        if (this.filelist.get_current_file() != "") this.streamplayer.play_file ();
     }
 
     public void pause_file () {
-        if (this.file != "") this.streamplayer.pause_file ();
+        if (this.filelist.get_current_file() != "") this.streamplayer.pause_file ();
     }
 
     public string state() {
-        // Returns state of streamplayer. It can be: "play" or "pause"
+        // Returns state of streamplayer. It can be: "play", "pause" or "endstream"
         return this.streamplayer.state;
     }
 
-    public void open_file (string filename) {
-        // store filename
-        this.file = filename;
-        // preapre file in streamplayer
-        this.streamplayer.ready_file("file://"+this.file);
+    public void open_files (string[] filenames, bool clean_filelist) {
+        this.filelist.add_files(filenames, clean_filelist);
+        if (clean_filelist) this.streamplayer.ready_file("file://"+this.filelist.get_current_file());
     }
 
     public StreamTimeInfo get_duration_str() {
@@ -97,10 +96,43 @@ public class MuseIC : Gtk.Application {
     }
 
     public string get_current_file() {
-        return this.file.split("/")[this.file.split("/").length-1];
+        string file = this.filelist.get_current_file();
+        if (file.split("/").length > 1) return file.split("/")[file.split("/").length-1];
+        else return file;
+    }
+
+    public string[] get_all_files() {
+        string[] sfiles = {};
+        foreach (string file in this.filelist.files_list[0:this.filelist.nfiles]) {
+            if (file.split("/").length > 1) sfiles += file.split("/")[file.split("/").length-1];
+            else sfiles += file;
+        }
+        return sfiles;
     }
 
     public void set_position(float value) {
         this.streamplayer.player.seek_simple (Gst.Format.TIME, Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT, (int64)(value * get_duration()));
+    }
+
+    public bool has_files() {
+        return get_current_file() != "";
+    }
+
+    public void seg_file() {
+        if (has_files()) {
+            bool play = state() == "play";
+            pause_file();
+            this.streamplayer.ready_file("file://"+this.filelist.seg_file());
+            if (play) play_file();
+        }
+    }
+
+    public void ant_file() {
+        if (has_files()) {
+            bool play = state() == "play";
+            pause_file();
+            this.streamplayer.ready_file("file://"+this.filelist.ant_file());
+            if (play) play_file();
+        }
     }
 }

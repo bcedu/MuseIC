@@ -42,6 +42,7 @@
             src/museic.vala
             src/museic_gui.vala
             src/museic_streamplayer.vala
+            src/museic_filelist.vala
 
         # tell what libraries to use when compiling
         PACKAGES

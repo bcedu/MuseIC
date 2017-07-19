@@ -35,7 +35,7 @@ public class MuseicStreamPlayer {
             loop.quit ();
             break;
         case MessageType.EOS:
-            stdout.printf ("end of stream\n");
+            this.state = "endstream";
             break;
         case MessageType.STATE_CHANGED:
             Gst.State oldstate;
