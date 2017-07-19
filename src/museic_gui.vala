@@ -28,7 +28,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Connect signals
         builder.connect_signals (this);
         // Add main box to window
-        this.add (builder.get_object ("mainBox") as Gtk.Box);
+        this.add (builder.get_object ("mainW") as Gtk.Grid);
         // Set filelist
         this.fileList = new Gtk.ListStore (2, typeof (string), typeof (string));
         var tree = (this.builder.get_object ("fileTree") as Gtk.TreeView);
