@@ -145,7 +145,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             }
         }
         this.museic_app.open_files(sfiles, this.is_open);
-        update_files_to_tree(this.is_open);
+        update_files_to_tree();
         update_stream_status();
         this.files_window.destroy ();
         this.files_window = null;
@@ -173,11 +173,10 @@ public class MuseicGui : Gtk.ApplicationWindow {
         return true;
     }
 
-    private void update_files_to_tree(bool clean_filelist) {
-        if (clean_filelist) fileList.clear ();
+    private void update_files_to_tree() {
+        this.fileList.clear ();
         Gtk.TreeIter iter;
         foreach (string filename in this.museic_app.get_all_files()) {
-            stdout.printf(filename+"\n");
             this.fileList.append (out iter);
             this.fileList.set (iter, 0, filename, 1, "min:sec");
         }

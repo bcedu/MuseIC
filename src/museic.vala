@@ -103,7 +103,7 @@ public class MuseIC : Gtk.Application {
 
     public string[] get_all_files() {
         string[] sfiles = {};
-        foreach (string file in this.filelist.files_list) {
+        foreach (string file in this.filelist.files_list[0:this.filelist.nfiles]) {
             if (file.split("/").length > 1) sfiles += file.split("/")[file.split("/").length-1];
             else sfiles += file;
         }
