@@ -20,27 +20,25 @@ public class MuseicFileList {
         this.nfiles += 1;
     }
 
-    public string get_current_filename() {
-        if (filepos < 0) return "";
-        else return this.files_list[this.filepos].path;
+    public MuseicFile get_current_file() {
+        if (filepos < 0) return new MuseicFile("");
+        else return this.files_list[this.filepos];
     }
 
-    public string[] get_files_list() {
-        string[] sfiles = {};
-        foreach (MuseicFile aux in this.files_list[0:this.nfiles]) sfiles += aux.path;
-        return sfiles;
+    public MuseicFile[] get_files_list() {
+        return this.files_list[0:this.nfiles];
     }
 
-    public string seg_file() {
+    public MuseicFile seg_file() {
         this.filepos += 1;
         if (this.filepos >= this.nfiles) this.filepos = 0;
-        return get_current_filename();
+        return get_current_file();
     }
 
-    public string ant_file() {
+    public MuseicFile ant_file() {
         this.filepos -= 1;
         if (this.filepos < 0) this.filepos = this.nfiles-1;
-        return get_current_filename();
+        return get_current_file();
     }
 
 }

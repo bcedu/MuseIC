@@ -178,9 +178,9 @@ public class MuseicGui : Gtk.ApplicationWindow {
     private void update_files_to_tree() {
         this.fileListStore.clear ();
         Gtk.TreeIter iter;
-        foreach (string filename in this.museic_app.get_all_filenames()) {
+        foreach (MuseicFile file in this.museic_app.get_all_files()) {
             this.fileListStore.append (out iter);
-            this.fileListStore.set (iter, 0, filename, 1, "filename.author", 2, "filename.album", 3, "filename.duration");
+            this.fileListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album, 3, file.duration);
         }
     }
 
