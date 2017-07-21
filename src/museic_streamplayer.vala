@@ -4,26 +4,18 @@ public class MuseicStreamPlayer {
     public dynamic Element player;
     private ClockTime duration = Gst.CLOCK_TIME_NONE;
     public string state = "pause";
+    public StreamMetadata? metadata = null;
+    public string n;
 
-    public MuseicStreamPlayer (string[] args) {
-        Gst.init (ref args);
+    public MuseicStreamPlayer (string[]? args, string name) {
+        if (args != null) Gst.init (ref args);
+        if (name != null) this.n = name;
+        else  this.n = "MAIN";
     }
 
     private static inline bool GST_CLOCK_TIME_IS_VALID (ClockTime time) {
 		return ((time) != CLOCK_TIME_NONE);
 	}
-
-    private void foreach_tag (Gst.TagList list, string tag) {
-        switch (tag) {
-        case "title":
-            string tag_string;
-            list.get_string (tag, out tag_string);
-            stdout.printf ("tag: %s = %s\n", tag, tag_string);
-            break;
-        default:
-        break;
-        }
-    }
 
     private bool bus_callback (Gst.Bus bus, Gst.Message message) {
         switch (message.type) {
@@ -45,11 +37,17 @@ public class MuseicStreamPlayer {
             stdout.printf ("state changed: %s->%s:%s\n", oldstate.to_string (), newstate.to_string (), pending.to_string ());
             break;
         case MessageType.TAG:
-            Gst.TagList tag_list;
-            stdout.printf ("taglist found\n");
-            message.parse_tag (out tag_list);
-            tag_list.foreach ((TagForeachFunc) foreach_tag);
-            break;
+            if (this.metadata == null) {
+                this.metadata = StreamMetadata();
+                Gst.TagList tag_list;
+                message.parse_tag (out tag_list);
+                tag_list.get_string ("title", out this.metadata.title);
+                tag_list.get_string ("album", out this.metadata.album);
+                tag_list.get_string ("artist", out this.metadata.artist);
+                tag_list = null;
+                stdout.printf(this.n+" -> STREAM Metadates: "+this.metadata.artist+"\n");
+            }
+        break;
         case Gst.MessageType.DURATION_CHANGED :
 			// The duration has changed, mark the current one as invalid:
 			this.duration = Gst.CLOCK_TIME_NONE;
@@ -77,6 +75,8 @@ public class MuseicStreamPlayer {
     public void ready_file(string stream) {
         this.player = ElementFactory.make ("playbin", "play");
         this.player.uri = stream;
+        this.metadata = null;
+        this.state = "pause";
         Gst.Bus bus = this.player.get_bus ();
         bus.add_watch (0, bus_callback);
         play_file();

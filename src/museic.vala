@@ -24,6 +24,12 @@ public struct StreamTimeInfo {
     public string minutes;
 }
 
+public struct StreamMetadata {
+    public string title;
+    public string album;
+    public string artist;
+}
+
 public class MuseIC : Gtk.Application {
 
     public string[] argsv;
@@ -36,7 +42,7 @@ public class MuseIC : Gtk.Application {
     }
 
     protected override void activate () {
-        this.streamplayer = new MuseicStreamPlayer(this.argsv);
+        this.streamplayer = new MuseicStreamPlayer(this.argsv, "MAIN");
         this.museic_filelist = new MuseicFileList();
         new MuseicGui (this);
     }
