@@ -30,11 +30,13 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Add main box to window
         this.add (builder.get_object ("mainW") as Gtk.Grid);
         // Set fileListStore
-        this.fileListStore = new Gtk.ListStore (2, typeof (string), typeof (string));
+        this.fileListStore = new Gtk.ListStore (4, typeof (string), typeof (string), typeof (string), typeof (string));
         var tree = (this.builder.get_object ("fileTree") as Gtk.TreeView);
         tree.set_model (this.fileListStore);
         tree.insert_column_with_attributes (-1, "File Name", new Gtk.CellRendererText (), "text", 0);
-        tree.insert_column_with_attributes (-1, "Duration", new Gtk.CellRendererText (), "text", 1);
+        tree.insert_column_with_attributes (-1, "Artist", new Gtk.CellRendererText (), "text", 1);
+        tree.insert_column_with_attributes (-1, "Album", new Gtk.CellRendererText (), "text", 2);
+        tree.insert_column_with_attributes (-1, "Duration", new Gtk.CellRendererText (), "text", 3);
         // Show window
         this.show_all ();
         this.show ();
@@ -53,7 +55,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             }catch (GLib.Error e) {
                 stdout.printf("Notification logo not found. Error: %s\n", e.message);
             }
-            notification.set_body ("Previous File\n"+this.museic_app.get_current_file());
+            notification.set_body ("Previous File\n"+this.museic_app.get_current_filename());
             this.museic_app.send_notification (this.museic_app.application_id, notification);
             update_stream_status();
         }
@@ -70,7 +72,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             }catch (GLib.Error e) {
                 stdout.printf("Notification logo not found. Error: %s\n", e.message);
             }
-            notification.set_body ("Next File\n"+this.museic_app.get_current_file());
+            notification.set_body ("Next File\n"+this.museic_app.get_current_filename());
             this.museic_app.send_notification (this.museic_app.application_id, notification);
             update_stream_status();
         }
@@ -78,7 +80,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     [CCode(instance_pos=-1)]
     public void action_play_file (Gtk.Button button) {
-        if (this.museic_app.get_current_file() != "") {
+        if (this.museic_app.get_current_filename() != "") {
             if (museic_app.state() == "pause")  {
                 this.museic_app.play_file();
                 button.set_label("gtk-media-pause");
@@ -176,9 +178,9 @@ public class MuseicGui : Gtk.ApplicationWindow {
     private void update_files_to_tree() {
         this.fileListStore.clear ();
         Gtk.TreeIter iter;
-        foreach (string filename in this.museic_app.get_all_files()) {
+        foreach (string filename in this.museic_app.get_all_filenames()) {
             this.fileListStore.append (out iter);
-            this.fileListStore.set (iter, 0, filename, 1, "min:sec");
+            this.fileListStore.set (iter, 0, filename, 1, "filename.author", 2, "filename.album", 3, "filename.duration");
         }
     }
 
@@ -192,7 +194,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         double progres = (double)pos_info.nanoseconds/(double)dur_info.nanoseconds;
         (this.builder.get_object ("scalebar") as Gtk.Scale).set_value (progres);
         // Update status label with filename
-        (builder.get_object ("statusLabel") as Gtk.Label).set_label (this.museic_app.get_current_file());
+        (builder.get_object ("statusLabel") as Gtk.Label).set_label (this.museic_app.get_current_filename());
         // Check if stream, has ended
         if (this.museic_app.state() == "endstream") action_seg_file((builder.get_object ("segButton") as Gtk.Button));
         return true;

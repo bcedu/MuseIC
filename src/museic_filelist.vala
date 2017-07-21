@@ -20,7 +20,7 @@ public class MuseicFileList {
         this.nfiles += 1;
     }
 
-    public string get_current_file() {
+    public string get_current_filename() {
         if (filepos < 0) return "";
         else return this.files_list[this.filepos].path;
     }
@@ -34,13 +34,13 @@ public class MuseicFileList {
     public string seg_file() {
         this.filepos += 1;
         if (this.filepos >= this.nfiles) this.filepos = 0;
-        return get_current_file();
+        return get_current_filename();
     }
 
     public string ant_file() {
         this.filepos -= 1;
         if (this.filepos < 0) this.filepos = this.nfiles-1;
-        return get_current_file();
+        return get_current_filename();
     }
 
 }
