@@ -6,12 +6,18 @@ public class MuseicFileList {
 
     public MuseicFileList () {}
 
-    public void add_files(string[] filenames, bool clean_filelist) {
+    public void add_files(string[] filenames, bool clean_filelist, bool filter_repeated) {
         if (clean_filelist) {
             this.files_list = new MuseicFile[filenames.length+1];
             this.filepos = 0;
+            this.nfiles = 0;
         }
-        foreach (string filename in filenames) add_file(filename);
+        foreach (string filename in filenames) if (!filter_repeated || (filter_repeated && !is_in_filelist(filename))) add_file(filename);
+    }
+
+    public bool is_in_filelist(string filename) {
+        foreach (MuseicFile file in get_files_list()) if (file.path == filename) return true;
+        return false;
     }
 
     public void add_file(string filename) {

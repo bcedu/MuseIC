@@ -65,7 +65,7 @@ public class MuseIC : Gtk.Application {
     }
 
     public void open_files (string[] filenames, bool clean_museic_filelist) {
-        this.museic_filelist.add_files(filenames, clean_museic_filelist);
+        this.museic_filelist.add_files(filenames, clean_museic_filelist, true);
         if (clean_museic_filelist) this.streamplayer.ready_file("file://"+this.museic_filelist.get_current_file().path);
     }
 
