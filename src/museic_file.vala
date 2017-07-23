@@ -27,12 +27,16 @@ public class MuseicFile {
         BytesInfo info = get_rep_of_bytes(data_stream, 3);
         if (info.rep != "ID3") {
             stderr.printf ("Error: %s is not a valid ID3 file\n", file.get_basename ());
+            if (path.split("/").length > 1) this.name = path.split("/")[path.split("/").length-1];
+            else this.name = path;
             return;
         }
         // Read ID3 version (check if file is v2.3)
         info = get_rep_of_bytes(data_stream, 2);
         if (info.bytes_str != ".3.0") {
             stderr.printf ("Error: %s is not ID3v2.3 version file\n", file.get_basename ());
+            if (path.split("/").length > 1) this.name = path.split("/")[path.split("/").length-1];
+            else this.name = path;
             return;
         }
         // Read flags (don't used)
