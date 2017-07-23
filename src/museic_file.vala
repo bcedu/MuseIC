@@ -89,7 +89,7 @@ public class MuseicFile {
                 }else if(tag_header.rep == "TPOS") { // part of set
                     // stdout.printf("TPOS:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
                 }else if(tag_header.rep == "APIC") { // image
-                    this.image = info.rep;found+=1;
+                    this.image = info.rep;
                     //stdout.printf("APIC:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
                 }else if(tag_header.rep == "TIT1") { // group desc.
                     // stdout.printf("TIT1:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
@@ -105,7 +105,7 @@ public class MuseicFile {
                 count ++;
             }
             // Check if we already have all the information that we want
-            if (found == 4 || count > 3) readed_bytes = size;
+            if (found == 3 || count > 3) readed_bytes = size;
         }
         if (this.name == "unknown") {
             if (path.split("/").length > 1) this.name = path.split("/")[path.split("/").length-1];
