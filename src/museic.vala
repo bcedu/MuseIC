@@ -131,7 +131,7 @@ public class MuseIC : Gtk.Application {
 
     public void seg_file() {
         if (has_files()) {
-            bool play = state() == "play";
+            bool play = (state() == "play") || (state() == "endstream");
             pause_file();
             this.streamplayer.ready_file("file://"+this.museic_filelist.seg_file().path);
             if (play) play_file();
@@ -140,7 +140,7 @@ public class MuseIC : Gtk.Application {
 
     public void ant_file() {
         if (has_files()) {
-            bool play = state() == "play";
+            bool play = (state() == "play") || (state() == "endstream");
             pause_file();
             this.streamplayer.ready_file("file://"+this.museic_filelist.ant_file().path);
             if (play) play_file();
