@@ -21,7 +21,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Load interface from file
         this.builder = new Gtk.Builder ();
         try {
-            builder.add_from_file ("src/museic_window.glade");
+            builder.add_from_file ("data/museic_window.glade");
         }catch (GLib.Error e) {
             stdout.printf("Glade file not found. Error: %s\n", e.message);
         }
@@ -34,8 +34,11 @@ public class MuseicGui : Gtk.ApplicationWindow {
         var tree = (this.builder.get_object ("fileTree") as Gtk.TreeView);
         tree.set_model (this.fileListStore);
         tree.insert_column_with_attributes (-1, "Song", new Gtk.CellRendererText (), "text", 0);
+        tree.get_column(0).set_resizable(true);
         tree.insert_column_with_attributes (-1, "Artist", new Gtk.CellRendererText (), "text", 1);
+        tree.get_column(1).set_resizable(true);
         tree.insert_column_with_attributes (-1, "Album", new Gtk.CellRendererText (), "text", 2);
+        tree.get_column(2).set_resizable(true);
         // Show window
         this.show_all ();
         this.show ();
@@ -54,7 +57,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             }catch (GLib.Error e) {
                 stdout.printf("Notification logo not found. Error: %s\n", e.message);
             }
-            notification.set_body ("Previous File\n"+this.museic_app.get_current_filename());
+            notification.set_body ("Playing:\n"+this.museic_app.get_current_filename());
             this.museic_app.send_notification (this.museic_app.application_id, notification);
             update_stream_status();
         }
@@ -71,7 +74,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             }catch (GLib.Error e) {
                 stdout.printf("Notification logo not found. Error: %s\n", e.message);
             }
-            notification.set_body ("Next File\n"+this.museic_app.get_current_filename());
+            notification.set_body ("Playing:\n"+this.museic_app.get_current_filename());
             this.museic_app.send_notification (this.museic_app.application_id, notification);
             update_stream_status();
         }
