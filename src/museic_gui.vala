@@ -142,8 +142,8 @@ public class MuseicGui : Gtk.ApplicationWindow {
         string[] sfiles = {};
         SList<File> files = this.chooser.get_files ();
         foreach (unowned File file in files) {
-            if (file.query_file_type(FileQueryInfoFlags.NOFOLLOW_SYMLINKS) == FileType.REGULAR) sfiles += file.get_path();
-            else if (file.query_file_type(FileQueryInfoFlags.NOFOLLOW_SYMLINKS) == FileType.DIRECTORY) {
+            if (file.query_file_type(FileQueryInfoFlags.NONE) == FileType.REGULAR) sfiles += file.get_path();
+            else if (file.query_file_type(FileQueryInfoFlags.NONE) == FileType.DIRECTORY) {
                 string[] folder_files = rec_open(file);
                 foreach (unowned string aux_file in folder_files) sfiles += file.get_path()+"/"+aux_file;
             }
@@ -158,7 +158,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
     }
 
     private string[] rec_open(File file) {
-        FileEnumerator enumerator = file.enumerate_children ("standard::*", FileQueryInfoFlags.NOFOLLOW_SYMLINKS, null);
+        FileEnumerator enumerator = file.enumerate_children ("standard::*", FileQueryInfoFlags.NONE, null);
         string[] sfiles = {};
         FileInfo info = null;
         while ((info = enumerator.next_file (null)) != null) {
