@@ -126,7 +126,7 @@ public class MuseIC : Gtk.Application {
     }
 
     public bool has_files() {
-        return get_current_filename() != "";
+        return get_current_filename() != "unknown";
     }
 
     public void seg_file() {

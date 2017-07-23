@@ -30,13 +30,12 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Add main box to window
         this.add (builder.get_object ("mainW") as Gtk.Grid);
         // Set fileListStore
-        this.fileListStore = new Gtk.ListStore (4, typeof (string), typeof (string), typeof (string), typeof (string));
+        this.fileListStore = new Gtk.ListStore (3, typeof (string), typeof (string), typeof (string));
         var tree = (this.builder.get_object ("fileTree") as Gtk.TreeView);
         tree.set_model (this.fileListStore);
-        tree.insert_column_with_attributes (-1, "File Name", new Gtk.CellRendererText (), "text", 0);
+        tree.insert_column_with_attributes (-1, "Song", new Gtk.CellRendererText (), "text", 0);
         tree.insert_column_with_attributes (-1, "Artist", new Gtk.CellRendererText (), "text", 1);
         tree.insert_column_with_attributes (-1, "Album", new Gtk.CellRendererText (), "text", 2);
-        tree.insert_column_with_attributes (-1, "Duration", new Gtk.CellRendererText (), "text", 3);
         // Show window
         this.show_all ();
         this.show ();
@@ -180,7 +179,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         Gtk.TreeIter iter;
         foreach (MuseicFile file in this.museic_app.get_all_files()) {
             this.fileListStore.append (out iter);
-            this.fileListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album, 3, file.duration);
+            this.fileListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album);
         }
     }
 
