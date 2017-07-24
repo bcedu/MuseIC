@@ -14,14 +14,14 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Define main window
         this.set_position (Gtk.WindowPosition.CENTER);
         try {
-            this.icon = new Gdk.Pixbuf.from_file ("data/museic_logo_64.png");
+            this.icon = new Gdk.Pixbuf.from_file (Constants.PKGDATADIR+"/data/museic_logo_64.png");
         }catch (GLib.Error e) {
             stdout.printf("Logo not found. Error: %s\n", e.message);
         }
         // Load interface from file
         this.builder = new Gtk.Builder ();
         try {
-            builder.add_from_file ("data/museic_window.glade");
+            builder.add_from_file (Constants.PKGDATADIR+"/data/museic_window.glade");
         }catch (GLib.Error e) {
             stdout.printf("Glade file not found. Error: %s\n", e.message);
         }
@@ -53,7 +53,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             var notification = new Notification ("MuseIC");
             // Doesn't work :(
             try {
-                notification.set_icon ( new Gdk.Pixbuf.from_file ("data/museic_logo_64.png"));
+                notification.set_icon ( new Gdk.Pixbuf.from_file (Constants.PKGDATADIR+"/data/museic_logo_64.png"));
             }catch (GLib.Error e) {
                 stdout.printf("Notification logo not found. Error: %s\n", e.message);
             }
@@ -70,7 +70,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             var notification = new Notification ("MuseIC");
             // Doesn't work :(
             try {
-                notification.set_icon ( new Gdk.Pixbuf.from_file ("data/museic_logo_64.png"));
+                notification.set_icon ( new Gdk.Pixbuf.from_file (Constants.PKGDATADIR+"/data/museic_logo_64.png"));
             }catch (GLib.Error e) {
                 stdout.printf("Notification logo not found. Error: %s\n", e.message);
             }
