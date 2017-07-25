@@ -211,7 +211,10 @@ public class MuseicGui : Gtk.ApplicationWindow {
     private void update_playlist_to_tree() {
         this.playListStore.clear ();
         Gtk.TreeIter iter;
-        foreach (MuseicFile file in this.museic_app.get_all_playlist_files()) {
+        MuseicFile[] aux = this.museic_app.get_all_playlist_files();
+        MuseicFile file;
+        for (int i=aux.length-1;i>=0;i--) {
+            file = aux[i];
             this.playListStore.append (out iter);
             this.playListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album);
         }
