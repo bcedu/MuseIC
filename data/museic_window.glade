@@ -13,6 +13,12 @@
     <property name="icon_name">media-playlist-shuffle</property>
     <property name="use_fallback">True</property>
   </object>
+  <object class="GtkImage" id="image2">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">format-indent-more-symbolic</property>
+    <property name="use_fallback">True</property>
+  </object>
   <object class="GtkGrid" id="mainW">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -242,15 +248,60 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <child>
-          <object class="GtkLabel" id="label1">
+          <object class="GtkGrid" id="filesGridHeader">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Files</property>
-            <property name="angle">0.01</property>
-            <attributes>
-              <attribute name="style" value="normal"/>
-              <attribute name="weight" value="bold"/>
-            </attributes>
+            <property name="column_homogeneous">True</property>
+            <child>
+              <object class="GtkLabel" id="label1">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Files</property>
+                <property name="angle">0.01</property>
+                <attributes>
+                  <attribute name="style" value="normal"/>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="addToPlay">
+                <property name="label" translatable="yes">Add</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="halign">center</property>
+                <property name="image">image2</property>
+                <property name="xalign">0.46000000834465027</property>
+                <property name="image_position">right</property>
+                <property name="always_show_image">True</property>
+                <signal name="clicked" handler="museic_gui_action_add_to_play" swapped="no"/>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label2">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Playlist</property>
+                <property name="angle">0.01</property>
+                <attributes>
+                  <attribute name="style" value="normal"/>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="left_attach">2</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="left_attach">0</property>
@@ -258,82 +309,84 @@
           </packing>
         </child>
         <child>
-          <object class="GtkLabel" id="label2">
+          <object class="GtkGrid" id="filesGridContent">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Playlist</property>
-            <property name="angle">0.01</property>
-            <attributes>
-              <attribute name="style" value="normal"/>
-              <attribute name="weight" value="bold"/>
-            </attributes>
-          </object>
-          <packing>
-            <property name="left_attach">1</property>
-            <property name="top_attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkScrolledWindow" id="playWindow">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="margin_top">5</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
-            <property name="min_content_width">0</property>
-            <property name="min_content_height">55</property>
+            <property name="row_homogeneous">True</property>
+            <property name="column_homogeneous">True</property>
             <child>
-              <object class="GtkTreeView" id="playTree">
+              <object class="GtkScrolledWindow" id="playWindow">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="hexpand">False</property>
-                <property name="vexpand">False</property>
-                <property name="hscroll_policy">natural</property>
-                <property name="vscroll_policy">natural</property>
-                <property name="reorderable">True</property>
-                <property name="search_column">0</property>
-                <property name="fixed_height_mode">True</property>
-                <property name="hover_expand">True</property>
-                <property name="rubber_banding">True</property>
-                <property name="tooltip_column">0</property>
-                <child internal-child="selection">
-                  <object class="GtkTreeSelection" id="treeview-selection4"/>
+                <property name="margin_top">5</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <property name="min_content_width">0</property>
+                <property name="min_content_height">55</property>
+                <child>
+                  <object class="GtkTreeView" id="playTree">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="hexpand">False</property>
+                    <property name="vexpand">False</property>
+                    <property name="hscroll_policy">natural</property>
+                    <property name="vscroll_policy">natural</property>
+                    <property name="rules_hint">True</property>
+                    <property name="search_column">0</property>
+                    <property name="fixed_height_mode">True</property>
+                    <property name="hover_expand">True</property>
+                    <property name="rubber_banding">True</property>
+                    <property name="tooltip_column">0</property>
+                    <child internal-child="selection">
+                      <object class="GtkTreeSelection" id="treeview-selection4">
+                        <property name="mode">multiple</property>
+                      </object>
+                    </child>
+                  </object>
                 </child>
               </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">0</property>
+              </packing>
             </child>
-          </object>
-          <packing>
-            <property name="left_attach">1</property>
-            <property name="top_attach">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkScrolledWindow" id="fileWindow">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="margin_top">5</property>
-            <property name="hexpand">True</property>
-            <property name="vexpand">True</property>
-            <property name="min_content_width">0</property>
-            <property name="min_content_height">55</property>
             <child>
-              <object class="GtkTreeView" id="fileTree">
+              <object class="GtkScrolledWindow" id="fileWindow">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="hexpand">False</property>
-                <property name="vexpand">False</property>
-                <property name="hscroll_policy">natural</property>
-                <property name="vscroll_policy">natural</property>
-                <property name="reorderable">True</property>
-                <property name="search_column">0</property>
-                <property name="fixed_height_mode">True</property>
-                <property name="hover_expand">True</property>
-                <property name="rubber_banding">True</property>
-                <property name="tooltip_column">0</property>
-                <child internal-child="selection">
-                  <object class="GtkTreeSelection" id="treeview-selection1"/>
+                <property name="margin_top">5</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <property name="min_content_width">0</property>
+                <property name="min_content_height">55</property>
+                <child>
+                  <object class="GtkTreeView" id="fileTree">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="hexpand">False</property>
+                    <property name="vexpand">False</property>
+                    <property name="hscroll_policy">natural</property>
+                    <property name="vscroll_policy">natural</property>
+                    <property name="rules_hint">True</property>
+                    <property name="search_column">0</property>
+                    <property name="fixed_height_mode">True</property>
+                    <property name="hover_expand">True</property>
+                    <property name="rubber_banding">True</property>
+                    <property name="tooltip_column">0</property>
+                    <child internal-child="selection">
+                      <object class="GtkTreeSelection" id="treeview-selection1">
+                        <property name="mode">multiple</property>
+                      </object>
+                    </child>
+                  </object>
                 </child>
               </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">0</property>
+              </packing>
             </child>
           </object>
           <packing>
