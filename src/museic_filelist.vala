@@ -24,6 +24,14 @@ public class MuseicFileList {
         if (this.nfiles == this.files_list.length) this.files_list.resize(this.files_list.length*2);
         this.files_list[this.nfiles] = new MuseicFile(filename);
         this.nfiles += 1;
+        if (this.nfiles == 1) this.filepos = 0;
+    }
+
+    public void add_museic_file(MuseicFile file) {
+        if (this.nfiles == this.files_list.length) this.files_list.resize(this.files_list.length*2);
+        this.files_list[this.nfiles] = file;
+        this.nfiles += 1;
+        if (this.nfiles == 1) this.filepos = 0;
     }
 
     public MuseicFile get_current_file() {

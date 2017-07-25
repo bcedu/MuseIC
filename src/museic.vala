@@ -54,11 +54,11 @@ public class MuseIC : Gtk.Application {
     }
 
     public void play_file () {
-        if (this.museic_filelist.get_current_file().path != "") this.streamplayer.play_file ();
+        if (this.museic_playlist.get_current_file().path != "") this.streamplayer.play_file ();
     }
 
     public void pause_file () {
-        if (this.museic_filelist.get_current_file().path != "") this.streamplayer.pause_file ();
+        if (this.museic_playlist.get_current_file().path != "") this.streamplayer.pause_file ();
     }
 
     public string state() {
@@ -68,7 +68,12 @@ public class MuseIC : Gtk.Application {
 
     public void open_files (string[] filenames, bool clean_museic_filelist) {
         this.museic_filelist.add_files(filenames, clean_museic_filelist, true);
-        if (clean_museic_filelist) this.streamplayer.ready_file("file://"+this.museic_filelist.get_current_file().path);
+        if (clean_museic_filelist) ready_file_to_play();
+    }
+
+    public void ready_file_to_play() {
+        this.museic_playlist.add_museic_file(this.museic_filelist.get_current_file());
+        this.streamplayer.ready_file("file://"+this.museic_playlist.get_current_file().path);
     }
 
     public StreamTimeInfo get_duration_str() {
@@ -104,7 +109,11 @@ public class MuseIC : Gtk.Application {
     }
 
     public string get_current_filename() {
-        return this.museic_filelist.get_current_file().name;
+        return this.museic_playlist.get_current_file().name;
+    }
+
+    public MuseicFile get_current_file() {
+        return this.museic_playlist.get_current_file();
     }
 
     public string[] get_all_filenames() {
@@ -115,12 +124,13 @@ public class MuseIC : Gtk.Application {
         return sfiles;
     }
 
-    public MuseicFile get_current_file() {
-        return this.museic_filelist.get_current_file();
-    }
-
     public MuseicFile[] get_all_files() {
         return this.museic_filelist.get_files_list();
+    }
+
+
+    public MuseicFile[] get_all_playlist_files() {
+        return this.museic_playlist.get_files_list();
     }
 
     public void set_position(float value) {
