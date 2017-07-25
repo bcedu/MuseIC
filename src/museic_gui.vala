@@ -236,4 +236,15 @@ public class MuseicGui : Gtk.ApplicationWindow {
         return true;
     }
 
+    [CCode(instance_pos=-1)]
+    public void action_random (Gtk.ToggleButton button) {
+        this.museic_app.set_random(button.active);
+        if (button.active) {
+            Gdk.RGBA rgba = Gdk.RGBA ();
+            rgba.parse ("#CCCCCC");
+            button.override_background_color (Gtk.StateFlags.NORMAL,rgba);
+        }else button.override_background_color (Gtk.StateFlags.NORMAL, null);
+    }
+
+
 }

@@ -176,4 +176,8 @@ public class MuseIC : Gtk.Application {
             if (play) play_file();
         }
     }
+
+    public void set_random(bool random) {
+        this.museic_filelist.random_state = random;
+    }
 }

@@ -3,6 +3,7 @@ public class MuseicFileList {
     public int filepos = -1;
     private MuseicFile[] files_list = new MuseicFile[4];
     public int nfiles = 0;
+    public bool random_state = false;
 
     public MuseicFileList () {}
 
@@ -44,8 +45,12 @@ public class MuseicFileList {
     }
 
     public MuseicFile seg_file() {
-        this.filepos += 1;
-        if (this.filepos >= this.nfiles) this.filepos = 0;
+        if (this.random_state){
+            this.filepos = Random.int_range (0, this.nfiles);
+        }else {
+            this.filepos += 1;
+            if (this.filepos >= this.nfiles) this.filepos = 0;
+        }
         return get_current_file();
     }
 

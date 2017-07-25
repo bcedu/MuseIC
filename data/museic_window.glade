@@ -7,6 +7,12 @@
     <property name="step_increment">0.001</property>
     <property name="page_increment">0.10000000000000001</property>
   </object>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">media-playlist-shuffle</property>
+    <property name="use_fallback">True</property>
+  </object>
   <object class="GtkGrid" id="mainW">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -179,14 +185,38 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="segButton">
-                <property name="label">gtk-media-next</property>
+              <object class="GtkGrid" id="grid1">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
-                <property name="always_show_image">True</property>
-                <signal name="clicked" handler="museic_gui_action_seg_file" swapped="no"/>
+                <property name="can_focus">False</property>
+                <child>
+                  <object class="GtkButton" id="segButton">
+                    <property name="label">gtk-media-next</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="use_stock">True</property>
+                    <property name="always_show_image">True</property>
+                    <signal name="clicked" handler="museic_gui_action_seg_file" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToggleButton" id="randButton">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="halign">end</property>
+                    <property name="image">image1</property>
+                    <signal name="toggled" handler="museic_gui_action_random" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="expand">True</property>
