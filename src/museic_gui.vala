@@ -70,6 +70,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             notification.set_body ("Playing:\n"+this.museic_app.get_current_filename());
             this.museic_app.send_notification (this.museic_app.application_id, notification);
             update_stream_status();
+            update_playlist_to_tree();
         }
     }
 
@@ -86,6 +87,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             notification.set_body ("Playing:\n"+this.museic_app.get_current_filename());
             this.museic_app.send_notification (this.museic_app.application_id, notification);
             update_stream_status();
+            update_playlist_to_tree();
         }
     }
 
@@ -161,6 +163,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         update_files_to_tree();
         update_stream_status();
         if (this.is_open) {
+            update_playlist_to_tree();
             var notification = new Notification ("MuseIC");
             try {
                 notification.set_icon ( new Gdk.Pixbuf.from_file (Constants.PKGDATADIR+"/data/museic_logo.png"));
@@ -202,6 +205,15 @@ public class MuseicGui : Gtk.ApplicationWindow {
         foreach (MuseicFile file in this.museic_app.get_all_files()) {
             this.fileListStore.append (out iter);
             this.fileListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album);
+        }
+    }
+
+    private void update_playlist_to_tree() {
+        this.playListStore.clear ();
+        Gtk.TreeIter iter;
+        foreach (MuseicFile file in this.museic_app.get_all_playlist_files()) {
+            this.playListStore.append (out iter);
+            this.playListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album);
         }
     }
 

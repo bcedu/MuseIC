@@ -55,4 +55,14 @@ public class MuseicFileList {
         return get_current_file();
     }
 
+    public void clean() {
+        filepos = -1;
+        nfiles = 0;
+        files_list = new MuseicFile[4];
+    }
+
+    public bool has_next() {
+        return (this.nfiles - this.filepos) > 1;
+    }
+
 }
