@@ -180,4 +180,9 @@ public class MuseIC : Gtk.Application {
     public void set_random(bool random) {
         this.museic_filelist.random_state = random;
     }
+
+    public void add_files_to_play(int[] file_indexs) {
+        MuseicFile[] files = this.museic_filelist.get_files_list();
+        foreach (int i in file_indexs) this.museic_playlist.add_museic_file(files[i]);
+    }
 }

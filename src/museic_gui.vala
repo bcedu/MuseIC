@@ -246,5 +246,17 @@ public class MuseicGui : Gtk.ApplicationWindow {
         }else button.override_background_color (Gtk.StateFlags.NORMAL, null);
     }
 
+    [CCode(instance_pos=-1)]
+    public void action_add_to_play (Gtk.Button button) {
+        List<Gtk.TreePath> selected = (this.builder.get_object ("fileTree") as Gtk.TreeView).get_selection().get_selected_rows(null);
+        int[] files_to_add = new int[selected.length()];
+        int i = 0;
+        foreach (Gtk.TreePath p in selected) {
+            files_to_add[i] = int.parse(p.to_string());
+            i++;
+        }
+        this.museic_app.add_files_to_play(files_to_add);
+        update_playlist_to_tree();
+    }
 
 }
