@@ -80,7 +80,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     [CCode(instance_pos=-1)]
     public void action_play_file (Gtk.Button button) {
-        if (this.museic_app.get_current_filename() != "") {
+        if (this.museic_app.has_files()) {
             if (museic_app.state() == "pause")  {
                 this.museic_app.play_file();
                 button.set_label("gtk-media-pause");
@@ -149,6 +149,16 @@ public class MuseicGui : Gtk.ApplicationWindow {
         this.museic_app.open_files(sfiles, this.is_open);
         update_files_to_tree();
         update_stream_status();
+        if (this.is_open) {
+            var notification = new Notification ("MuseIC");
+            try {
+                notification.set_icon ( new Gdk.Pixbuf.from_file (Constants.PKGDATADIR+"/data/museic_logo.png"));
+            }catch (GLib.Error e) {
+                stdout.printf("Notification logo not found. Error: %s\n", e.message);
+            }
+            notification.set_body ("Playing:\n"+this.museic_app.get_current_filename());
+            this.museic_app.send_notification (this.museic_app.application_id, notification);
+        }
         this.files_window.destroy ();
         this.files_window = null;
         this.chooser = null;
