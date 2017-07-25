@@ -3,10 +3,9 @@
     GenericName=MuseIC App
     Categories=GTK;Utility;
     Exec=com.github.bcedu.MuseIC
-    Icon=application-default-icon
+    Icon=museic_logo
     Terminal=false
     Type=Application
     X-GNOME-Gettext-Domain=MuseIC
     Keywords=MuseIC;
     X-GNOME-UsesNotifications=true
-    

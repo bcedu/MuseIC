@@ -73,8 +73,13 @@ install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.bcedu.MuseIC.appdata.
 add_subdirectory (po)
 
 # Install data
-INSTALL(FILES data/museic_logo_16.png DESTINATION ${PKGDATADIR}/data)
-INSTALL(FILES data/museic_logo_32.png DESTINATION ${PKGDATADIR}/data)
-INSTALL(FILES data/museic_logo_64.png DESTINATION ${PKGDATADIR}/data)
-INSTALL(FILES data/museic_logo_256.png DESTINATION ${PKGDATADIR}/data)
 INSTALL(FILES data/museic_window.glade DESTINATION ${PKGDATADIR}/data)
+INSTALL(FILES data/icons/256/museic_logo.png DESTINATION ${PKGDATADIR}/data)
+# Install icons
+install(FILES data/icons/256/museic_logo.png DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/scalable/apps)
+install(FILES data/icons/16/museic_logo.png DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/16x16/apps)
+install(FILES data/icons/32/museic_logo.png DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/32x32/apps)
+install(FILES data/icons/48/museic_logo.png DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/48x48/apps)
+install(FILES data/icons/64/museic_logo.png DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/64x64/apps)
+install(FILES data/icons/128/museic_logo.png DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/128x128/apps)
+install(FILES data/icons/256/museic_logo.png DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/256x256/apps)
