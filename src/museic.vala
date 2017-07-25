@@ -35,6 +35,7 @@ public class MuseIC : Gtk.Application {
     public string[] argsv;
     private MuseicStreamPlayer streamplayer;
     private MuseicFileList museic_filelist;
+    private MuseicFileList museic_playlist;
 
     public MuseIC (string[] args) {
         Object (application_id: "com.github.bcedu.MuseIC", flags: ApplicationFlags.FLAGS_NONE);
@@ -44,6 +45,7 @@ public class MuseIC : Gtk.Application {
     protected override void activate () {
         this.streamplayer = new MuseicStreamPlayer(this.argsv, "MAIN");
         this.museic_filelist = new MuseicFileList();
+        this.museic_playlist = new MuseicFileList();
         new MuseicGui (this);
     }
 

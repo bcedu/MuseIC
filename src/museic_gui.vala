@@ -3,6 +3,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
     private MuseIC museic_app;
     private Gtk.Builder builder;
     private Gtk.ListStore fileListStore;
+    private Gtk.ListStore playListStore;
     // Aux variables needed to open files
     private Gtk.Window files_window;
     private Gtk.FileChooserWidget chooser;
@@ -33,6 +34,16 @@ public class MuseicGui : Gtk.ApplicationWindow {
         this.fileListStore = new Gtk.ListStore (3, typeof (string), typeof (string), typeof (string));
         var tree = (this.builder.get_object ("fileTree") as Gtk.TreeView);
         tree.set_model (this.fileListStore);
+        tree.insert_column_with_attributes (-1, "Song", new Gtk.CellRendererText (), "text", 0);
+        tree.get_column(0).set_resizable(true);
+        tree.insert_column_with_attributes (-1, "Artist", new Gtk.CellRendererText (), "text", 1);
+        tree.get_column(1).set_resizable(true);
+        tree.insert_column_with_attributes (-1, "Album", new Gtk.CellRendererText (), "text", 2);
+        tree.get_column(2).set_resizable(true);
+        // Set playListStore
+        this.playListStore = new Gtk.ListStore (3, typeof (string), typeof (string), typeof (string));
+        tree = (this.builder.get_object ("playTree") as Gtk.TreeView);
+        tree.set_model (this.playListStore);
         tree.insert_column_with_attributes (-1, "Song", new Gtk.CellRendererText (), "text", 0);
         tree.get_column(0).set_resizable(true);
         tree.insert_column_with_attributes (-1, "Artist", new Gtk.CellRendererText (), "text", 1);
