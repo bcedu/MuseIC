@@ -3,6 +3,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
     private MuseIC museic_app;
     private Gtk.Builder builder;
     private Gtk.ListStore fileListStore;
+    private Gtk.ListStore playListStore;
     // Aux variables needed to open files
     private Gtk.Window files_window;
     private Gtk.FileChooserWidget chooser;
@@ -39,6 +40,16 @@ public class MuseicGui : Gtk.ApplicationWindow {
         tree.get_column(1).set_resizable(true);
         tree.insert_column_with_attributes (-1, "Album", new Gtk.CellRendererText (), "text", 2);
         tree.get_column(2).set_resizable(true);
+        // Set playListStore
+        this.playListStore = new Gtk.ListStore (3, typeof (string), typeof (string), typeof (string));
+        tree = (this.builder.get_object ("playTree") as Gtk.TreeView);
+        tree.set_model (this.playListStore);
+        tree.insert_column_with_attributes (-1, "Song", new Gtk.CellRendererText (), "text", 0);
+        tree.get_column(0).set_resizable(true);
+        tree.insert_column_with_attributes (-1, "Artist", new Gtk.CellRendererText (), "text", 1);
+        tree.get_column(1).set_resizable(true);
+        tree.insert_column_with_attributes (-1, "Album", new Gtk.CellRendererText (), "text", 2);
+        tree.get_column(2).set_resizable(true);
         // Show window
         this.show_all ();
         this.show ();
@@ -59,6 +70,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             notification.set_body ("Playing:\n"+this.museic_app.get_current_filename());
             this.museic_app.send_notification (this.museic_app.application_id, notification);
             update_stream_status();
+            update_playlist_to_tree();
         }
     }
 
@@ -75,6 +87,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             notification.set_body ("Playing:\n"+this.museic_app.get_current_filename());
             this.museic_app.send_notification (this.museic_app.application_id, notification);
             update_stream_status();
+            update_playlist_to_tree();
         }
     }
 
@@ -150,6 +163,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         update_files_to_tree();
         update_stream_status();
         if (this.is_open) {
+            update_playlist_to_tree();
             var notification = new Notification ("MuseIC");
             try {
                 notification.set_icon ( new Gdk.Pixbuf.from_file (Constants.PKGDATADIR+"/data/museic_logo.png"));
@@ -194,6 +208,18 @@ public class MuseicGui : Gtk.ApplicationWindow {
         }
     }
 
+    private void update_playlist_to_tree() {
+        this.playListStore.clear ();
+        Gtk.TreeIter iter;
+        MuseicFile[] aux = this.museic_app.get_all_playlist_files();
+        MuseicFile file;
+        for (int i=aux.length-1;i>=0;i--) {
+            file = aux[i];
+            this.playListStore.append (out iter);
+            this.playListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album);
+        }
+    }
+
     private bool update_stream_status() {
         if (!this.museic_app.has_files()) return true;
         StreamTimeInfo pos_info = this.museic_app.get_position_str();
@@ -208,6 +234,29 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Check if stream, has ended
         if (this.museic_app.state() == "endstream") action_seg_file((builder.get_object ("segButton") as Gtk.Button));
         return true;
+    }
+
+    [CCode(instance_pos=-1)]
+    public void action_random (Gtk.ToggleButton button) {
+        this.museic_app.set_random(button.active);
+        if (button.active) {
+            Gdk.RGBA rgba = Gdk.RGBA ();
+            rgba.parse ("#CCCCCC");
+            button.override_background_color (Gtk.StateFlags.NORMAL,rgba);
+        }else button.override_background_color (Gtk.StateFlags.NORMAL, null);
+    }
+
+    [CCode(instance_pos=-1)]
+    public void action_add_to_play (Gtk.Button button) {
+        List<Gtk.TreePath> selected = (this.builder.get_object ("fileTree") as Gtk.TreeView).get_selection().get_selected_rows(null);
+        int[] files_to_add = new int[selected.length()];
+        int i = 0;
+        foreach (Gtk.TreePath p in selected) {
+            files_to_add[i] = int.parse(p.to_string());
+            i++;
+        }
+        this.museic_app.add_files_to_play(files_to_add);
+        update_playlist_to_tree();
     }
 
 }

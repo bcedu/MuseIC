@@ -3,6 +3,7 @@ public class MuseicFileList {
     public int filepos = -1;
     private MuseicFile[] files_list = new MuseicFile[4];
     public int nfiles = 0;
+    public bool random_state = false;
 
     public MuseicFileList () {}
 
@@ -24,6 +25,14 @@ public class MuseicFileList {
         if (this.nfiles == this.files_list.length) this.files_list.resize(this.files_list.length*2);
         this.files_list[this.nfiles] = new MuseicFile(filename);
         this.nfiles += 1;
+        if (this.nfiles == 1) this.filepos = 0;
+    }
+
+    public void add_museic_file(MuseicFile file) {
+        if (this.nfiles == this.files_list.length) this.files_list.resize(this.files_list.length*2);
+        this.files_list[this.nfiles] = file;
+        this.nfiles += 1;
+        if (this.nfiles == 1) this.filepos = 0;
     }
 
     public MuseicFile get_current_file() {
@@ -36,8 +45,12 @@ public class MuseicFileList {
     }
 
     public MuseicFile seg_file() {
-        this.filepos += 1;
-        if (this.filepos >= this.nfiles) this.filepos = 0;
+        if (this.random_state){
+            this.filepos = Random.int_range (0, this.nfiles);
+        }else {
+            this.filepos += 1;
+            if (this.filepos >= this.nfiles) this.filepos = 0;
+        }
         return get_current_file();
     }
 
@@ -45,6 +58,16 @@ public class MuseicFileList {
         this.filepos -= 1;
         if (this.filepos < 0) this.filepos = this.nfiles-1;
         return get_current_file();
+    }
+
+    public void clean() {
+        filepos = -1;
+        nfiles = 0;
+        files_list = new MuseicFile[4];
+    }
+
+    public bool has_next() {
+        return (this.nfiles - this.filepos) > 1;
     }
 
 }
