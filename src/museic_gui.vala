@@ -215,17 +215,36 @@ public class MuseicGui : Gtk.ApplicationWindow {
     private void update_playlist_to_tree() {
         this.playListStore.clear ();
         Gtk.TreeIter iter;
+        Gtk.TreeIter iterfile;
         MuseicFile[] aux = this.museic_app.get_all_playlist_files();
         MuseicFile file;
-        Gdk.RGBA rgba = Gdk.RGBA ();
-        rgba.parse ("#bcdbff");
+        Gdk.RGBA rgba_act = Gdk.RGBA ();
+        rgba_act.parse ("#d0e5e3");
+        Gdk.RGBA rgba_next = Gdk.RGBA ();
+        rgba_next.parse ("#e7f2f1");
         int pos = museic_app.get_current_file_pos();
         for (int i=aux.length-1;i>=0;i--) {
             file = aux[i];
             this.playListStore.append (out iter);
             this.playListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album);
             if (i == pos) {
-                this.playListStore.set (iter, 4, rgba);
+                this.playListStore.set (iter, 3, "Playing...", 4, rgba_act);
+                if (this.playListStore.iter_previous(ref iter)) {
+                    this.playListStore.set (iter, 3, "Next", 4, rgba_next);
+                    this.fileListStore.get_iter_from_string(out iterfile, this.museic_app.get_next_filelist_pos().to_string());
+                    this.fileListStore.set (iterfile, 3, "", 4, "");
+                }else if (!this.museic_app.is_random()) {
+                    int filepos = this.museic_app.get_next_filelist_pos();
+                    this.fileListStore.get_iter_from_string(out iterfile, filepos.to_string());
+                    this.fileListStore.set (iterfile, 3, "Next", 4, rgba_next);
+                    if (this.museic_app.get_filelist_len() != 1) {
+                        if (filepos == 0) filepos = this.museic_app.get_filelist_len()-1;
+                        else filepos = filepos -1;
+                        this.fileListStore.get_iter_from_string(out iterfile, filepos.to_string());
+                        this.fileListStore.set (iterfile, 3, "", 4, "");
+                    }
+                }
+                this.playListStore.iter_next(ref iter);
             }
         }
 

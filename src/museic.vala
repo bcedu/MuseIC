@@ -138,6 +138,16 @@ public class MuseIC : Gtk.Application {
         return this.museic_playlist.filepos;
     }
 
+    public int get_next_filelist_pos() {
+        int pos = this.museic_filelist.filepos + 1;
+        if (pos >= this.museic_filelist.nfiles) pos = 0;
+        return pos;
+    }
+
+    public int get_filelist_len() {
+        return this.museic_filelist.get_files_list().length;
+    }
+
     public string[] get_all_filenames() {
         string[] sfiles = {};
         foreach (MuseicFile file in this.museic_filelist.get_files_list()) {
@@ -183,6 +193,10 @@ public class MuseIC : Gtk.Application {
 
     public void set_random(bool random) {
         this.museic_filelist.random_state = random;
+    }
+
+    public bool is_random() {
+        return this.museic_filelist.random_state;
     }
 
     public void add_files_to_play(int[] file_indexs) {
