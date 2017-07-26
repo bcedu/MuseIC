@@ -31,25 +31,29 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Add main box to window
         this.add (builder.get_object ("mainW") as Gtk.Grid);
         // Set fileListStore
-        this.fileListStore = new Gtk.ListStore (3, typeof (string), typeof (string), typeof (string));
+        this.fileListStore = new Gtk.ListStore (5, typeof (string), typeof (string), typeof (string), typeof (string), typeof (Gdk.RGBA));
         var tree = (this.builder.get_object ("fileTree") as Gtk.TreeView);
         tree.set_model (this.fileListStore);
-        tree.insert_column_with_attributes (-1, "Song", new Gtk.CellRendererText (), "text", 0);
+        tree.insert_column_with_attributes (-1, "Song", new Gtk.CellRendererText (), "text", 0, "background-rgba", 4);
         tree.get_column(0).set_resizable(true);
-        tree.insert_column_with_attributes (-1, "Artist", new Gtk.CellRendererText (), "text", 1);
+        tree.insert_column_with_attributes (-1, "Artist", new Gtk.CellRendererText (), "text", 1, "background-rgba", 4);
         tree.get_column(1).set_resizable(true);
-        tree.insert_column_with_attributes (-1, "Album", new Gtk.CellRendererText (), "text", 2);
+        tree.insert_column_with_attributes (-1, "Album", new Gtk.CellRendererText (), "text", 2, "background-rgba", 4);
         tree.get_column(2).set_resizable(true);
+        tree.insert_column_with_attributes (-1, "Status", new Gtk.CellRendererText (), "text", 3, "background-rgba", 4);
+        tree.get_column(3).set_resizable(true);
         // Set playListStore
-        this.playListStore = new Gtk.ListStore (3, typeof (string), typeof (string), typeof (string));
+        this.playListStore = new Gtk.ListStore (5, typeof (string), typeof (string), typeof (string), typeof (string), typeof (Gdk.RGBA));
         tree = (this.builder.get_object ("playTree") as Gtk.TreeView);
         tree.set_model (this.playListStore);
-        tree.insert_column_with_attributes (-1, "Song", new Gtk.CellRendererText (), "text", 0);
+        tree.insert_column_with_attributes (-1, "Song", new Gtk.CellRendererText (), "text", 0, "background-rgba", 4);
         tree.get_column(0).set_resizable(true);
-        tree.insert_column_with_attributes (-1, "Artist", new Gtk.CellRendererText (), "text", 1);
+        tree.insert_column_with_attributes (-1, "Artist", new Gtk.CellRendererText (), "text", 1, "background-rgba", 4);
         tree.get_column(1).set_resizable(true);
-        tree.insert_column_with_attributes (-1, "Album", new Gtk.CellRendererText (), "text", 2);
+        tree.insert_column_with_attributes (-1, "Album", new Gtk.CellRendererText (), "text", 2, "background-rgba", 4);
         tree.get_column(2).set_resizable(true);
+        tree.insert_column_with_attributes (-1, "Status", new Gtk.CellRendererText (), "text", 3, "background-rgba", 4);
+        tree.get_column(3).set_resizable(true);
         // Show window
         this.show_all ();
         this.show ();
@@ -204,7 +208,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         Gtk.TreeIter iter;
         foreach (MuseicFile file in this.museic_app.get_all_files()) {
             this.fileListStore.append (out iter);
-            this.fileListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album);
+            this.fileListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album, -1);
         }
     }
 
@@ -213,11 +217,18 @@ public class MuseicGui : Gtk.ApplicationWindow {
         Gtk.TreeIter iter;
         MuseicFile[] aux = this.museic_app.get_all_playlist_files();
         MuseicFile file;
+        Gdk.RGBA rgba = Gdk.RGBA ();
+        rgba.parse ("#bcdbff");
+        int pos = museic_app.get_current_file_pos();
         for (int i=aux.length-1;i>=0;i--) {
             file = aux[i];
             this.playListStore.append (out iter);
             this.playListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album);
+            if (i == pos) {
+                this.playListStore.set (iter, 4, rgba);
+            }
         }
+
     }
 
     private bool update_stream_status() {

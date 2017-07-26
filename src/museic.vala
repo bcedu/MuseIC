@@ -134,6 +134,10 @@ public class MuseIC : Gtk.Application {
         return this.museic_playlist.get_current_file();
     }
 
+    public int get_current_file_pos() {
+        return this.museic_playlist.filepos;
+    }
+
     public string[] get_all_filenames() {
         string[] sfiles = {};
         foreach (MuseicFile file in this.museic_filelist.get_files_list()) {
