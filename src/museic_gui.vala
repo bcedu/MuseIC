@@ -298,6 +298,15 @@ public class MuseicGui : Gtk.ApplicationWindow {
         update_playlist_to_tree();
     }
 
+    [CCode(instance_pos=-1)]
+    public void action_play_selected_file_filelist (Gtk.TreeView view, Gtk.TreePath path, Gtk.TreeViewColumn column) {
+        clean_files_status();
+        this.museic_app.clear_playlist();
+        this.museic_app.set_next_filepos(int.parse(path.to_string()));
+        this.museic_app.ready_file_to_play();
+        update_playlist_to_tree();
+    }
+
     private void clean_files_status() {
         Gtk.TreeIter iter;
         this.fileListStore.get_iter_from_string(out iter, this.museic_app.get_next_filelist_pos().to_string());

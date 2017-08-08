@@ -207,4 +207,12 @@ public class MuseIC : Gtk.Application {
         MuseicFile[] files = this.museic_filelist.get_files_list();
         foreach (int i in file_indexs) this.museic_playlist.add_museic_file(files[i]);
     }
+
+    public void set_next_filepos(int i) {
+        this.museic_filelist.filepos = i;
+    }
+
+    public void clear_playlist() {
+        this.museic_playlist.clean();
+    }
 }
