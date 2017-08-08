@@ -34,7 +34,7 @@ public class MuseicStreamPlayer {
             Gst.State newstate;
             Gst.State pending;
             message.parse_state_changed (out oldstate, out newstate, out pending);
-            stdout.printf ("state changed: %s->%s:%s\n", oldstate.to_string (), newstate.to_string (), pending.to_string ());
+            // stdout.printf ("state changed: %s->%s:%s\n", oldstate.to_string (), newstate.to_string (), pending.to_string ());
             break;
         case MessageType.TAG:
             if (this.metadata == null) {
@@ -45,7 +45,7 @@ public class MuseicStreamPlayer {
                 tag_list.get_string ("album", out this.metadata.album);
                 tag_list.get_string ("artist", out this.metadata.artist);
                 tag_list = null;
-                stdout.printf(this.n+" -> STREAM Metadates: "+this.metadata.artist+"\n");
+                // stdout.printf(this.n+" -> STREAM Metadates: "+this.metadata.artist+"\n");
             }
         break;
         case Gst.MessageType.DURATION_CHANGED :

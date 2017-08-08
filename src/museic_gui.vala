@@ -31,25 +31,29 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Add main box to window
         this.add (builder.get_object ("mainW") as Gtk.Grid);
         // Set fileListStore
-        this.fileListStore = new Gtk.ListStore (3, typeof (string), typeof (string), typeof (string));
+        this.fileListStore = new Gtk.ListStore (5, typeof (string), typeof (string), typeof (string), typeof (string), typeof (Gdk.RGBA));
         var tree = (this.builder.get_object ("fileTree") as Gtk.TreeView);
         tree.set_model (this.fileListStore);
-        tree.insert_column_with_attributes (-1, "Song", new Gtk.CellRendererText (), "text", 0);
+        tree.insert_column_with_attributes (-1, "Song", new Gtk.CellRendererText (), "text", 0, "background-rgba", 4);
         tree.get_column(0).set_resizable(true);
-        tree.insert_column_with_attributes (-1, "Artist", new Gtk.CellRendererText (), "text", 1);
+        tree.insert_column_with_attributes (-1, "Artist", new Gtk.CellRendererText (), "text", 1, "background-rgba", 4);
         tree.get_column(1).set_resizable(true);
-        tree.insert_column_with_attributes (-1, "Album", new Gtk.CellRendererText (), "text", 2);
+        tree.insert_column_with_attributes (-1, "Album", new Gtk.CellRendererText (), "text", 2, "background-rgba", 4);
         tree.get_column(2).set_resizable(true);
+        tree.insert_column_with_attributes (-1, "Status", new Gtk.CellRendererText (), "text", 3, "background-rgba", 4);
+        tree.get_column(3).set_resizable(true);
         // Set playListStore
-        this.playListStore = new Gtk.ListStore (3, typeof (string), typeof (string), typeof (string));
+        this.playListStore = new Gtk.ListStore (5, typeof (string), typeof (string), typeof (string), typeof (string), typeof (Gdk.RGBA));
         tree = (this.builder.get_object ("playTree") as Gtk.TreeView);
         tree.set_model (this.playListStore);
-        tree.insert_column_with_attributes (-1, "Song", new Gtk.CellRendererText (), "text", 0);
+        tree.insert_column_with_attributes (-1, "Song", new Gtk.CellRendererText (), "text", 0, "background-rgba", 4);
         tree.get_column(0).set_resizable(true);
-        tree.insert_column_with_attributes (-1, "Artist", new Gtk.CellRendererText (), "text", 1);
+        tree.insert_column_with_attributes (-1, "Artist", new Gtk.CellRendererText (), "text", 1, "background-rgba", 4);
         tree.get_column(1).set_resizable(true);
-        tree.insert_column_with_attributes (-1, "Album", new Gtk.CellRendererText (), "text", 2);
+        tree.insert_column_with_attributes (-1, "Album", new Gtk.CellRendererText (), "text", 2, "background-rgba", 4);
         tree.get_column(2).set_resizable(true);
+        tree.insert_column_with_attributes (-1, "Status", new Gtk.CellRendererText (), "text", 3, "background-rgba", 4);
+        tree.get_column(3).set_resizable(true);
         // Show window
         this.show_all ();
         this.show ();
@@ -95,7 +99,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
     public void action_play_file (Gtk.Button button) {
         if (this.museic_app.has_files()) {
             if (museic_app.state() == "pause")  {
-                this.museic_app.play_file();
+                this.museic_app.play_file(null);
                 button.set_label("gtk-media-pause");
             }else {
                 this.museic_app.pause_file();
@@ -204,20 +208,46 @@ public class MuseicGui : Gtk.ApplicationWindow {
         Gtk.TreeIter iter;
         foreach (MuseicFile file in this.museic_app.get_all_files()) {
             this.fileListStore.append (out iter);
-            this.fileListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album);
+            this.fileListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album, -1);
         }
     }
 
     private void update_playlist_to_tree() {
         this.playListStore.clear ();
         Gtk.TreeIter iter;
+        Gtk.TreeIter iterfile;
         MuseicFile[] aux = this.museic_app.get_all_playlist_files();
         MuseicFile file;
+        Gdk.RGBA rgba_act = Gdk.RGBA ();
+        rgba_act.parse ("#d0e5e3");
+        Gdk.RGBA rgba_next = Gdk.RGBA ();
+        rgba_next.parse ("#e7f2f1");
+        int pos = museic_app.get_current_file_pos();
         for (int i=aux.length-1;i>=0;i--) {
             file = aux[i];
             this.playListStore.append (out iter);
-            this.playListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album);
+            this.playListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album, 3, "");
+            if (i == pos) {
+                this.playListStore.set (iter, 3, "Playing...", 4, rgba_act);
+                if (this.playListStore.iter_previous(ref iter)) {
+                    this.playListStore.set (iter, 3, "Next", 4, rgba_next);
+                    this.fileListStore.get_iter_from_string(out iterfile, this.museic_app.get_next_filelist_pos().to_string());
+                    this.fileListStore.set (iterfile, 3, "", 4, "");
+                }else if (!this.museic_app.is_random()) {
+                    int filepos = this.museic_app.get_next_filelist_pos();
+                    this.fileListStore.get_iter_from_string(out iterfile, filepos.to_string());
+                    this.fileListStore.set (iterfile, 3, "Next", 4, rgba_next);
+                    if (this.museic_app.get_filelist_len() != 1) {
+                        if (filepos == 0) filepos = this.museic_app.get_filelist_len()-1;
+                        else filepos = filepos -1;
+                        this.fileListStore.get_iter_from_string(out iterfile, filepos.to_string());
+                        this.fileListStore.set (iterfile, 3, "", 4, "");
+                    }
+                }
+                this.playListStore.iter_next(ref iter);
+            }
         }
+
     }
 
     private bool update_stream_status() {
@@ -238,12 +268,14 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     [CCode(instance_pos=-1)]
     public void action_random (Gtk.ToggleButton button) {
+        clean_files_status();
         this.museic_app.set_random(button.active);
         if (button.active) {
             Gdk.RGBA rgba = Gdk.RGBA ();
             rgba.parse ("#CCCCCC");
             button.override_background_color (Gtk.StateFlags.NORMAL,rgba);
         }else button.override_background_color (Gtk.StateFlags.NORMAL, null);
+        update_playlist_to_tree();
     }
 
     [CCode(instance_pos=-1)]
@@ -257,6 +289,28 @@ public class MuseicGui : Gtk.ApplicationWindow {
         }
         this.museic_app.add_files_to_play(files_to_add);
         update_playlist_to_tree();
+    }
+
+    [CCode(instance_pos=-1)]
+    public void action_play_selected_file_playlist (Gtk.TreeView view, Gtk.TreePath path, Gtk.TreeViewColumn column) {
+        this.museic_app.play_file(this.museic_app.get_all_playlist_files().length-1-int.parse(path.to_string()));
+        clean_files_status();
+        update_playlist_to_tree();
+    }
+
+    [CCode(instance_pos=-1)]
+    public void action_play_selected_file_filelist (Gtk.TreeView view, Gtk.TreePath path, Gtk.TreeViewColumn column) {
+        clean_files_status();
+        this.museic_app.clear_playlist();
+        this.museic_app.set_next_filepos(int.parse(path.to_string()));
+        this.museic_app.ready_file_to_play();
+        update_playlist_to_tree();
+    }
+
+    private void clean_files_status() {
+        Gtk.TreeIter iter;
+        this.fileListStore.get_iter_from_string(out iter, this.museic_app.get_next_filelist_pos().to_string());
+        this.fileListStore.set (iter, 3, "", 4, "INCORRECTCOLOR");  // I use an string i know it's incorrect because i don't know how to say the tree to use the default color
     }
 
 }

@@ -53,7 +53,11 @@ public class MuseIC : Gtk.Application {
         return new MuseIC (args).run (args);
     }
 
-    public void play_file () {
+    public void play_file (int? index_file) {
+        if (index_file != null && this.museic_playlist.nfiles > index_file) {
+            this.museic_playlist.filepos = index_file;
+            this.streamplayer.ready_file("file://"+this.museic_playlist.get_current_file().path);
+        }
         if (this.museic_playlist.get_current_file().path != "") this.streamplayer.play_file ();
         else if (this.museic_filelist.get_current_file().path != "") {
             ready_file_to_play();
@@ -134,6 +138,20 @@ public class MuseIC : Gtk.Application {
         return this.museic_playlist.get_current_file();
     }
 
+    public int get_current_file_pos() {
+        return this.museic_playlist.filepos;
+    }
+
+    public int get_next_filelist_pos() {
+        int pos = this.museic_filelist.filepos + 1;
+        if (pos >= this.museic_filelist.nfiles) pos = 0;
+        return pos;
+    }
+
+    public int get_filelist_len() {
+        return this.museic_filelist.get_files_list().length;
+    }
+
     public string[] get_all_filenames() {
         string[] sfiles = {};
         foreach (MuseicFile file in this.museic_filelist.get_files_list()) {
@@ -164,7 +182,7 @@ public class MuseIC : Gtk.Application {
             bool play = (state() == "play") || (state() == "endstream");
             pause_file();
             ready_seg_file_to_play();
-            if (play) play_file();
+            if (play) play_file(null);
         }
     }
 
@@ -173,7 +191,7 @@ public class MuseIC : Gtk.Application {
             bool play = (state() == "play") || (state() == "endstream");
             pause_file();
             ready_ant_file_to_play();
-            if (play) play_file();
+            if (play) play_file(null);
         }
     }
 
@@ -181,8 +199,20 @@ public class MuseIC : Gtk.Application {
         this.museic_filelist.random_state = random;
     }
 
+    public bool is_random() {
+        return this.museic_filelist.random_state;
+    }
+
     public void add_files_to_play(int[] file_indexs) {
         MuseicFile[] files = this.museic_filelist.get_files_list();
         foreach (int i in file_indexs) this.museic_playlist.add_museic_file(files[i]);
+    }
+
+    public void set_next_filepos(int i) {
+        this.museic_filelist.filepos = i;
+    }
+
+    public void clear_playlist() {
+        this.museic_playlist.clean();
     }
 }
