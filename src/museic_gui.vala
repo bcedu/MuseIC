@@ -99,7 +99,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
     public void action_play_file (Gtk.Button button) {
         if (this.museic_app.has_files()) {
             if (museic_app.state() == "pause")  {
-                this.museic_app.play_file();
+                this.museic_app.play_file(null);
                 button.set_label("gtk-media-pause");
             }else {
                 this.museic_app.pause_file();
@@ -286,6 +286,12 @@ public class MuseicGui : Gtk.ApplicationWindow {
             i++;
         }
         this.museic_app.add_files_to_play(files_to_add);
+        update_playlist_to_tree();
+    }
+
+    [CCode(instance_pos=-1)]
+    public void action_play_selected_file_playlist (Gtk.TreeView view, Gtk.TreePath path, Gtk.TreeViewColumn column) {
+        this.museic_app.play_file(this.museic_app.get_all_playlist_files().length-1-int.parse(path.to_string()));
         update_playlist_to_tree();
     }
 

@@ -339,6 +339,7 @@
                     <property name="hover_expand">True</property>
                     <property name="rubber_banding">True</property>
                     <property name="tooltip_column">0</property>
+                    <signal name="row-activated" handler="museic_gui_action_play_selected_file_playlist" swapped="no"/>
                     <child internal-child="selection">
                       <object class="GtkTreeSelection" id="treeview-selection4">
                         <property name="mode">multiple</property>

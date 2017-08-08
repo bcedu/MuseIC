@@ -53,7 +53,11 @@ public class MuseIC : Gtk.Application {
         return new MuseIC (args).run (args);
     }
 
-    public void play_file () {
+    public void play_file (int? index_file) {
+        if (index_file != null && this.museic_playlist.nfiles > index_file) {
+            this.museic_playlist.filepos = index_file;
+            this.streamplayer.ready_file("file://"+this.museic_playlist.get_current_file().path);
+        }
         if (this.museic_playlist.get_current_file().path != "") this.streamplayer.play_file ();
         else if (this.museic_filelist.get_current_file().path != "") {
             ready_file_to_play();
@@ -178,7 +182,7 @@ public class MuseIC : Gtk.Application {
             bool play = (state() == "play") || (state() == "endstream");
             pause_file();
             ready_seg_file_to_play();
-            if (play) play_file();
+            if (play) play_file(null);
         }
     }
 
@@ -187,7 +191,7 @@ public class MuseIC : Gtk.Application {
             bool play = (state() == "play") || (state() == "endstream");
             pause_file();
             ready_ant_file_to_play();
-            if (play) play_file();
+            if (play) play_file(null);
         }
     }
 
