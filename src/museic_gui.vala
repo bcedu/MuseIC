@@ -226,7 +226,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         for (int i=aux.length-1;i>=0;i--) {
             file = aux[i];
             this.playListStore.append (out iter);
-            this.playListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album);
+            this.playListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album, 3, "");
             if (i == pos) {
                 this.playListStore.set (iter, 3, "Playing...", 4, rgba_act);
                 if (this.playListStore.iter_previous(ref iter)) {
@@ -268,12 +268,14 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     [CCode(instance_pos=-1)]
     public void action_random (Gtk.ToggleButton button) {
+        clean_files_status();
         this.museic_app.set_random(button.active);
         if (button.active) {
             Gdk.RGBA rgba = Gdk.RGBA ();
             rgba.parse ("#CCCCCC");
             button.override_background_color (Gtk.StateFlags.NORMAL,rgba);
         }else button.override_background_color (Gtk.StateFlags.NORMAL, null);
+        update_playlist_to_tree();
     }
 
     [CCode(instance_pos=-1)]
@@ -292,7 +294,14 @@ public class MuseicGui : Gtk.ApplicationWindow {
     [CCode(instance_pos=-1)]
     public void action_play_selected_file_playlist (Gtk.TreeView view, Gtk.TreePath path, Gtk.TreeViewColumn column) {
         this.museic_app.play_file(this.museic_app.get_all_playlist_files().length-1-int.parse(path.to_string()));
+        clean_files_status();
         update_playlist_to_tree();
+    }
+
+    private void clean_files_status() {
+        Gtk.TreeIter iter;
+        this.fileListStore.get_iter_from_string(out iter, this.museic_app.get_next_filelist_pos().to_string());
+        this.fileListStore.set (iter, 3, "", 4, "INCORRECTCOLOR");  // I use an string i know it's incorrect because i don't know how to say the tree to use the default color
     }
 
 }
