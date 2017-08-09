@@ -7,12 +7,7 @@ public class MuseicFileList {
 
     public MuseicFileList () {}
 
-    public void add_files(string[] filenames, bool clean_filelist, bool filter_repeated) {
-        if (clean_filelist) {
-            this.files_list = new MuseicFile[filenames.length+1];
-            this.filepos = 0;
-            this.nfiles = 0;
-        }
+    public void add_files(string[] filenames, bool filter_repeated) {
         foreach (string filename in filenames) if (!filter_repeated || (filter_repeated && !is_in_filelist(filename))) add_file(filename);
     }
 
@@ -44,7 +39,7 @@ public class MuseicFileList {
         return this.files_list[0:this.nfiles];
     }
 
-    public MuseicFile seg_file() {
+    public MuseicFile next_file() {
         if (this.random_state){
             this.filepos = Random.int_range (0, this.nfiles);
         }else {

@@ -53,49 +53,120 @@ public class MuseIC : Gtk.Application {
         return new MuseIC (args).run (args);
     }
 
-    public void play_file (int? index_file) {
-        if (index_file != null && this.museic_playlist.nfiles > index_file) {
-            this.museic_playlist.filepos = index_file;
-            this.streamplayer.ready_file("file://"+this.museic_playlist.get_current_file().path);
-        }
+
+    //// PLAYLIST AND FILELIST RELATED METHODS
+
+    public void play_ant_file() {
+        // Set the playlist pos to the previous file and ready it in stream.
+        ready_file(this.museic_playlist.ant_file());
+    }
+
+    public void play_next_file() {
+        // Set the playlist pos to the next file and ready it in stream.
+        // If there isn't next file in playlist, add the next file of filelist
+        // to the playlist and play it.
+        if (!this.museic_playlist.has_next()) this.museic_playlist.add_museic_file(this.museic_filelist.next_file());
+        ready_file(this.museic_playlist.next_file());
+    }
+
+    public void play_playlist_file(int index) {
+        // Set the playlist pos to the passed index and ready it in stream.
+        this.museic_playlist.filepos = index;
+        ready_file(this.museic_playlist.get_current_file());
+    }
+
+    public void play_filelist_file(int index) {
+        // Set the filelist pos to the passed index, add it to playlist and ready it in stream.
+        this.museic_filelist.filepos = index;
+        int [] aux = new int[1];
+        aux[0] = index;
+        add_files_to_playlist(aux);
+        play_playlist_file(0);
+    }
+
+    public void play_file () {
+        // If there is a file in playlist, set streamplayer state to play
         if (this.museic_playlist.get_current_file().path != "") this.streamplayer.play_file ();
-        else if (this.museic_filelist.get_current_file().path != "") {
-            ready_file_to_play();
-            this.streamplayer.play_file ();
-        }
     }
 
     public void pause_file () {
+        // If there is a file in playlist, set streamplayer state to pause
         if (this.museic_playlist.get_current_file().path != "") this.streamplayer.pause_file ();
     }
 
-    public string state() {
-        // Returns state of streamplayer. It can be: "play", "pause" or "endstream"
-        return this.streamplayer.state;
+    public MuseicFile get_current_file() {
+        // Returns current file from playlist
+        return this.museic_playlist.get_current_file();
     }
 
-    public void open_files (string[] filenames, bool clean_museic_filelist) {
-        this.museic_filelist.add_files(filenames, clean_museic_filelist, true);
-        if (clean_museic_filelist) {
-            this.museic_playlist.clean();
-            ready_file_to_play();
-        }
+    public bool has_files() {
+        // True if there is any file in playlist
+        return get_current_file().name != "unknown";
     }
 
-    public void ready_file_to_play() {
-        this.museic_playlist.add_museic_file(this.museic_filelist.get_current_file());
-        this.streamplayer.ready_file("file://"+this.museic_playlist.get_current_file().path);
+    public void add_files_to_filelist(string[] filenames) {
+        // Add the files from filenames to the filelist
+        this.museic_filelist.add_files(filenames, true);
     }
 
-    public void ready_seg_file_to_play() {
-        if (!this.museic_playlist.has_next()) this.museic_playlist.add_museic_file(this.museic_filelist.seg_file());
-        this.museic_playlist.seg_file();
-        this.streamplayer.ready_file("file://"+this.museic_playlist.get_current_file().path);
+    public void add_files_to_playlist(int[] file_indexs) {
+        // Add the files from filelist referenced with file_index to the playlist
+        MuseicFile[] files = this.museic_filelist.get_files_list();
+        foreach (int i in file_indexs) this.museic_playlist.add_museic_file(files[i]);
     }
 
-    public void ready_ant_file_to_play() {
-        this.museic_playlist.ant_file();
-        this.streamplayer.ready_file("file://"+this.museic_playlist.get_current_file().path);
+    public void clear_filelist() {
+        // Delete all files from the filelist.
+        this.museic_filelist.clean();
+    }
+
+    public void clear_playlist() {
+        // Delete all files from the playist.
+        this.museic_playlist.clean();
+    }
+
+    public MuseicFile[] get_all_filelist_files() {
+        // Get all files from filelist
+        return this.museic_filelist.get_files_list();
+    }
+
+    public MuseicFile[] get_all_playlist_files() {
+        // Get all files from playlist
+        return this.museic_playlist.get_files_list();
+    }
+
+    public int get_next_filelist_pos() {
+        // Get position of next file in filelist
+        int pos = this.museic_filelist.filepos + 1;
+        if (pos >= this.museic_filelist.nfiles) pos = 0;
+        return pos;
+    }
+
+    public int get_playlist_pos() {
+        // Get position of file in playlist
+        return this.museic_playlist.filepos;
+    }
+
+    public int get_filelist_len() {
+        // Get number of files in filelist
+        return this.museic_filelist.get_files_list().length;
+    }
+
+    public bool is_random() {
+        // True if filelist is in random mode
+        return this.museic_filelist.random_state;
+    }
+
+    public void set_random(bool random) {
+        // Set the random state of filelist with the passed value
+        this.museic_filelist.random_state = random;
+    }
+
+
+    //// STREAM RELATED METHODS
+
+    public void set_position(float value) {
+        this.streamplayer.player.seek_simple (Gst.Format.TIME, Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT, (int64)(value * get_duration()));
     }
 
     public StreamTimeInfo get_duration_str() {
@@ -111,7 +182,7 @@ public class MuseIC : Gtk.Application {
     }
 
     public ulong get_duration() {
-		// Returns duration
+        // Returns duration
         return this.streamplayer.get_duration();
     }
 
@@ -130,89 +201,17 @@ public class MuseIC : Gtk.Application {
         return smin+":"+ssec;
     }
 
-    public string get_current_filename() {
-        return this.museic_playlist.get_current_file().name;
+    public string state() {
+        // Returns state of streamplayer. It can be: "play", "pause" or "endstream"
+        return this.streamplayer.state;
     }
 
-    public MuseicFile get_current_file() {
-        return this.museic_playlist.get_current_file();
+    private void ready_file(MuseicFile file) {
+        // Add the file to the stream. If previous state was "play", play the new file
+        if (state() == "play" || state() == "endstream") {
+            this.streamplayer.ready_file("file://"+file.path);
+            play_file();
+        }else this.streamplayer.ready_file("file://"+file.path);
     }
 
-    public int get_current_file_pos() {
-        return this.museic_playlist.filepos;
-    }
-
-    public int get_next_filelist_pos() {
-        int pos = this.museic_filelist.filepos + 1;
-        if (pos >= this.museic_filelist.nfiles) pos = 0;
-        return pos;
-    }
-
-    public int get_filelist_len() {
-        return this.museic_filelist.get_files_list().length;
-    }
-
-    public string[] get_all_filenames() {
-        string[] sfiles = {};
-        foreach (MuseicFile file in this.museic_filelist.get_files_list()) {
-            sfiles += file.name;
-        }
-        return sfiles;
-    }
-
-    public MuseicFile[] get_all_files() {
-        return this.museic_filelist.get_files_list();
-    }
-
-
-    public MuseicFile[] get_all_playlist_files() {
-        return this.museic_playlist.get_files_list();
-    }
-
-    public void set_position(float value) {
-        this.streamplayer.player.seek_simple (Gst.Format.TIME, Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT, (int64)(value * get_duration()));
-    }
-
-    public bool has_files() {
-        return get_current_filename() != "unknown";
-    }
-
-    public void seg_file() {
-        if (has_files()) {
-            bool play = (state() == "play") || (state() == "endstream");
-            pause_file();
-            ready_seg_file_to_play();
-            if (play) play_file(null);
-        }
-    }
-
-    public void ant_file() {
-        if (has_files()) {
-            bool play = (state() == "play") || (state() == "endstream");
-            pause_file();
-            ready_ant_file_to_play();
-            if (play) play_file(null);
-        }
-    }
-
-    public void set_random(bool random) {
-        this.museic_filelist.random_state = random;
-    }
-
-    public bool is_random() {
-        return this.museic_filelist.random_state;
-    }
-
-    public void add_files_to_play(int[] file_indexs) {
-        MuseicFile[] files = this.museic_filelist.get_files_list();
-        foreach (int i in file_indexs) this.museic_playlist.add_museic_file(files[i]);
-    }
-
-    public void set_next_filepos(int i) {
-        this.museic_filelist.filepos = i;
-    }
-
-    public void clear_playlist() {
-        this.museic_playlist.clean();
-    }
 }
