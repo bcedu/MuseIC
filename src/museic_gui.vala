@@ -36,22 +36,33 @@ public class MuseicGui : Gtk.ApplicationWindow {
         tree.set_model (this.fileListStore);
         tree.insert_column_with_attributes (-1, "Song", new Gtk.CellRendererText (), "text", 0, "background-rgba", 4);
         tree.get_column(0).set_resizable(true);
+        tree.get_column(0).set_clickable(true);
+        tree.get_column(0).set_min_width(200);
+        tree.get_column(0).clicked.connect (sort_by_song);
         tree.insert_column_with_attributes (-1, "Artist", new Gtk.CellRendererText (), "text", 1, "background-rgba", 4);
         tree.get_column(1).set_resizable(true);
+        tree.get_column(1).set_clickable(true);
+        tree.get_column(1).set_min_width(200);
+        tree.get_column(1).clicked.connect (sort_by_artist);
         tree.insert_column_with_attributes (-1, "Album", new Gtk.CellRendererText (), "text", 2, "background-rgba", 4);
         tree.get_column(2).set_resizable(true);
+        tree.get_column(2).set_clickable(true);
+        tree.get_column(2).set_min_width(200);
+        tree.get_column(2).clicked.connect (sort_by_album);
         tree.insert_column_with_attributes (-1, "Status", new Gtk.CellRendererText (), "text", 3, "background-rgba", 4);
-        tree.get_column(3).set_resizable(true);
         // Set playListStore
         this.playListStore = new Gtk.ListStore (5, typeof (string), typeof (string), typeof (string), typeof (string), typeof (Gdk.RGBA));
         tree = (this.builder.get_object ("playTree") as Gtk.TreeView);
         tree.set_model (this.playListStore);
         tree.insert_column_with_attributes (-1, "Song", new Gtk.CellRendererText (), "text", 0, "background-rgba", 4);
         tree.get_column(0).set_resizable(true);
+        tree.get_column(0).set_min_width(200);
         tree.insert_column_with_attributes (-1, "Artist", new Gtk.CellRendererText (), "text", 1, "background-rgba", 4);
         tree.get_column(1).set_resizable(true);
+        tree.get_column(1).set_min_width(200);
         tree.insert_column_with_attributes (-1, "Album", new Gtk.CellRendererText (), "text", 2, "background-rgba", 4);
         tree.get_column(2).set_resizable(true);
+        tree.get_column(2).set_min_width(200);
         tree.insert_column_with_attributes (-1, "Status", new Gtk.CellRendererText (), "text", 3, "background-rgba", 4);
         tree.get_column(3).set_resizable(true);
         // Show window
@@ -315,6 +326,16 @@ public class MuseicGui : Gtk.ApplicationWindow {
         Gtk.TreeIter iter;
         this.fileListStore.get_iter_from_string(out iter, this.museic_app.get_next_filelist_pos().to_string());
         this.fileListStore.set (iter, 3, "", 4, "INCORRECTCOLOR");  // I use an string i know it's incorrect because i don't know how to say the tree to use the default color
+    }
+
+    private void sort_by_song() {
+        stdout.printf("By Song\n");
+    }
+    private void sort_by_artist() {
+        stdout.printf("By Artist\n");
+    }
+    private void sort_by_album() {
+        stdout.printf("By Album\n");
     }
 
 }
