@@ -329,23 +329,36 @@ public class MuseicGui : Gtk.ApplicationWindow {
     }
 
     private void sort_by_song() {
-        // Get name NF of current filelist file
-        // Sort filelist
-        // Set filepos to the file with name NF
-        // Update tree view
-        this.museic_app.set_filelist_sort_field("name");
-        this.museic_app.sort_filelist();
-        update_files_to_tree();
+        if (this.museic_app.get_filelist_len() > 1) sort_filelist("name");
     }
     private void sort_by_artist() {
-        this.museic_app.set_filelist_sort_field("artist");
-        this.museic_app.sort_filelist();
-        update_files_to_tree();
+        if (this.museic_app.get_filelist_len() > 1) sort_filelist("artist");
     }
     private void sort_by_album() {
-        this.museic_app.set_filelist_sort_field("album");
+        if (this.museic_app.get_filelist_len() > 1) sort_filelist("album");
+    }
+
+    private void sort_filelist(string field) {
+        // Sort filelist
+        this.museic_app.set_filelist_sort_field(field);
         this.museic_app.sort_filelist();
+        // Update tree view
         update_files_to_tree();
+        // Set status of next file if necessari
+        if (this.museic_app.get_playlist_pos() == this.museic_app.get_playlist_len()-1 & !this.museic_app.is_random()) {
+            Gtk.TreeIter iterfile;
+            Gdk.RGBA rgba_next = Gdk.RGBA ();
+            rgba_next.parse ("#e7f2f1");
+            int filepos = this.museic_app.get_next_filelist_pos();
+            this.fileListStore.get_iter_from_string(out iterfile, filepos.to_string());
+            this.fileListStore.set (iterfile, 3, "Next", 4, rgba_next);
+            if (this.museic_app.get_filelist_len() != 1) {
+                if (filepos == 0) filepos = this.museic_app.get_filelist_len()-1;
+                else filepos = filepos -1;
+                this.fileListStore.get_iter_from_string(out iterfile, filepos.to_string());
+                this.fileListStore.set (iterfile, 3, "", 4, "");
+            }
+        }
     }
 
 }

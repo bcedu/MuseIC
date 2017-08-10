@@ -99,6 +99,11 @@ public class MuseIC : Gtk.Application {
         return this.museic_playlist.get_current_file();
     }
 
+    public MuseicFile get_current_filelist_file() {
+        // Returns current file from filelist
+        return this.museic_filelist.get_current_file();
+    }
+
     public bool has_files() {
         // True if there is any file in playlist
         return get_current_file().name != "unknown";
@@ -150,6 +155,11 @@ public class MuseIC : Gtk.Application {
     public int get_filelist_len() {
         // Get number of files in filelist
         return this.museic_filelist.get_files_list().length;
+    }
+
+    public int get_playlist_len() {
+        // Get number of files in playlist
+        return this.museic_playlist.get_files_list().length;
     }
 
     public bool is_random() {
