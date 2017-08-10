@@ -162,6 +162,16 @@ public class MuseIC : Gtk.Application {
         this.museic_filelist.random_state = random;
     }
 
+    public void set_filelist_sort_field(string field) {
+        // Sets the name of the fields used to sort the filelist
+        this.museic_filelist.sort_field = field;
+    }
+
+    public void sort_filelist() {
+        // Sorts the filelist
+        this.museic_filelist.sort();
+    }
+
 
     //// STREAM RELATED METHODS
 

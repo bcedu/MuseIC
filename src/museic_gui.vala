@@ -329,13 +329,23 @@ public class MuseicGui : Gtk.ApplicationWindow {
     }
 
     private void sort_by_song() {
-        stdout.printf("By Song\n");
+        // Get name NF of current filelist file
+        // Sort filelist
+        // Set filepos to the file with name NF
+        // Update tree view
+        this.museic_app.set_filelist_sort_field("name");
+        this.museic_app.sort_filelist();
+        update_files_to_tree();
     }
     private void sort_by_artist() {
-        stdout.printf("By Artist\n");
+        this.museic_app.set_filelist_sort_field("artist");
+        this.museic_app.sort_filelist();
+        update_files_to_tree();
     }
     private void sort_by_album() {
-        stdout.printf("By Album\n");
+        this.museic_app.set_filelist_sort_field("album");
+        this.museic_app.sort_filelist();
+        update_files_to_tree();
     }
 
 }

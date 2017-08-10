@@ -167,4 +167,22 @@ public class MuseicFile {
         return bin_to_dec(bin);
     }
 
+    public int compare(MuseicFile file, string field) {
+        // Returns 1 if this is greater, 0 if thery are equal and -1 if this is smaller.
+        // Comparations is made using the atribut named like "field"
+        if (field == "album") {
+            if (this.album > file.album) return 1;
+            else if (this.album == file.album) return this.compare(file, "name");
+            else return -1;
+        }else if (field == "artist") {
+            if (this.artist > file.artist) return 1;
+            else if (this.artist == file.artist) return this.compare(file, "album");
+            else return -1;
+        }else { // "name" (it is also the default for unreconized passed field)
+            if (this.name > file.name) return 1;
+            else if (this.name == file.name) return 0;
+            else return -1;
+        }
+    }
+
 }

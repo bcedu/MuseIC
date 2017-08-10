@@ -4,6 +4,8 @@ public class MuseicFileList {
     private MuseicFile[] files_list = new MuseicFile[4];
     public int nfiles = 0;
     public bool random_state = false;
+    private int sorted = 0; // -1 -> desc, 0 -> not sorted, 1 -> asc
+    public string sort_field = "name"; // name | artist | album
 
     public MuseicFileList () {}
 
@@ -63,6 +65,40 @@ public class MuseicFileList {
 
     public bool has_next() {
         return (this.nfiles - this.filepos) > 1;
+    }
+
+    public void sort() {
+        // Sort the files_list using the current sort_field.
+        if (this.sorted == 0 || this.sorted == -1) this.sorted = 1;
+        else this.sorted = -1;
+        quicksort(ref files_list, 0, this.nfiles-1);
+        if (sorted == -1) {
+            MuseicFile[] aux = new MuseicFile[this.nfiles];
+            for (int i=0; i<this.nfiles; i++) aux[this.nfiles-i-1] = files_list[i];
+            files_list = aux;
+        }
+    }
+
+    private MuseicFile[] quicksort(ref MuseicFile[] list, int first, int last) {
+        // Set index and pivot
+        int i = first;
+        int j = last;
+        MuseicFile pivot = list[(i+j)/2];
+        while (i < j) {
+            while (list[i].compare(pivot, this.sort_field) == -1) i++;  // while l[i] < pivot
+            while (list[j].compare(pivot, this.sort_field) == 1) j--;  // while l[j] > pivot
+            // Check if the indexs have swap
+            if (i <= j) {
+                MuseicFile aux = list[j];
+                list[j] = list[i];
+                list[i] = aux;
+                i++;
+                j--;
+            }
+        }
+        if (first < j) list = quicksort(ref list, first, j);
+        if (last > i) list = quicksort(ref list, i, last);
+        return list;
     }
 
 }
