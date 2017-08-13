@@ -187,6 +187,10 @@ public class MuseIC : Gtk.Application {
         this.museic_filelist.sort();
     }
 
+    public void clear_library() {
+        this.museic_library.clear();
+    }
+
 
     //// STREAM RELATED METHODS
 

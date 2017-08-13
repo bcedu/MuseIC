@@ -184,6 +184,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         if (this.is_open) {
             this.museic_app.clear_playlist();
             this.museic_app.clear_filelist();
+            this.museic_app.clear_library();
         }
         this.museic_app.add_files_to_filelist(sfiles);
         if (this.is_open) this.museic_app.play_filelist_file(0);

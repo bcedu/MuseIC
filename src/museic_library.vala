@@ -36,7 +36,6 @@ public class MuseicLibrary {
     }
 
     public void add_file(string filename) {
-        stdout.printf("ADDING %s\n", filename);
         if (this.nfiles == this.filenames.length) this.filenames.resize(this.filenames.length*2);
         this.filenames[this.nfiles] = filename;
         this.nfiles += 1;
@@ -50,6 +49,11 @@ public class MuseicLibrary {
     public bool is_in_filelist(string filename) {
         foreach (string file in this.filenames[0:this.nfiles]) if (file == filename) return true;
         return false;
+    }
+
+    public void clear() {
+        this.file.delete();
+        file.create(FileCreateFlags.NONE);
     }
 
 
