@@ -47,6 +47,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
     src/museic_streamplayer.vala
     src/museic_filelist.vala
     src/museic_file.vala
+    src/museic_library.vala
     src/config.vala
 
 # tell what libraries to use when compiling
