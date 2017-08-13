@@ -70,6 +70,8 @@ public class MuseicGui : Gtk.ApplicationWindow {
         this.show ();
         // Start time function to update info about stream duration and position each second
         GLib.Timeout.add_seconds (1, update_stream_status);
+        // Update tree view with files from library
+        update_files_to_tree();
     }
 
     [CCode(instance_pos=-1)]

@@ -36,6 +36,7 @@ public class MuseIC : Gtk.Application {
     private MuseicStreamPlayer streamplayer;
     private MuseicFileList museic_filelist;
     private MuseicFileList museic_playlist;
+    private MuseicLibrary museic_library;
 
     public MuseIC (string[] args) {
         Object (application_id: "com.github.bcedu.MuseIC", flags: ApplicationFlags.FLAGS_NONE);
@@ -46,6 +47,8 @@ public class MuseIC : Gtk.Application {
         this.streamplayer = new MuseicStreamPlayer(this.argsv, "MAIN");
         this.museic_filelist = new MuseicFileList();
         this.museic_playlist = new MuseicFileList();
+        this.museic_library = new MuseicLibrary(Environment.get_home_dir()+"/.museic_library");
+        this.museic_filelist.add_files(this.museic_library.get_library_filenames(), true);
         new MuseicGui (this);
     }
 
