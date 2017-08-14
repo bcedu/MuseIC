@@ -1,11 +1,11 @@
 [Desktop Entry]
-    Name=MuseIC
-    GenericName=MuseIC App
-    Categories=GTK;Utility;
-    Exec=com.github.bcedu.MuseIC
-    Icon=museic_logo
-    Terminal=false
-    Type=Application
-    X-GNOME-Gettext-Domain=MuseIC
-    Keywords=MuseIC;
-    X-GNOME-UsesNotifications=true
+Name=MuseIC
+GenericName=MuseIC App
+Categories=GTK;Utility;
+Exec=com.github.bcedu.MuseIC
+Icon=museic-icon.svg
+Terminal=false
+Type=Application
+X-GNOME-Gettext-Domain=MuseIC
+Keywords=MuseIC;museic;music;
+X-GNOME-UsesNotifications=true
