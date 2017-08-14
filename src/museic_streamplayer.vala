@@ -73,6 +73,7 @@ public class MuseicStreamPlayer {
     }
 
     public void ready_file(string stream) {
+        pause_file();
         this.player = ElementFactory.make ("playbin", "play");
         this.player.uri = stream;
         this.metadata = null;
