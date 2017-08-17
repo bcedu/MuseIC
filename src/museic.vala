@@ -1,5 +1,5 @@
 /*
-    * Copyright (c) 2011-2017 Your Organization (https://yourwebsite.com)
+    * Copyright (c) 2011-2017 Eduard Berloso Clarà
     *
     * This program is free software; you can redistribute it and/or
     * modify it under the terms of the GNU General Public
@@ -39,8 +39,18 @@ public class MuseIC : Gtk.Application {
     private MuseicLibrary museic_library;
 
     public MuseIC (string[] args) {
-        Object (application_id: "com.github.bcedu.MuseIC", flags: ApplicationFlags.FLAGS_NONE);
+        Object (application_id: "com.github.bcedu.MuseIC", flags: ApplicationFlags.HANDLES_OPEN);
         argsv = args;
+        GLib.Environ.set_variable ({"PULSE_PROP_media.role"}, "audio", "true");
+    }
+
+    public override void open (File[] files, string hint) {
+        // Activate, then play files
+        this.activate ();
+        string[] sfiles = {};
+        foreach (unowned File file in files) sfiles += file.get_path();
+        this.add_files_to_filelist(sfiles);
+        this.play_filelist_file(0);
     }
 
     protected override void activate () {
