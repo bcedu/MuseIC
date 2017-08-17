@@ -227,7 +227,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         return true;
     }
 
-    private void update_files_to_tree() {
+    public void update_files_to_tree() {
         this.fileListStore.clear ();
         Gtk.TreeIter iter;
         foreach (MuseicFile file in this.museic_app.get_all_filelist_files()) {
@@ -236,7 +236,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         }
     }
 
-    private void update_playlist_to_tree() {
+    public void update_playlist_to_tree() {
         this.playListStore.clear ();
         Gtk.TreeIter iter;
         Gtk.TreeIter iterfile;
@@ -274,7 +274,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     }
 
-    private bool update_stream_status() {
+    public bool update_stream_status() {
         if (!this.museic_app.has_files()) return true;
         StreamTimeInfo pos_info = this.museic_app.get_position_str();
         StreamTimeInfo dur_info = this.museic_app.get_duration_str();

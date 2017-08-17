@@ -48,6 +48,7 @@ vala_precompile(VALA_C ${EXEC_NAME}
     src/museic_filelist.vala
     src/museic_file.vala
     src/museic_library.vala
+    src/museic_dbus.vala
     src/config.vala
 
 # tell what libraries to use when compiling
@@ -56,6 +57,7 @@ PACKAGES
     gio-2.0
     gmodule-2.0
     gstreamer-1.0
+    dbus-glib-1
 )
 
 # tell cmake what to call the executable we just made

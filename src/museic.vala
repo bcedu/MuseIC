@@ -37,11 +37,11 @@ public class MuseIC : Gtk.Application {
     private MuseicFileList museic_filelist;
     private MuseicFileList museic_playlist;
     private MuseicLibrary museic_library;
+    public MuseicGui main_window;
 
     public MuseIC (string[] args) {
         Object (application_id: "com.github.bcedu.MuseIC", flags: ApplicationFlags.HANDLES_OPEN);
         argsv = args;
-        GLib.Environ.set_variable ({"PULSE_PROP_media.role"}, "audio", "true");
     }
 
     public override void open (File[] files, string hint) {
@@ -59,10 +59,40 @@ public class MuseIC : Gtk.Application {
         this.museic_playlist = new MuseicFileList();
         this.museic_library = new MuseicLibrary(Environment.get_home_dir()+"/.museic_library");
         this.museic_filelist.add_files(this.museic_library.get_library_filenames(), true);
-        new MuseicGui (this);
+        setup_dbus();
+        this.main_window = new MuseicGui (this);
+    }
+
+    private void setup_dbus() {
+        Bus.own_name(BusType.SESSION,
+                    "org.mpris.MediaPlayer2.MuseIC",
+                    GLib.BusNameOwnerFlags.NONE,
+                    on_bus_acquired,
+                    on_name_acquired,
+                    on_name_lost);
+    }
+
+    private void on_bus_acquired (DBusConnection connection, string name) {
+        stdout.printf("bus acquired\n");
+        try {
+            connection.register_object ("/org/mpris/MediaPlayer2", new MprisRoot(this));
+            connection.register_object ("/org/mpris/MediaPlayer2", new MprisPlayer(this));
+        }
+        catch(IOError e) {
+            warning("could not create MPRIS player: %s\n", e.message);
+        }
+    }
+
+    private void on_name_acquired(DBusConnection connection, string name) {
+        stdout.printf("name acquired\n");
+    }
+
+    private void on_name_lost(DBusConnection connection, string name) {
+        stdout.printf("name_lost\n");
     }
 
     public static int main (string[] args) {
+        GLib.Environ.set_variable ({"PULSE_PROP_media.role"}, "audio", "true");
         return new MuseIC (args).run (args);
     }
 
@@ -204,8 +234,8 @@ public class MuseIC : Gtk.Application {
 
     //// STREAM RELATED METHODS
 
-    public void set_position(float value) {
-        this.streamplayer.player.seek_simple (Gst.Format.TIME, Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT, (int64)(value * get_duration()));
+    public void set_position(float fvalue) {
+        this.streamplayer.set_position (fvalue);
     }
 
     public StreamTimeInfo get_duration_str() {

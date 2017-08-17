@@ -1,4 +1,5 @@
 using Gst;
+
 public class MuseicStreamPlayer {
     private MainLoop loop;
     public dynamic Element player;
@@ -108,6 +109,10 @@ public class MuseicStreamPlayer {
             stderr.puts ("Could not query current position.\n");
         }
         return (ulong) current;
+    }
+
+    public void set_position(float fvalue) {
+        this.player.seek_simple (Gst.Format.TIME, Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT, (int64)(fvalue * this.get_duration()));
     }
 
 }
