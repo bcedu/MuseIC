@@ -1,4 +1,4 @@
-Source: com.github.bcedu.MuseIC
+Source: com.github.bcedu.museic
 Section: x11
 Priority: optional
 Maintainer: Eduard Berloso Clarà <eduard.bc.95@gmail.com>
@@ -13,6 +13,6 @@ Package: com.github.djaler.formatter
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: Music player.
-MuseIC is a fast and simple music player.
-It allows play music files and add them to music library.
-It handles ID3 metadata tags.
+ MuseIC is a fast and simple music player.
+ It allows play music files and add them to music library.
+ It handles ID3 metadata tags.

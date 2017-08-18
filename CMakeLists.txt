@@ -1,5 +1,5 @@
 # project name
-project (com.github.bcedu.MuseIC)
+project (com.github.bcedu.museic)
 
 # the oldest stable cmake version we support
 cmake_minimum_required (VERSION 2.6)
@@ -15,9 +15,9 @@ set (PKGDATADIR "${DATADIR}/${CMAKE_PROJECT_NAME}")
 set (GETTEXT_PACKAGE "${CMAKE_PROJECT_NAME}")
 add_definitions (-DGETTEXT_PACKAGE="${GETTEXT_PACKAGE}")
 
-set (EXEC_NAME "com.github.bcedu.MuseIC")
+set (EXEC_NAME "com.github.bcedu.museic")
 set (RELEASE_NAME "MuseIC")
-set (VERSION "0.5.1")
+set (VERSION "0.5.2")
 set (VERSION_INFO "MuseIC first version")
 
 configure_file (${CMAKE_SOURCE_DIR}/src/config.vala.cmake ${CMAKE_SOURCE_DIR}/src/config.vala)
@@ -67,10 +67,10 @@ add_executable(${EXEC_NAME} ${VALA_C})
 install (TARGETS ${EXEC_NAME} RUNTIME DESTINATION bin)
 
 # install our .desktop file so the Applications menu will see it
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.bcedu.MuseIC.desktop DESTINATION ${DATADIR}/applications/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.bcedu.museic.desktop DESTINATION ${DATADIR}/applications/)
 
 # install our .appdata.xml file so AppCenter will see it
-install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.bcedu.MuseIC.appdata.xml DESTINATION ${DATADIR}/metainfo/)
+install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.bcedu.museic.appdata.xml DESTINATION ${DATADIR}/metainfo/)
 
 # Translation files
 add_subdirectory (po)

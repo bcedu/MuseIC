@@ -19,7 +19,7 @@ public class MprisRoot : GLib.Object {
         get {return false;}
     }
     public string DesktopEntry {
-        get {return "com.github.bcedu.MuesIC";}
+        get {return "com.github.bcedu.museic";}
     }
 
     public string Identity {

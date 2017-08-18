@@ -41,7 +41,7 @@ public class MuseIC : Gtk.Application {
     public MprisPlayer mpris_player;
 
     public MuseIC (string[] args) {
-        Object (application_id: "com.github.bcedu.MuseIC", flags: ApplicationFlags.HANDLES_OPEN);
+        Object (application_id: "com.github.bcedu.museic", flags: ApplicationFlags.HANDLES_OPEN);
         argsv = args;
     }
 

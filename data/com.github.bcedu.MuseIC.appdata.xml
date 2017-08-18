@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2017 Eduard Berloso Clarà <eduard.bc.95@gmail.com> -->
 <component type="desktop">
-    <id>com.github.bcedu.MuseIC.desktop</id>
+    <id>com.github.bcedu.museic.desktop</id>
     <metadata_license>CC0-1.0</metadata_license>
     <project_license>GPL-3.0+</project_license>
     <developer_name>Eduard Berloso Clarà</developer_name>
@@ -29,7 +29,7 @@
         </screenshot>
     </screenshots>
     <provides>
-        <binary>com.github.bcedu.MuseIC</binary>
+        <binary>com.github.bcedu.museic</binary>
     </provides>
     <url type="homepage">https://github.com/bcedu/MuseIC</url>
     <url type="bugtracker">https://github.com/bcedu/MuseIC/issues</url>

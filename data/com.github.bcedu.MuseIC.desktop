@@ -2,7 +2,7 @@
 Name=MuseIC
 GenericName=Music Player
 Categories=AudioVideo;Audio;
-Exec=com.github.bcedu.MuseIC
+Exec=com.github.bcedu.museic
 Icon=museic-icon.svg
 Terminal=false
 Type=Application
