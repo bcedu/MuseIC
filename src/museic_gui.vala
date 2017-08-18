@@ -93,6 +93,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             this.museic_app.send_notification (this.museic_app.application_id, notification);
             update_stream_status();
             update_playlist_to_tree();
+            this.museic_app.update_dbus_status();
         }
     }
 
@@ -110,6 +111,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             this.museic_app.send_notification (this.museic_app.application_id, notification);
             update_stream_status();
             update_playlist_to_tree();
+            this.museic_app.update_dbus_status();
         }
     }
 
@@ -123,6 +125,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
                 this.museic_app.pause_file();
                 button.set_label("gtk-media-play");
             }
+            this.museic_app.update_dbus_status();
         }
     }
 
@@ -326,6 +329,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         this.museic_app.play_playlist_file(this.museic_app.get_all_playlist_files().length-1-int.parse(path.to_string()));
         clean_files_status();
         update_playlist_to_tree();
+        this.museic_app.update_dbus_status();
     }
 
     [CCode(instance_pos=-1)]
@@ -334,6 +338,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         this.museic_app.clear_playlist();
         this.museic_app.play_filelist_file(int.parse(path.to_string()));
         update_playlist_to_tree();
+        this.museic_app.update_dbus_status();
     }
 
     private void clean_files_status() {

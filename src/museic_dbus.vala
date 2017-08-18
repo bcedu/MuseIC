@@ -53,42 +53,77 @@ public class MprisRoot : GLib.Object {
 public class MprisPlayer : GLib.Object {
 
     MuseIC app;
+    private unowned DBusConnection conn;
 
-    public MprisPlayer(MuseIC app) {
+    public MprisPlayer(MuseIC app, DBusConnection conn) {
         this.app = app;
+        this.conn = conn;
+    }
+
+    private bool send_property_change(string property, Variant variant) {
+        var builder = new VariantBuilder(VariantType.ARRAY);
+        var invalidated_builder = new VariantBuilder(new VariantType("as"));
+        builder.add("{sv}", property, variant);
+
+        try {
+            conn.emit_signal (null,
+                              "/org/mpris/MediaPlayer2",
+                              "org.freedesktop.DBus.Properties",
+                              "PropertiesChanged",
+                              new Variant("(sa{sv}as)",
+                                         "org.mpris.MediaPlayer2.Player",
+                                         builder,
+                                         invalidated_builder)
+                             );
+        }
+        catch(Error e) {
+            print("Could not send MPRIS property change: %s\n", e.message);
+        }
+        return false;
+    }
+
+    public void update_properties() {
+        send_property_change("PlaybackStatus", this.PlaybackStatus);
+        send_property_change("Metadata", get_metadata());
     }
 
     public void Next() {
         this.app.play_next_file();
         this.app.main_window.update_stream_status();
         this.app.main_window.update_playlist_to_tree();
+        update_properties();
     }
 
     public void Previous() {
         this.app.play_ant_file();
         this.app.main_window.update_stream_status();
         this.app.main_window.update_playlist_to_tree();
+        update_properties();
     }
 
     public void Pause() {
         this.app.main_window.update_play_button();
         this.app.pause_file();
+        update_properties();
     }
 
     public void PlayPause() {
         this.app.main_window.update_play_button();
         if (this.app.state() != "play") this.app.play_file();
         else this.app.pause_file();
+        update_properties();
     }
 
     public void Stop() {
         this.app.main_window.update_play_button();
         this.app.pause_file();
+        update_properties();
     }
 
     public void Play() {
         this.app.main_window.update_play_button();
         this.app.play_file();
+        update_properties();
     }
 
     public void Seek(int64 Offset) {
@@ -128,18 +163,32 @@ public class MprisPlayer : GLib.Object {
 
     public HashTable<string,Variant>? Metadata {
         owned get {
-            MuseicFile act = this.app.get_current_file();
-            HashTable<string,Variant> _metadata = new HashTable<string, Variant> (null, null);
-
-            _metadata.insert("mpris:trackid", new ObjectPath ("/org/museic/Track/%s".printf (act.path)));
-            _metadata.insert("mpris:length", (int64) (this.app.get_duration()/1000));
-
-            _metadata.insert("xesam:title", act.name);
-            _metadata.insert("xesam:album", act.album);
-            _metadata.insert("xesam:artist", act.artist);
-            _metadata.insert("xesam:url", act.path);
-            return _metadata;
+            return get_metadata();
         }
+    }
+
+    private static string[] get_simple_string_array (string? text) {
+        if (text == null)
+            return new string [0];
+        string[] array = new string[0];
+        array += text;
+        return array;
+    }
+
+    private HashTable<string,Variant>? get_metadata() {
+        MuseicFile act = this.app.get_current_file();
+        HashTable<string,Variant> _metadata = new HashTable<string, Variant> (null, null);
+
+        _metadata.insert("mpris:trackid", new ObjectPath ("/org/museic/Track/%s".printf (act.path)));
+        _metadata.insert("mpris:length", (int64) (this.app.get_duration()/1000));
+        _metadata.insert("xesam:title", act.name);
+        _metadata.insert("xesam:album", get_simple_string_array(act.album)); // Why is needed a list of fucking arrays?!
+        _metadata.insert("xesam:artist", get_simple_string_array(act.artist));
+        _metadata.insert("xesam:url", act.path);
+        _metadata.insert("mpris:artUrl", "file://"+Constants.PKGDATADIR+"/data/icons/museic-icon.svg");
+        stdout.printf("METADATA\n    TITLE: %s\n    URI: %s\n", act.name, "file://"+Constants.PKGDATADIR+"/data/icons/museic-icon.svg");
+
+        return _metadata;
     }
 
     public double Volume {

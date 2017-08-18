@@ -38,6 +38,7 @@ public class MuseIC : Gtk.Application {
     private MuseicFileList museic_playlist;
     private MuseicLibrary museic_library;
     public MuseicGui main_window;
+    public MprisPlayer mpris_player;
 
     public MuseIC (string[] args) {
         Object (application_id: "com.github.bcedu.MuseIC", flags: ApplicationFlags.HANDLES_OPEN);
@@ -75,8 +76,9 @@ public class MuseIC : Gtk.Application {
     private void on_bus_acquired (DBusConnection connection, string name) {
         stdout.printf("bus acquired\n");
         try {
+            this.mpris_player = new MprisPlayer(this, connection);
             connection.register_object ("/org/mpris/MediaPlayer2", new MprisRoot(this));
-            connection.register_object ("/org/mpris/MediaPlayer2", new MprisPlayer(this));
+            connection.register_object ("/org/mpris/MediaPlayer2", this.mpris_player);
         }
         catch(IOError e) {
             warning("could not create MPRIS player: %s\n", e.message);
@@ -94,6 +96,10 @@ public class MuseIC : Gtk.Application {
     public static int main (string[] args) {
         GLib.Environ.set_variable ({"PULSE_PROP_media.role"}, "audio", "true");
         return new MuseIC (args).run (args);
+    }
+
+    public void update_dbus_status() {
+        this.mpris_player.update_properties();
     }
 
 
