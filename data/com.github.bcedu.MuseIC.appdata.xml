@@ -25,9 +25,12 @@
     </custom>
     <screenshots>
         <screenshot type="default">
-            <image>https://raw.githubusercontent.com/bcedu/MuseIC/master/museic_screenshoot.png</image>
+            <image>https://raw.githubusercontent.com/bcedu/MuseIC/master/data/museic_screenshoot.png</image>
         </screenshot>
     </screenshots>
+    <provides>
+        <binary>com.github.bcedu.MuseIC</binary>
+    </provides>
     <url type="homepage">https://github.com/bcedu/MuseIC</url>
     <url type="bugtracker">https://github.com/bcedu/MuseIC/issues</url>
     <url type="help">https://github.com/bcedu/MuseIC/issues</url>

@@ -17,7 +17,7 @@ add_definitions (-DGETTEXT_PACKAGE="${GETTEXT_PACKAGE}")
 
 set (EXEC_NAME "com.github.bcedu.MuseIC")
 set (RELEASE_NAME "MuseIC")
-set (VERSION "0.1")
+set (VERSION "0.5.1")
 set (VERSION_INFO "MuseIC first version")
 
 configure_file (${CMAKE_SOURCE_DIR}/src/config.vala.cmake ${CMAKE_SOURCE_DIR}/src/config.vala)
