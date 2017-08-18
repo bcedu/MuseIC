@@ -1,12 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-    <!-- Copyright 2017 Eduard Berloso Clarà <eduard.bc.95@gmail.com> -->
-    <component type="desktop">
-      <id>com.github.bcedu.MuseIC.desktop</id>
-      <metadata_license>CC0</metadata_license>
-      <name>MuseIC</name>
-      <summary>MuseIC</summary>
-      <description>
-        <p>MuseIC</p>
-      </description>
-    </component>
-    
+<!-- Copyright 2017 Eduard Berloso Clarà <eduard.bc.95@gmail.com> -->
+<component type="desktop">
+    <id>com.github.bcedu.MuseIC.desktop</id>
+    <metadata_license>CC0-1.0</metadata_license>
+    <project_license>GPL-3.0+</project_license>
+    <developer_name>Eduard Berloso Clarà</developer_name>
+    <name>MuseIC</name>
+    <summary>Simple and fast music player</summary>
+    <description>
+        <p>
+            MuseIC is a fast and simple music player.
+            It allows play music files and add them to music library.
+            It handles ID3 metadata tags.
+        </p>
+        <p>Any resemblance between the name and some awesome music band is pure coincidence.</p>
+    </description>
+    <categories>
+        <category>Music</category>
+    </categories>
+    <custom>
+        <value key="x-appcenter-color-primary">#151515</value>
+        <value key="x-appcenter-color-primary-text">rgb(255,255,255)</value>
+        <value key="x-appcenter-suggested-price">0</value>
+    </custom>
+    <screenshots>
+        <screenshot type="default">
+            <image>https://raw.githubusercontent.com/bcedu/MuseIC/master/museic_screenshoot.png</image>
+        </screenshot>
+    </screenshots>
+    <url type="homepage">https://github.com/bcedu/MuseIC</url>
+    <url type="bugtracker">https://github.com/bcedu/MuseIC/issues</url>
+    <url type="help">https://github.com/bcedu/MuseIC/issues</url>
+</component>
