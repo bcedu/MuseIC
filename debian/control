@@ -9,7 +9,7 @@ Build-Depends: cmake (>= 2.6),
                valac (>= 0.16)
 Standards-Version: 3.9.3
 
-Package: com.github.djaler.formatter
+Package: com.github.bcedu.museic
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: Music player.

@@ -1,5 +1,5 @@
 Format: http://dep.debian.net/deps/dep5
-Upstream-Name: com.github.bcedu.MuseIC
+Upstream-Name: com.github.bcedu.museic
 Source: https://github.com/bcedu/MuseIC
 
 Files: *

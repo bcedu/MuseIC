@@ -1,4 +1,4 @@
-com.github.bcedu.MuseIC (0.5.2) xenial; urgency=low
+com.github.bcedu.museic (0.5.2) xenial; urgency=low
 
   * Add debian package.
 
