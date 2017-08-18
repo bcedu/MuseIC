@@ -15,7 +15,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Define main window
         this.set_position (Gtk.WindowPosition.CENTER);
         try {
-            this.icon = new Gdk.Pixbuf.from_file (Constants.PKGDATADIR+"/data/museic-icon.svg");
+            this.icon = new Gdk.Pixbuf.from_file (Constants.PKGDATADIR+"/data/icons/museic-icon.svg");
         }catch (GLib.Error e) {
             stdout.printf("Logo not found. Error: %s\n", e.message);
         }
@@ -85,7 +85,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             this.museic_app.play_ant_file();
             var notification = new Notification ("MuseIC");
             try {
-                notification.set_icon ( new Gdk.Pixbuf.from_file (Constants.PKGDATADIR+"/data/museic-icon.svg"));
+                notification.set_icon ( new Gdk.Pixbuf.from_file (Constants.PKGDATADIR+"/data/icons/museic-icon.svg"));
             }catch (GLib.Error e) {
                 stdout.printf("Notification logo not found. Error: %s\n", e.message);
             }
@@ -102,7 +102,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             this.museic_app.play_next_file();
             var notification = new Notification ("MuseIC");
             try {
-                notification.set_icon ( new Gdk.Pixbuf.from_file (Constants.PKGDATADIR+"/data/museic-icon.svg"));
+                notification.set_icon ( new Gdk.Pixbuf.from_file (Constants.PKGDATADIR+"/data/icons/museic-icon.svg"));
             }catch (GLib.Error e) {
                 stdout.printf("Notification logo not found. Error: %s\n", e.message);
             }
@@ -136,6 +136,12 @@ public class MuseicGui : Gtk.ApplicationWindow {
     [CCode(instance_pos=-1)]
     public void action_add_file (Gtk.Button button) {
         create_file_open_window(!this.museic_app.has_files());
+    }
+
+    public void update_play_button() {
+        Gtk.Button button = (builder.get_object ("playButton") as Gtk.Button);
+        if (museic_app.state() != "play")  button.set_label("gtk-media-pause");
+        else button.set_label("gtk-media-play");
     }
 
     private void create_file_open_window(bool is_open_files) {
@@ -194,7 +200,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             update_playlist_to_tree();
             var notification = new Notification ("MuseIC");
             try {
-                notification.set_icon ( new Gdk.Pixbuf.from_file (Constants.PKGDATADIR+"/data/museic_logo.png"));
+                notification.set_icon ( new Gdk.Pixbuf.from_file (Constants.PKGDATADIR+"/data/icons/museic-icon.svg"));
             }catch (GLib.Error e) {
                 stdout.printf("Notification logo not found. Error: %s\n", e.message);
             }

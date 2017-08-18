@@ -71,19 +71,23 @@ public class MprisPlayer : GLib.Object {
     }
 
     public void Pause() {
+        this.app.main_window.update_play_button();
         this.app.pause_file();
     }
 
     public void PlayPause() {
+        this.app.main_window.update_play_button();
         if (this.app.state() != "play") this.app.play_file();
         else this.app.pause_file();
     }
 
     public void Stop() {
+        this.app.main_window.update_play_button();
         this.app.pause_file();
     }
 
     public void Play() {
+        this.app.main_window.update_play_button();
         this.app.play_file();
     }
 
@@ -111,7 +115,8 @@ public class MprisPlayer : GLib.Object {
 
     public string PlaybackStatus {
         get {
-            if(this.app.state() == "play") return "Playing";
+            if (!this.app.has_files()) return "Stopped";
+            else if(this.app.state() == "play") return "Playing";
             else return "Paused";
         }
     }
