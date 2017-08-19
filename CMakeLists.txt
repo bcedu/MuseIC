@@ -7,6 +7,7 @@ cmake_minimum_required (VERSION 2.6)
 # tell cmake where its modules can be found in our project directory
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/src)
+list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/vala)
 
 # where we install data directory (if we have any)
 set (DATADIR "${CMAKE_INSTALL_PREFIX}/share")
@@ -17,8 +18,8 @@ add_definitions (-DGETTEXT_PACKAGE="${GETTEXT_PACKAGE}")
 
 set (EXEC_NAME "com.github.bcedu.museic")
 set (RELEASE_NAME "MuseIC")
-set (VERSION "0.5.2")
-set (VERSION_INFO "MuseIC first version")
+set (VERSION "1.0.1")
+set (VERSION_INFO "MuseIC beta version")
 
 configure_file (${CMAKE_SOURCE_DIR}/src/config.vala.cmake ${CMAKE_SOURCE_DIR}/src/config.vala)
 
@@ -26,7 +27,12 @@ configure_file (${CMAKE_SOURCE_DIR}/src/config.vala.cmake ${CMAKE_SOURCE_DIR}/sr
 find_package(PkgConfig)
 
 # now let's actually check for the required dependencies
-pkg_check_modules(DEPS REQUIRED gtk+-3.0 gio-2.0 gmodule-2.0 gstreamer-1.0 dbus-glib-1)
+pkg_check_modules(DEPS REQUIRED
+        gtk+-3.0
+        gio-2.0
+        gmodule-2.0
+        gstreamer-1.0
+        dbus-glib-1)
 
 add_definitions(${DEPS_CFLAGS})
 link_libraries(${DEPS_LIBRARIES})
@@ -37,7 +43,7 @@ find_package(Vala REQUIRED)
 # make sure we use vala
 include(ValaVersion)
 # make sure it's the desired version of vala
-ensure_vala_version("0.16" MINIMUM)
+ensure_vala_version("0.28.0" MINIMUM)
 
 # files we want to compile
 include(ValaPrecompile)

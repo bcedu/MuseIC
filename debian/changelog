@@ -1,5 +1,5 @@
-com.github.bcedu.museic (0.5.2) xenial; urgency=low
+com.github.bcedu.museic (1.0.1) precise; urgency=low
 
-  * Add debian package.
+  * Initial Release.
 
- -- Eduard Berloso Clarà <eduard.bc.95@gmail.com>  Fri, 18 Aug 2017 16:09:00 +0300
+ Eduard Berloso Clarà <eduard.bc.95@gmail.com>  Tue, 9 Apr 2013 04:53:39 -0500

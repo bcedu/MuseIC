@@ -1,5 +1,5 @@
 namespace Constants {
     public const string DATADIR = "";
     public const string PKGDATADIR = ".";
-    public const string VERSION = "0.5.2";
+    public const string VERSION = "1.0.1";
 }
