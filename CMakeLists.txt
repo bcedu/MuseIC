@@ -18,7 +18,7 @@ add_definitions (-DGETTEXT_PACKAGE="${GETTEXT_PACKAGE}")
 
 set (EXEC_NAME "com.github.bcedu.museic")
 set (RELEASE_NAME "MuseIC")
-set (VERSION "1.0.1")
+set (VERSION "1.0.2")
 set (VERSION_INFO "MuseIC beta version")
 
 configure_file (${CMAKE_SOURCE_DIR}/src/config.vala.cmake ${CMAKE_SOURCE_DIR}/src/config.vala)
@@ -47,7 +47,7 @@ ensure_vala_version("0.28.0" MINIMUM)
 
 # files we want to compile
 include(ValaPrecompile)
-vala_precompile(VALA_C ${EXEC_NAME}
+vala_precompile(VALA_C
     src/museic.vala
     src/museic_gui.vala
     src/museic_streamplayer.vala
