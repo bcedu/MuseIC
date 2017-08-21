@@ -11,7 +11,7 @@
         <p>MuseIC is a fast and simple music player.</p>
         <p>It allows play music files and add them to music library.</p>
         <p>It handles ID3 metadata tags.</p>
-        <br><p>Any resemblance between the name and some awesome music band is pure coincidence.</p>
+        <p>Any resemblance between the name and some awesome music band is pure coincidence.</p>
     </description>
     <categories>
         <category>Music</category>
