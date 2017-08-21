@@ -64,6 +64,18 @@ public class MuseicServer : GLib.Object {
                 correct_request = true;
             }else if (message == "GET /info HTTP/1.1") {
                 correct_request = true;
+            }else if (message == "GET /player HTTP/1.1") {
+                correct_request = true;
+                json_request = false;
+            }else if (message == "GET /player/play HTTP/1.1") {
+                correct_request = true;
+                json_request = false;
+            }else if (message == "GET /player/next HTTP/1.1") {
+                correct_request = true;
+                json_request = false;
+            }else if (message == "GET /player/prev HTTP/1.1") {
+                correct_request = true;
+                json_request = false;
             }
 
             if (correct_request && json_request) {
@@ -73,8 +85,8 @@ public class MuseicServer : GLib.Object {
             }else if (correct_request) {
                 // Response: html page with player
                 // TODO
-                // ostream.write (this.get_html_player(this.app.get_current_file()).data);
-                // ostream.flush ();
+                ostream.write (this.get_html_player(this.app.get_current_file()).data);
+                ostream.flush ();
             }
 
     	}catch (Error e) {
