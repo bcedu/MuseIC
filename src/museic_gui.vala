@@ -79,18 +79,22 @@ public class MuseicGui : Gtk.ApplicationWindow {
         }
     }
 
+    public void notify(string text) {
+        var notification = new Notification ("MuseIC");
+        try {
+            notification.set_icon ( new Gdk.Pixbuf.from_file (Constants.ICON));
+        }catch (GLib.Error e) {
+            stdout.printf("Notification logo not found. Error: %s\n", e.message);
+        }
+        notification.set_body (text);
+        this.museic_app.send_notification (this.museic_app.application_id, notification);
+    }
+
     [CCode(instance_pos=-1)]
     public void action_ant_file (Gtk.Button button) {
         if (this.museic_app.has_files()) {
             this.museic_app.play_ant_file();
-            var notification = new Notification ("MuseIC");
-            try {
-                notification.set_icon ( new Gdk.Pixbuf.from_file (Constants.ICON));
-            }catch (GLib.Error e) {
-                stdout.printf("Notification logo not found. Error: %s\n", e.message);
-            }
-            notification.set_body ("Playing:\n"+this.museic_app.get_current_file().name);
-            this.museic_app.send_notification (this.museic_app.application_id, notification);
+            this.notify(this.museic_app.get_current_file().name);
             update_stream_status();
             update_playlist_to_tree();
             this.museic_app.update_dbus_status();
@@ -100,15 +104,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
     [CCode(instance_pos=-1)]
     public void action_seg_file (Gtk.Button button) {
         if (this.museic_app.has_files()) {
-            this.museic_app.play_next_file();
-            var notification = new Notification ("MuseIC");
-            try {
-                notification.set_icon ( new Gdk.Pixbuf.from_file (Constants.ICON));
-            }catch (GLib.Error e) {
-                stdout.printf("Notification logo not found. Error: %s\n", e.message);
-            }
-            notification.set_body ("Playing:\n"+this.museic_app.get_current_file().name);
-            this.museic_app.send_notification (this.museic_app.application_id, notification);
+            this.notify(this.museic_app.get_current_file().name);
             update_stream_status();
             update_playlist_to_tree();
             this.museic_app.update_dbus_status();
