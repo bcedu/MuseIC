@@ -22,7 +22,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Load interface from file
         this.builder = new Gtk.Builder ();
         try {
-            builder.add_from_file (Constants.PKGDATADIR+"/data/museic_window.glade");
+            builder.add_from_file (Constants.PKGDATADIR+"/data/com.github.bcedu.museic.glade");
         }catch (GLib.Error e) {
             stdout.printf("Glade file not found. Error: %s\n", e.message);
         }
