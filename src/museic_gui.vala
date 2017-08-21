@@ -236,9 +236,11 @@ public class MuseicGui : Gtk.ApplicationWindow {
     public void update_files_to_tree() {
         this.fileListStore.clear ();
         Gtk.TreeIter iter;
+        Gdk.RGBA rgba_default = Gdk.RGBA ();
+        rgba_default.parse ("#ffffff");
         foreach (MuseicFile file in this.museic_app.get_all_filelist_files()) {
             this.fileListStore.append (out iter);
-            this.fileListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album, -1);
+            this.fileListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album, 3, "", 4, rgba_default);
         }
     }
 
@@ -252,17 +254,19 @@ public class MuseicGui : Gtk.ApplicationWindow {
         rgba_act.parse ("#d0e5e3");
         Gdk.RGBA rgba_next = Gdk.RGBA ();
         rgba_next.parse ("#e7f2f1");
+        Gdk.RGBA rgba_default = Gdk.RGBA ();
+        rgba_default.parse ("#ffffff");
         int pos = museic_app.get_playlist_pos();
         for (int i=aux.length-1;i>=0;i--) {
             file = aux[i];
             this.playListStore.append (out iter);
-            this.playListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album, 3, "");
+            this.playListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album, 3, "", 4, rgba_default);
             if (i == pos) {
                 this.playListStore.set (iter, 3, "Playing...", 4, rgba_act);
                 if (this.playListStore.iter_previous(ref iter)) {
                     this.playListStore.set (iter, 3, "Next", 4, rgba_next);
                     this.fileListStore.get_iter_from_string(out iterfile, this.museic_app.get_next_filelist_pos().to_string());
-                    this.fileListStore.set (iterfile, 3, "", 4, "");
+                    this.fileListStore.set (iterfile, 3, "", 4, rgba_default);
                 }else if (!this.museic_app.is_random()) {
                     int filepos = this.museic_app.get_next_filelist_pos();
                     this.fileListStore.get_iter_from_string(out iterfile, filepos.to_string());
@@ -271,7 +275,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
                         if (filepos == 0) filepos = this.museic_app.get_filelist_len()-1;
                         else filepos = filepos -1;
                         this.fileListStore.get_iter_from_string(out iterfile, filepos.to_string());
-                        this.fileListStore.set (iterfile, 3, "", 4, "");
+                        this.fileListStore.set (iterfile, 3, "", 4, rgba_default);
                     }
                 }
                 this.playListStore.iter_next(ref iter);
@@ -339,9 +343,11 @@ public class MuseicGui : Gtk.ApplicationWindow {
     }
 
     private void clean_files_status() {
+        Gdk.RGBA rgba_default = Gdk.RGBA ();
+        rgba_default.parse ("#ffffff");
         Gtk.TreeIter iter;
         this.fileListStore.get_iter_from_string(out iter, this.museic_app.get_next_filelist_pos().to_string());
-        this.fileListStore.set (iter, 3, "", 4, "INCORRECTCOLOR");  // I use an string i know it's incorrect because i don't know how to say the tree to use the default color
+        this.fileListStore.set (iter, 3, "", 4, rgba_default);  // I use an string i know it's incorrect because i don't know how to say the tree to use the default color
     }
 
     private void sort_by_song() {
@@ -365,6 +371,8 @@ public class MuseicGui : Gtk.ApplicationWindow {
             Gtk.TreeIter iterfile;
             Gdk.RGBA rgba_next = Gdk.RGBA ();
             rgba_next.parse ("#e7f2f1");
+            Gdk.RGBA rgba_default = Gdk.RGBA ();
+            rgba_default.parse ("#ffffff");
             int filepos = this.museic_app.get_next_filelist_pos();
             this.fileListStore.get_iter_from_string(out iterfile, filepos.to_string());
             this.fileListStore.set (iterfile, 3, "Next", 4, rgba_next);
@@ -372,7 +380,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
                 if (filepos == 0) filepos = this.museic_app.get_filelist_len()-1;
                 else filepos = filepos -1;
                 this.fileListStore.get_iter_from_string(out iterfile, filepos.to_string());
-                this.fileListStore.set (iterfile, 3, "", 4, "");
+                this.fileListStore.set (iterfile, 3, "", 4, rgba_default);
             }
         }
     }
