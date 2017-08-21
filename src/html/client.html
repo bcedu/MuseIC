@@ -1,7 +1,12 @@
 <html>
 <head>
     <!-- <link rel="stylesheet" type="text/css" href="client.css"> -->
-    <style media="screen" type="text/css">
+<style media="screen" type="text/css">
+
+    body {
+        background-color: black;
+        color: white;
+    }
 
     .player {
         width: 100%;
@@ -9,22 +14,42 @@
         text-align: center;
     }
 
-    .player td {
-
+    .arrow-left {
+        width: 0;
+        height: 0;
+        border-top: 30px solid transparent;
+        border-bottom: 30px solid transparent;
+        border-right:60px solid white;
+        display: inline-block;
     }
+
+    .arrow-right {
+      width: 0;
+      height: 0;
+      border-top: 30px solid transparent;
+      border-bottom: 30px solid transparent;
+      border-left: 60px solid  white;
+      display: inline-block;
+    }
+
+    .controler:hover {
+        background-color: gray;
+    }
+
+
 </style>
 </head>
 <body>
     <table class="player">
         <tr>
             <td colspan="3">
-                *TITLE*
+                <h1>*TITLE*</h1>
             </td>
         </tr>
         <tr>
-            <td>PREV</td>
-            <td>PLAY</td>
-            <td>NEXT</td>
+            <td class="controler"><div class="arrow-left"></div><div class="arrow-left"></div></td>
+            <td class="controler"><div class="arrow-right" style="margin-left:20px;"></div></td>
+            <td class="controler"><div class="arrow-right"></div><div class="arrow-right"></div></td>
         </tr>
     </table>
 </body>
