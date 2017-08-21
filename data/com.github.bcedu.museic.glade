@@ -5,7 +5,7 @@
   <object class="GtkAdjustment" id="adjustment">
     <property name="upper">1</property>
     <property name="step_increment">0.001</property>
-    <property name="page_increment">0.10000000000000001</property>
+    <property name="page_increment">0.1</property>
   </object>
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
@@ -62,6 +62,20 @@
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-add</property>
                 <signal name="clicked" handler="museic_gui_action_add_file" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="helpRemote">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Remote</property>
+                <property name="use_underline">True</property>
+                <property name="icon_name">network-wireless</property>
+                <signal name="clicked" handler="museic_gui_action_help_remote" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
