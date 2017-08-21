@@ -104,6 +104,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
     [CCode(instance_pos=-1)]
     public void action_seg_file (Gtk.Button button) {
         if (this.museic_app.has_files()) {
+            this.museic_app.play_next_file();
             this.notify(this.museic_app.get_current_file().name);
             update_stream_status();
             update_playlist_to_tree();
