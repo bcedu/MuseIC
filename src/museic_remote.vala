@@ -47,10 +47,6 @@ public class MuseicServer : GLib.Object {
     		message._strip ();
     		stdout.printf ("Received: %s\n", message);
 
-    		// Response:
-    		ostream.put_string (message, cancellable);
-    		ostream.put_byte ('\n', cancellable);
-
     		if (message == "GET /shutdown HTTP/1.1") {
     			cancellable.cancel ();
     		}else if (message == "GET /play HTTP/1.1") {
@@ -62,6 +58,19 @@ public class MuseicServer : GLib.Object {
     			this.app.mpris_player.Previous();
                 this.app.main_window.notify(this.app.get_current_file().name);
     		}
+
+            // Response: info about current file
+            MuseicFile file = this.app.get_current_file();
+            string content = @"{\"name\":\"$(file.name)\", \"artist\": \"$(file.artist)\", \"album\": \"$(file.album)\"}";
+            var header = new StringBuilder ();
+            header.append ("HTTP/1.0 200 OK\r\n");
+            header.append ("Content-Type: application/json\r\n");
+            header.append_printf ("Content-Length: %lu\r\n\r\n", content.length);
+
+            ostream.write (header.str.data);
+            ostream.write (content.data);
+            ostream.flush ();
+
     	} catch (Error e) {
     		stdout.printf ("Error! %s\n", e.message);
     	}
