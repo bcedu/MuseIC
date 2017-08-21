@@ -92,6 +92,23 @@ public class MuseicServer : GLib.Object {
         return res.str;
     }
 
+    private string get_html_player(MuseicFile file) {
+        var res = new StringBuilder ();
+        res.append ("HTTP/1.0 200 OK\r\n");
+        res.append ("Content-Type: text/html\r\n");
+
+        File aux = File.new_for_path(Constants.HTMLDIR+"client.html");
+        DataInputStream reader = new DataInputStream(aux.read());
+        string line;
+        var aux_content = new StringBuilder ();
+        while ((line=reader.read_line(null)) != null) aux_content.append(line);
+
+        string content = aux_content.str.replace("*TITLE*", file.name);
+        res.append_printf ("Content-Length: %lu\r\n\r\n", content.length);
+        res.append(content);
+        return res.str;
+    }
+
 }
 
 
