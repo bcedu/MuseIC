@@ -56,6 +56,7 @@ vala_precompile(VALA_C
     src/museic_file.vala
     src/museic_library.vala
     src/museic_dbus.vala
+    src/museic_remote.vala
     src/config.vala
 
 # tell what libraries to use when compiling
