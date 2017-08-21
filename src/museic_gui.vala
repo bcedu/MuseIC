@@ -15,7 +15,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Define main window
         this.set_position (Gtk.WindowPosition.CENTER);
         try {
-            this.icon = new Gdk.Pixbuf.from_file (Constants.PKGDATADIR+"/data/icons/museic-icon.svg");
+            this.icon = new Gdk.Pixbuf.from_file (Constants.ICON);
         }catch (GLib.Error e) {
             stdout.printf("Logo not found. Error: %s\n", e.message);
         }
@@ -85,7 +85,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             this.museic_app.play_ant_file();
             var notification = new Notification ("MuseIC");
             try {
-                notification.set_icon ( new Gdk.Pixbuf.from_file (Constants.PKGDATADIR+"/data/icons/museic-icon.svg"));
+                notification.set_icon ( new Gdk.Pixbuf.from_file (Constants.ICON));
             }catch (GLib.Error e) {
                 stdout.printf("Notification logo not found. Error: %s\n", e.message);
             }
@@ -103,7 +103,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             this.museic_app.play_next_file();
             var notification = new Notification ("MuseIC");
             try {
-                notification.set_icon ( new Gdk.Pixbuf.from_file (Constants.PKGDATADIR+"/data/icons/museic-icon.svg"));
+                notification.set_icon ( new Gdk.Pixbuf.from_file (Constants.ICON));
             }catch (GLib.Error e) {
                 stdout.printf("Notification logo not found. Error: %s\n", e.message);
             }
@@ -203,7 +203,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             update_playlist_to_tree();
             var notification = new Notification ("MuseIC");
             try {
-                notification.set_icon ( new Gdk.Pixbuf.from_file (Constants.PKGDATADIR+"/data/icons/museic-icon.svg"));
+                notification.set_icon ( new Gdk.Pixbuf.from_file (Constants.ICON));
             }catch (GLib.Error e) {
                 stdout.printf("Notification logo not found. Error: %s\n", e.message);
             }

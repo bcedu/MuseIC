@@ -20,6 +20,7 @@ set (EXEC_NAME "com.github.bcedu.museic")
 set (RELEASE_NAME "MuseIC")
 set (VERSION "1.0.2")
 set (VERSION_INFO "MuseIC beta version")
+set (ICON "${PKGDATADIR}/data/icons/com.github.bcedu.museic.svg")
 
 configure_file (${CMAKE_SOURCE_DIR}/src/config.vala.cmake ${CMAKE_SOURCE_DIR}/src/config.vala)
 

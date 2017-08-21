@@ -185,8 +185,7 @@ public class MprisPlayer : GLib.Object {
         _metadata.insert("xesam:album", get_simple_string_array(act.album)); // Why is needed a list of fucking arrays?!
         _metadata.insert("xesam:artist", get_simple_string_array(act.artist));
         _metadata.insert("xesam:url", act.path);
-        _metadata.insert("mpris:artUrl", "file://"+Constants.PKGDATADIR+"/data/icons/museic-icon.svg");
-        stdout.printf("METADATA\n    TITLE: %s\n    URI: %s\n", act.name, "file://"+Constants.PKGDATADIR+"/data/icons/museic-icon.svg");
+        _metadata.insert("mpris:artUrl", "file://"+Constants.ICON);
 
         return _metadata;
     }
