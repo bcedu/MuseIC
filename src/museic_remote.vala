@@ -68,12 +68,17 @@ public class MuseicServer : GLib.Object {
                 correct_request = true;
                 json_request = false;
             }else if (message == "GET /player/play HTTP/1.1") {
+                this.app.mpris_player.PlayPause();
                 correct_request = true;
                 json_request = false;
             }else if (message == "GET /player/next HTTP/1.1") {
+                this.app.mpris_player.Next();
+                this.app.main_window.notify(this.app.get_current_file().name);
                 correct_request = true;
                 json_request = false;
             }else if (message == "GET /player/prev HTTP/1.1") {
+                this.app.mpris_player.Previous();
+                this.app.main_window.notify(this.app.get_current_file().name);
                 correct_request = true;
                 json_request = false;
             }

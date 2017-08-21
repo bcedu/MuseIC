@@ -1,6 +1,6 @@
 <html>
 <head>
-    <!-- <link rel="stylesheet" type="text/css" href="client.css"> -->
+<!-- <link rel="stylesheet" type="text/css" href="client.css"> -->
 <style media="screen" type="text/css">
 
     body {
@@ -36,8 +36,23 @@
         background-color: gray;
     }
 
-
 </style>
+<script>
+function prev()
+{
+    window.location.href = "/player/prev";
+}
+
+function play()
+{
+    window.location.href = "/player/play";
+}
+
+function next()
+{
+    window.location.href = "/player/next";
+}
+</script>
 </head>
 <body>
     <table class="player">
@@ -47,9 +62,9 @@
             </td>
         </tr>
         <tr>
-            <td class="controler"><div class="arrow-left"></div><div class="arrow-left"></div></td>
-            <td class="controler"><div class="arrow-right" style="margin-left:20px;"></div></td>
-            <td class="controler"><div class="arrow-right"></div><div class="arrow-right"></div></td>
+            <td class="controler" onclick="prev()"><div class="arrow-left"></div><div class="arrow-left"></div></td>
+            <td class="controler" onclick="play()"><div class="arrow-right" style="margin-left:20px;"></div></td>
+            <td class="controler" onclick="next()"><div class="arrow-right"></div><div class="arrow-right"></div></td>
         </tr>
     </table>
 </body>
