@@ -39,6 +39,7 @@ public class MuseIC : Gtk.Application {
     private MuseicLibrary museic_library;
     public MuseicGui main_window;
     public MprisPlayer mpris_player;
+    public MuseicServer museic_server;
 
     public MuseIC (string[] args) {
         Object (application_id: "com.github.bcedu.museic", flags: ApplicationFlags.HANDLES_OPEN);
@@ -62,6 +63,7 @@ public class MuseIC : Gtk.Application {
         this.museic_filelist.add_files(this.museic_library.get_library_filenames(), true);
         setup_dbus();
         this.main_window = new MuseicGui (this);
+        this.museic_server = new MuseicServer(this);
     }
 
     private void setup_dbus() {
@@ -93,13 +95,13 @@ public class MuseIC : Gtk.Application {
         stdout.printf("name_lost\n");
     }
 
+    public void update_dbus_status() {
+        this.mpris_player.update_properties();
+    }
+
     public static int main (string[] args) {
         GLib.Environ.set_variable ({"PULSE_PROP_media.role"}, "audio", "true");
         return new MuseIC (args).run (args);
-    }
-
-    public void update_dbus_status() {
-        this.mpris_player.update_properties();
     }
 
 
