@@ -47,6 +47,7 @@ public class MuseicServer : GLib.Object {
     		message._strip ();
     		stdout.printf ("Received: %s\n", message);
             bool correct_request = false;
+            bool json_request = true;
     		if (message == "GET /shutdown HTTP/1.1") {
     			cancellable.cancel ();
                 correct_request = true;
@@ -61,20 +62,19 @@ public class MuseicServer : GLib.Object {
     			this.app.mpris_player.Previous();
                 this.app.main_window.notify(this.app.get_current_file().name);
                 correct_request = true;
-            }else if (message == "GET /info HTTP/1.1") correct_request = true;
+            }else if (message == "GET /info HTTP/1.1") {
+                correct_request = true;
+            }
 
-            if (correct_request) {
-                // Response: info about current file
-                MuseicFile file = this.app.get_current_file();
-                string content = @"{\"name\":\"$(file.name)\", \"artist\": \"$(file.artist)\", \"album\": \"$(file.album)\"}";
-                var header = new StringBuilder ();
-                header.append ("HTTP/1.0 200 OK\r\n");
-                header.append ("Content-Type: application/json\r\n");
-                header.append_printf ("Content-Length: %lu\r\n\r\n", content.length);
-
-                ostream.write (header.str.data);
-                ostream.write (content.data);
+            if (correct_request && json_request) {
+                // Response: json with info about current file
+                ostream.write (this.get_file_data_json(this.app.get_current_file()).data);
                 ostream.flush ();
+            }else if (correct_request) {
+                // Response: html page with player
+                // TODO
+                // ostream.write (this.get_html_player(this.app.get_current_file()).data);
+                // ostream.flush ();
             }
 
     	}catch (Error e) {
@@ -82,7 +82,18 @@ public class MuseicServer : GLib.Object {
     	}
     }
 
+    private string get_file_data_json(MuseicFile file) {
+        var res = new StringBuilder ();
+        res.append ("HTTP/1.0 200 OK\r\n");
+        res.append ("Content-Type: application/json\r\n");
+        string content = @"{\"name\":\"$(file.name)\", \"artist\": \"$(file.artist)\", \"album\": \"$(file.album)\"}";
+        res.append_printf ("Content-Length: %lu\r\n\r\n", content.length);
+        res.append(content);
+        return res.str;
+    }
+
 }
+
 
 public class Source : Object {
 	public uint16 port { private set; get; }
