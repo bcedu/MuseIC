@@ -83,12 +83,12 @@ install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.bcedu.museic.appdata.
 add_subdirectory (po)
 
 # Install data
-INSTALL(FILES data/museic_window.glade DESTINATION ${PKGDATADIR}/data)
-INSTALL(FILES data/icons/museic-icon.svg DESTINATION ${PKGDATADIR}/data/icons)
+INSTALL(FILES data/com.github.bcedu.museic.glade DESTINATION ${PKGDATADIR}/data)
+INSTALL(FILES data/icons/com.github.bcedu.museic.svg DESTINATION ${PKGDATADIR}/data/icons)
 # Install icons
-install(FILES data/icons/museic-icon.svg DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/)
-install(FILES data/icons/museic-icon.svg DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/32x32/apps/)
-install(FILES data/icons/museic-icon.svg DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/48x48/apps/)
-install(FILES data/icons/museic-icon.svg DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/64x64/apps/)
-install(FILES data/icons/museic-icon.svg DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/128x128/apps/)
-install(FILES data/icons/museic-icon.svg DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/256x256/apps/)
+install(FILES data/icons/com.github.bcedu.museic.svg DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/)
+install(FILES data/icons/com.github.bcedu.museic.svg DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/32x32/apps/)
+install(FILES data/icons/com.github.bcedu.museic.svg DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/48x48/apps/)
+install(FILES data/icons/com.github.bcedu.museic.svg DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/64x64/apps/)
+install(FILES data/icons/com.github.bcedu.museic.svg DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/128x128/apps/)
+install(FILES data/icons/com.github.bcedu.museic.svg DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/256x256/apps/)
