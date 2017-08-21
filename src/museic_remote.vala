@@ -2,13 +2,10 @@ public class MuseicServer : GLib.Object {
 
     private MuseIC app;
     private SocketService service;
-    public MainLoop loop;
     private Cancellable cancellable;
 
     public MuseicServer(MuseIC app) {
         this.app = app;
-
-        this.loop = new MainLoop ();
 
 		// Create a new SocketService:
 		this.service = new SocketService ();
@@ -25,7 +22,6 @@ public class MuseicServer : GLib.Object {
 		this.service.incoming.connect(accept_connection);
 
 		this.service.start ();
-		this.loop.run ();
     }
 
     private bool accept_connection(SocketConnection connection, Object? source_object) {
@@ -38,7 +34,6 @@ public class MuseicServer : GLib.Object {
 
     public void close_connection() {
         this.service.stop ();
-        this.loop.quit ();
         this.app.quit();
     }
 
