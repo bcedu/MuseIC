@@ -93,7 +93,6 @@ public class MuseicServer : GLib.Object {
                 ostream.write (this.get_html_player(this.app.get_current_file()).data);
                 ostream.flush ();
             }
-
     	}catch (Error e) {
             stdout.printf ("Error! %s\n", e.message);
     	}
@@ -124,6 +123,22 @@ public class MuseicServer : GLib.Object {
         res.append_printf ("Content-Length: %lu\r\n\r\n", content.length);
         res.append(content);
         return res.str;
+    }
+
+    public string get_server_info() {
+        return this.resolve_server_address()+":1025";
+    }
+
+    public string resolve_server_address() {
+        // Resolve hostname to IP address
+       var resolver = Resolver.get_default ();
+       var addresses = resolver.lookup_by_name ("www.google.com", null);
+       var address = addresses.nth_data (0);
+
+       var client = new SocketClient ();
+       var conn = client.connect (new InetSocketAddress (address, 80));
+       InetSocketAddress local = conn.get_local_address() as InetSocketAddress;
+       return local.get_address().to_string();
     }
 
 }
