@@ -20,10 +20,14 @@ public class MuseicLibrary {
         try {
             DataInputStream reader = new DataInputStream(this.file.read());
             string line;
+            File aux;
             while ((line=reader.read_line(null)) != null) {
-                if (this.filenames.length == this.nfiles) this.filenames.resize(this.filenames.length*2);
-                this.filenames[this.nfiles] = line;
-                this.nfiles++;
+                aux = File.new_for_path(line);
+                if (aux.query_exists()) {
+                    if (this.filenames.length == this.nfiles) this.filenames.resize(this.filenames.length*2);
+                    this.filenames[this.nfiles] = line;
+                    this.nfiles++;
+                }
             }
         }catch (Error e){
             error("%s", e.message);
