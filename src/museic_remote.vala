@@ -46,33 +46,39 @@ public class MuseicServer : GLib.Object {
     		string message = yield istream.read_line_async (Priority.DEFAULT, cancellable);
     		message._strip ();
     		stdout.printf ("Received: %s\n", message);
-
+            bool correct_request = false;
     		if (message == "GET /shutdown HTTP/1.1") {
     			cancellable.cancel ();
+                correct_request = true;
     		}else if (message == "GET /play HTTP/1.1") {
     			this.app.mpris_player.PlayPause();
+                correct_request = true;
     		}else if (message == "GET /next HTTP/1.1") {
     			this.app.mpris_player.Next();
                 this.app.main_window.notify(this.app.get_current_file().name);
+                correct_request = true;
     		}else if (message == "GET /prev HTTP/1.1") {
     			this.app.mpris_player.Previous();
                 this.app.main_window.notify(this.app.get_current_file().name);
-    		}
+                correct_request = true;
+            }else if (message == "GET /info HTTP/1.1") correct_request = true;
 
-            // Response: info about current file
-            MuseicFile file = this.app.get_current_file();
-            string content = @"{\"name\":\"$(file.name)\", \"artist\": \"$(file.artist)\", \"album\": \"$(file.album)\"}";
-            var header = new StringBuilder ();
-            header.append ("HTTP/1.0 200 OK\r\n");
-            header.append ("Content-Type: application/json\r\n");
-            header.append_printf ("Content-Length: %lu\r\n\r\n", content.length);
+            if (correct_request) {
+                // Response: info about current file
+                MuseicFile file = this.app.get_current_file();
+                string content = @"{\"name\":\"$(file.name)\", \"artist\": \"$(file.artist)\", \"album\": \"$(file.album)\"}";
+                var header = new StringBuilder ();
+                header.append ("HTTP/1.0 200 OK\r\n");
+                header.append ("Content-Type: application/json\r\n");
+                header.append_printf ("Content-Length: %lu\r\n\r\n", content.length);
 
-            ostream.write (header.str.data);
-            ostream.write (content.data);
-            ostream.flush ();
+                ostream.write (header.str.data);
+                ostream.write (content.data);
+                ostream.flush ();
+            }
 
-    	} catch (Error e) {
-    		stdout.printf ("Error! %s\n", e.message);
+    	}catch (Error e) {
+            stdout.printf ("Error! %s\n", e.message);
     	}
     }
 
