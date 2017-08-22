@@ -38,6 +38,8 @@
 
 </style>
 <script>
+    setTimeout(update_status, 10000);
+
     function prev()
     {
         var xhttp = new XMLHttpRequest();
@@ -71,6 +73,18 @@
             }
         };
         xhttp.open("GET", "/next", true);
+        xhttp.send();
+    }
+
+    function update_status() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("info").innerHTML = JSON.parse(this.responseText).name;
+                setTimeout(update_status, 1000);
+            }
+        };
+        xhttp.open("GET", "/info", true);
         xhttp.send();
     }
 </script>
