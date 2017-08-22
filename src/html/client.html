@@ -32,6 +32,23 @@
       display: inline-block;
     }
 
+    .play {
+        width: 0;
+        height: 0;
+        border-top: 30px solid transparent;
+        border-bottom: 30px solid transparent;
+        border-left: 60px solid  white;
+        display: inline-block;
+    }
+
+    .pause {
+        width: 10px;
+        height: 60px;
+        border-right: 25px solid white;
+        border-left: 25px solid white;
+        display: inline-block;
+    }
+
     .controler:hover {
         background-color: gray;
     }
@@ -57,6 +74,11 @@
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 document.getElementById("info").innerHTML = JSON.parse(this.responseText).name;
+                if (JSON.parse(this.responseText).status == "play") {
+                    document.getElementById("play-button").className = "pause";
+                }else {
+                    document.getElementById("play-button").className = "play";
+                }
             }
         };
         xhttp.open("GET", "/play", true);
@@ -80,6 +102,11 @@
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 document.getElementById("info").innerHTML = JSON.parse(this.responseText).name;
+                if (JSON.parse(this.responseText).status == "play") {
+                    document.getElementById("play-button").className = "pause";
+                }else {
+                    document.getElementById("play-button").className = "play";
+                }
                 setTimeout(update_status, 1000);
             }
         };
@@ -97,7 +124,7 @@
         </tr>
         <tr>
             <td class="controler" onclick="prev()"><div class="arrow-left"></div><div class="arrow-left"></div></td>
-            <td class="controler" onclick="play()"><div class="arrow-right" style="margin-left:20px;"></div></td>
+            <td class="controler" onclick="play()"><div id="play-button" class="arrow-right" style="margin-left:20px;"></div></td>
             <td class="controler" onclick="next()"><div class="arrow-right"></div><div class="arrow-right"></div></td>
         </tr>
     </table>

@@ -71,7 +71,7 @@ public class MuseicServer : GLib.Object {
 
             if (correct_request && json_request) {
                 // Response: json with info about current file
-                ostream.write (this.get_file_data_json(this.app.get_current_file()).data);
+                ostream.write (this.get_file_data_json(this.app.get_current_file(), this.app.state()).data);
                 ostream.flush ();
             }else if (correct_request) {
                 // Response: html page with player
@@ -84,11 +84,11 @@ public class MuseicServer : GLib.Object {
     	}
     }
 
-    private string get_file_data_json(MuseicFile file) {
+    private string get_file_data_json(MuseicFile file, string status) {
         var res = new StringBuilder ();
         res.append ("HTTP/1.0 200 OK\r\n");
         res.append ("Content-Type: application/json\r\n");
-        string content = @"{\"name\":\"$(file.name)\", \"artist\": \"$(file.artist)\", \"album\": \"$(file.album)\"}";
+        string content = @"{\"name\":\"$(file.name)\", \"artist\": \"$(file.artist)\", \"album\": \"$(file.album)\", \"status\": \"$status\"}";
         res.append_printf ("Content-Length: %lu\r\n\r\n", content.length);
         res.append(content);
         return res.str;
