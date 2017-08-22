@@ -1,5 +1,5 @@
-com.github.bcedu.museic (1.0.2) precise; urgency=low
+com.github.bcedu.museic (1.1.1) precise; urgency=low
 
-  * Initial Release.
+  * Remote control through browser.
 
  Eduard Berloso Clarà <eduard.bc.95@gmail.com>  Tue, 9 Apr 2013 04:53:39 -0500
