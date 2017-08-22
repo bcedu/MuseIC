@@ -386,7 +386,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
     }
     [CCode(instance_pos=-1)]
     public void action_help_remote(Gtk.Button button) {
-        string help_string = "Control MuseIC from any device!\n1. Open your favourite browser\n2. Type "+this.museic_app.museic_server.get_server_info()+"\n3. Control MuseIC playback: play/ppause, next, previous, etc.\n\nIn order to be able to connect to MuseIC, both devices must be in the same Wifi network.\n";
+        string help_string = "Control MuseIC from any device!\n1. Open your favourite browser\n2. Type "+this.museic_app.museic_server.get_server_info()+"/player\n3. Control MuseIC playback: play/pause, next, previous, etc.\n\nIn order to be able to connect to MuseIC, both devices must be in the same Wifi network.\n";
 
         var helpw = new Gtk.Window();
         helpw.window_position = Gtk.WindowPosition.CENTER;
