@@ -38,27 +38,48 @@
 
 </style>
 <script>
-function prev()
-{
-    window.location.href = "/player/prev";
-}
+    function prev()
+    {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("info").innerHTML = JSON.parse(this.responseText).name;
+            }
+        };
+        xhttp.open("GET", "/prev", true);
+        xhttp.send();
+    }
 
-function play()
-{
-    window.location.href = "/player/play";
-}
+    function play()
+    {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("info").innerHTML = JSON.parse(this.responseText).name;
+            }
+        };
+        xhttp.open("GET", "/play", true);
+        xhttp.send();
+    }
 
-function next()
-{
-    window.location.href = "/player/next";
-}
+    function next()
+    {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("info").innerHTML = JSON.parse(this.responseText).name;
+            }
+        };
+        xhttp.open("GET", "/next", true);
+        xhttp.send();
+    }
 </script>
 </head>
 <body>
     <table class="player">
         <tr>
             <td colspan="3">
-                <h1>*TITLE*</h1>
+                <h1 id="info">*TITLE*</h1>
             </td>
         </tr>
         <tr>
