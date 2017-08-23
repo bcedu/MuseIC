@@ -102,18 +102,11 @@
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 document.getElementById("info").innerHTML = JSON.parse(this.responseText).name;
+                var jsonInfo = JSON.parse(this.responseText);
                 /* Update play/pause button */
-                if (JSON.parse(this.responseText).status == "play") {
-                    document.getElementById("play-button").className = "pause";
-                }else {
-                    document.getElementById("play-button").className = "play";
-                }
+                update_play(jsonInfo);
                 /* Update random button */
-                if (JSON.parse(this.responseText).random == "true") {
-                    document.getElementById("random").style.backgroundColor = "gray";
-                }else {
-                    document.getElementById("random").style.backgroundColor = "white";
-                }
+                update_random(jsonInfo);
                 setTimeout(update_status, 1000);
             }
         };
@@ -124,16 +117,26 @@
     function random() {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                if (JSON.parse(this.responseText).random == "true") {
-                    document.getElementById("random").style.backgroundColor = "gray";
-                }else {
-                    document.getElementById("random").style.backgroundColor = "white";
-                }
-            }
+            update_random(JSON.parse(this.responseText));
         };
         xhttp.open("GET", "/random", true);
         xhttp.send();
+    }
+
+    function update_random(jsonInfo) {
+        if (jsonInfo.random == "true") {
+            document.getElementById("random").style.backgroundColor = "gray";
+        }else {
+            document.getElementById("random").style.backgroundColor = "white";
+        }
+    }
+
+    function update_play(jsonInfo) {
+        if (jsonInfo.status == "play") {
+            document.getElementById("play-button").className = "pause";
+        }else {
+            document.getElementById("play-button").className = "play";
+        }
     }
 
 </script>
