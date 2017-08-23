@@ -1,17 +1,17 @@
 <html>
 <head>
-<!-- <link rel="stylesheet" type="text/css" href="client.css"> -->
 <style media="screen" type="text/css">
 
-    body {
-        background-color: black;
-        color: white;
-    }
+    body {}
 
     .player {
         width: 100%;
         height: 80%;
-        text-align: center;
+        text-align: center
+    }
+
+    .player td{
+        width: 33%;
     }
 
     .arrow-left {
@@ -19,7 +19,7 @@
         height: 0;
         border-top: 30px solid transparent;
         border-bottom: 30px solid transparent;
-        border-right:60px solid white;
+        border-right:60px solid black;
         display: inline-block;
     }
 
@@ -28,7 +28,7 @@
       height: 0;
       border-top: 30px solid transparent;
       border-bottom: 30px solid transparent;
-      border-left: 60px solid  white;
+      border-left: 60px solid  black;
       display: inline-block;
     }
 
@@ -37,20 +37,23 @@
         height: 0;
         border-top: 30px solid transparent;
         border-bottom: 30px solid transparent;
-        border-left: 60px solid  white;
+        border-left: 60px solid  black;
         display: inline-block;
     }
 
     .pause {
         width: 10px;
         height: 60px;
-        border-right: 25px solid white;
-        border-left: 25px solid white;
+        border-right: 25px solid black;
+        border-left: 25px solid black;
         display: inline-block;
     }
 
+    .controler {
+        border: 5px solid white;
+    }
     .controler:hover {
-        background-color: gray;
+        border: 5px solid black;
     }
 
 </style>
@@ -119,14 +122,28 @@
     <table class="player">
         <tr>
             <td colspan="3">
-                <h1 id="info">*TITLE*</h1>
+                <div><h1 id="info">*TITLE*</h1></div>
             </td>
         </tr>
         <tr>
-            <td class="controler" onclick="prev()"><div class="arrow-left"></div><div class="arrow-left"></div></td>
-            <td class="controler" onclick="play()"><div id="play-button" class="arrow-right" style="margin-left:20px;"></div></td>
-            <td class="controler" onclick="next()"><div class="arrow-right"></div><div class="arrow-right"></div></td>
+            <td class="controler" onclick="prev()">
+                <div class="arrow-left"></div><div class="arrow-left"></div>
+            </td>
+            <td class="controler" onclick="play()">
+                <div id="play-button" class="play" style="margin-left:20px;"></div>
+            </td>
+            <td>
+                <table class="player"><tr>
+                    <td class="controler" onclick="next()" style="width:80%;">
+                        <div class="arrow-right"></div><div class="arrow-right"></div>
+                    </td>
+                    <td class="controler" onclick="random()" style="width:20%;">
+                        <div class="">Rand</div>
+                    </td>
+                </tr></table>
+            </td>
         </tr>
+        <tr><td></td></tr>
     </table>
     <script>update_status();</script>
 </body>
