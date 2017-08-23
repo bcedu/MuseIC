@@ -109,6 +109,8 @@ public class MuseicServer : GLib.Object {
         while ((line=reader.read_line(null)) != null) aux_content.append(line);
 
         string content = aux_content.str.replace("*TITLE*", file.name);
+        content = content.replace("*ARTIST*", file.artist);
+        content = content.replace("*ALBUM*", file.album);
         res.append_printf ("Content-Length: %lu\r\n\r\n", content.length);
         res.append(content);
         return res.str;

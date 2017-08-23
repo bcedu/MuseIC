@@ -63,7 +63,8 @@
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("info").innerHTML = JSON.parse(this.responseText).name;
+                var jsonInfo = JSON.parse(this.responseText);
+                update_file_info(jsonInfo);
             }
         };
         xhttp.open("GET", "/prev", true);
@@ -74,12 +75,9 @@
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("info").innerHTML = JSON.parse(this.responseText).name;
-                if (JSON.parse(this.responseText).status == "play") {
-                    document.getElementById("play-button").className = "pause";
-                }else {
-                    document.getElementById("play-button").className = "play";
-                }
+                var jsonInfo = JSON.parse(this.responseText);
+                update_file_info(jsonInfo);
+                update_play(jsonInfo);
             }
         };
         xhttp.open("GET", "/play", true);
@@ -90,7 +88,8 @@
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("info").innerHTML = JSON.parse(this.responseText).name;
+                var jsonInfo = JSON.parse(this.responseText);
+                update_file_info(jsonInfo);
             }
         };
         xhttp.open("GET", "/next", true);
@@ -101,8 +100,9 @@
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                document.getElementById("info").innerHTML = JSON.parse(this.responseText).name;
                 var jsonInfo = JSON.parse(this.responseText);
+                /* Update file info */
+                update_file_info(jsonInfo);
                 /* Update play/pause button */
                 update_play(jsonInfo);
                 /* Update random button */
@@ -139,13 +139,21 @@
         }
     }
 
+    function update_file_info(jsonInfo) {
+        document.getElementById("file-name").innerHTML = jsonInfo.name;
+        document.getElementById("file-artist").innerHTML = jsonInfo.artist;
+        document.getElementById("file-album").innerHTML = jsonInfo.album;
+    }
+
 </script>
 </head>
 <body>
     <table class="player">
         <tr>
             <td colspan="3">
-                <div><h1 id="info">*TITLE*</h1></div>
+                <div><h1 id="file-name">*TITLE*</h1></div>
+                <div><h4 id="file-album">*ALBUM*</h4></div>
+                <div><h2 id="file-artist">*ARTIST*</h2></div>
             </td>
         </tr>
         <tr>
