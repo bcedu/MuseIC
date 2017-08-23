@@ -67,15 +67,17 @@ public class MuseicServer : GLib.Object {
             }else if (message == "GET /player HTTP/1.1" || message == "GET / HTTP/1.1") {
                 correct_request = true;
                 json_request = false;
+            }else if (message == "GET /random HTTP/1.1") {
+                correct_request = true;
+                this.app.main_window.toggle_random();
             }
 
             if (correct_request && json_request) {
                 // Response: json with info about current file
-                ostream.write (this.get_file_data_json(this.app.get_current_file(), this.app.state()).data);
+                ostream.write (this.get_file_data_json(this.app.get_current_file(), this.app.state(), this.app.is_random()).data);
                 ostream.flush ();
             }else if (correct_request) {
                 // Response: html page with player
-                // TODO
                 ostream.write (this.get_html_player(this.app.get_current_file()).data);
                 ostream.flush ();
             }
@@ -84,11 +86,12 @@ public class MuseicServer : GLib.Object {
     	}
     }
 
-    private string get_file_data_json(MuseicFile file, string status) {
+    private string get_file_data_json(MuseicFile file, string status, bool random) {
         var res = new StringBuilder ();
         res.append ("HTTP/1.0 200 OK\r\n");
         res.append ("Content-Type: application/json\r\n");
-        string content = @"{\"name\":\"$(file.name)\", \"artist\": \"$(file.artist)\", \"album\": \"$(file.album)\", \"status\": \"$status\"}";
+        string srandom = random.to_string();
+        string content = @"{\"name\":\"$(file.name)\", \"artist\": \"$(file.artist)\", \"album\": \"$(file.album)\", \"status\": \"$status\", \"random\": \"$srandom\"}";
         res.append_printf ("Content-Length: %lu\r\n\r\n", content.length);
         res.append(content);
         return res.str;

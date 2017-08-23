@@ -312,6 +312,12 @@ public class MuseicGui : Gtk.ApplicationWindow {
         update_playlist_to_tree();
     }
 
+    public void toggle_random() {
+        Gtk.ToggleButton button = (builder.get_object ("randButton") as Gtk.ToggleButton);
+        button.active = !button.active;
+        action_random(button);
+    }
+
     [CCode(instance_pos=-1)]
     public void action_add_to_play (Gtk.Button button) {
         List<Gtk.TreePath> selected = (this.builder.get_object ("fileTree") as Gtk.TreeView).get_selection().get_selected_rows(null);
