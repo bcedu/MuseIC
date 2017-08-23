@@ -6,7 +6,7 @@
 
     .player {
         width: 100%;
-        height: 80%;
+        height: 20%;
         text-align: center
     }
 
@@ -54,6 +54,26 @@
     }
     .controler:hover {
         border: 5px solid black;
+    }
+
+    .player-separator {
+        width: 100%;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .listStore {
+        width: 50%;
+        height: 80%;
+        float: left;
+    }
+
+    .mfile {
+        width: 100%;
+        border: 1px solid white;
+    }
+    .mfile:hover {
+        border: 1px solid black;
     }
 
 </style>
@@ -151,9 +171,9 @@
     <table class="player">
         <tr>
             <td colspan="3">
-                <div><h1 id="file-name">*TITLE*</h1></div>
-                <div><h4 id="file-album">*ALBUM*</h4></div>
-                <div><h2 id="file-artist">*ARTIST*</h2></div>
+                <div><h1 style="margin-left:1%;" id="file-name">*TITLE*</h1></div>
+                <div><h4 style="margin-left:1%;" id="file-album">*ALBUM*</h4></div>
+                <div><h2 style="margin-left:1%"; id="file-artist">*ARTIST*</h2></div>
             </td>
         </tr>
         <tr>
@@ -176,6 +196,13 @@
         </tr>
         <tr><td></td></tr>
     </table>
-    <script>update_status();</script>
+    <hr class="player-separator"/>
+    <div class="listStore">
+
+    </div>
+    <div class="listStore">
+
+    </div>
+<script>update_status();</script>
 </body>
 </html>
