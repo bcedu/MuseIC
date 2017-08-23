@@ -59,8 +59,7 @@
 </style>
 <script>
 
-    function prev()
-    {
+    function prev() {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -71,8 +70,7 @@
         xhttp.send();
     }
 
-    function play()
-    {
+    function play() {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -88,8 +86,7 @@
         xhttp.send();
     }
 
-    function next()
-    {
+    function next() {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -105,10 +102,17 @@
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 document.getElementById("info").innerHTML = JSON.parse(this.responseText).name;
+                /* Update play/pause button */
                 if (JSON.parse(this.responseText).status == "play") {
                     document.getElementById("play-button").className = "pause";
                 }else {
                     document.getElementById("play-button").className = "play";
+                }
+                /* Update random button */
+                if (JSON.parse(this.responseText).random == "true") {
+                    document.getElementById("random").style.backgroundColor = "gray";
+                }else {
+                    document.getElementById("random").style.backgroundColor = "white";
                 }
                 setTimeout(update_status, 1000);
             }
@@ -116,6 +120,22 @@
         xhttp.open("GET", "/info", true);
         xhttp.send();
     }
+
+    function random() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                if (JSON.parse(this.responseText).random == "true") {
+                    document.getElementById("random").style.backgroundColor = "gray";
+                }else {
+                    document.getElementById("random").style.backgroundColor = "white";
+                }
+            }
+        };
+        xhttp.open("GET", "/random", true);
+        xhttp.send();
+    }
+
 </script>
 </head>
 <body>
@@ -137,8 +157,8 @@
                     <td class="controler" onclick="next()" style="width:80%;">
                         <div class="arrow-right"></div><div class="arrow-right"></div>
                     </td>
-                    <td class="controler" onclick="random()" style="width:20%;">
-                        <div class="">Rand</div>
+                    <td  id="random" class="controler" onclick="random()" style="width:20%;">
+                        <div>Rand</div>
                     </td>
                 </tr></table>
             </td>
