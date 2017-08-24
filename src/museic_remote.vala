@@ -74,7 +74,7 @@ public class MuseicServer : GLib.Object {
 
     private void send_current_status(DataOutputStream ostream) {
         // Response: json with info about current file
-        ostream.write (this.get_file_data_json(this.app.get_current_file(), this.app.state(), this.app.is_random()).data);
+        ostream.write (this.get_current_data_json(this.app.get_current_file(), this.app.state(), this.app.is_random()).data);
         ostream.flush ();
     }
 
@@ -84,17 +84,21 @@ public class MuseicServer : GLib.Object {
         ostream.flush ();
     }
 
-    private string get_file_data_json(MuseicFile file, string status, bool random) {
+    private string get_current_data_json(MuseicFile file, string status, bool random) {
         var res = new StringBuilder ();
         res.append ("HTTP/1.0 200 OK\r\n");
         res.append ("Content-Type: application/json\r\n");
         string srandom = random.to_string();
-        string content = @"{\"name\":\"$(file.name)\", \"artist\": \"$(file.artist)\", \"album\": \"$(file.album)\", \"status\": \"$status\", \"random\": \"$srandom\"}";
+        string file_json = this.get_file_data_json(file);
+        string content = @"{\"status\": \"$status\", \"random\": \"$srandom\", \"file\": $file_json}";
         res.append_printf ("Content-Length: %lu\r\n\r\n", content.length);
         res.append(content);
         return res.str;
     }
 
+    private string get_file_data_json(MuseicFile file) {
+        return @"{\"name\":\"$(file.name)\", \"artist\": \"$(file.artist)\", \"album\": \"$(file.album)\"}";
+    }
     private string get_html_player(MuseicFile file) {
         var res = new StringBuilder ();
         res.append ("HTTP/1.0 200 OK\r\n");

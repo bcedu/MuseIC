@@ -160,9 +160,9 @@
     }
 
     function update_file_info(jsonInfo) {
-        document.getElementById("file-name").innerHTML = jsonInfo.name;
-        document.getElementById("file-artist").innerHTML = jsonInfo.artist;
-        document.getElementById("file-album").innerHTML = jsonInfo.album;
+        document.getElementById("file-name").innerHTML = jsonInfo.file.name;
+        document.getElementById("file-artist").innerHTML = jsonInfo.file.artist;
+        document.getElementById("file-album").innerHTML = jsonInfo.file.album;
     }
 
 </script>
