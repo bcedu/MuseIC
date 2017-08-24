@@ -46,44 +46,42 @@ public class MuseicServer : GLib.Object {
     		string message = yield istream.read_line_async (Priority.DEFAULT, cancellable);
     		message._strip ();
     		stdout.printf ("Received: %s\n", message);
-            bool correct_request = false;
-            bool json_request = true;
     		if (message == "GET /shutdown HTTP/1.1") {
     			cancellable.cancel ();
-                correct_request = true;
     		}else if (message == "GET /play HTTP/1.1") {
     			this.app.mpris_player.PlayPause();
-                correct_request = true;
+                this.send_current_status(ostream);
     		}else if (message == "GET /next HTTP/1.1") {
     			this.app.mpris_player.Next();
                 this.app.main_window.notify(this.app.get_current_file().name);
-                correct_request = true;
+                this.send_current_status(ostream);
     		}else if (message == "GET /prev HTTP/1.1") {
     			this.app.mpris_player.Previous();
                 this.app.main_window.notify(this.app.get_current_file().name);
-                correct_request = true;
+                this.send_current_status(ostream);
             }else if (message == "GET /info HTTP/1.1") {
-                correct_request = true;
+                this.send_current_status(ostream);
             }else if (message == "GET /player HTTP/1.1" || message == "GET / HTTP/1.1") {
-                correct_request = true;
-                json_request = false;
+                this.send_html_player(ostream);
             }else if (message == "GET /random HTTP/1.1") {
-                correct_request = true;
                 this.app.main_window.toggle_random();
-            }
-
-            if (correct_request && json_request) {
-                // Response: json with info about current file
-                ostream.write (this.get_file_data_json(this.app.get_current_file(), this.app.state(), this.app.is_random()).data);
-                ostream.flush ();
-            }else if (correct_request) {
-                // Response: html page with player
-                ostream.write (this.get_html_player(this.app.get_current_file()).data);
-                ostream.flush ();
+                this.send_current_status(ostream);
             }
     	}catch (Error e) {
             stdout.printf ("Error! %s\n", e.message);
     	}
+    }
+
+    private void send_current_status(DataOutputStream ostream) {
+        // Response: json with info about current file
+        ostream.write (this.get_file_data_json(this.app.get_current_file(), this.app.state(), this.app.is_random()).data);
+        ostream.flush ();
+    }
+
+    private void send_html_player(DataOutputStream ostream) {
+        // Response: html page with player
+        ostream.write (this.get_html_player(this.app.get_current_file()).data);
+        ostream.flush ();
     }
 
     private string get_file_data_json(MuseicFile file, string status, bool random) {
