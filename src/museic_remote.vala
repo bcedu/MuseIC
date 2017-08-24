@@ -66,6 +66,10 @@ public class MuseicServer : GLib.Object {
             }else if (message == "GET /random HTTP/1.1") {
                 this.app.main_window.toggle_random();
                 this.send_current_status(ostream);
+            }else if (message == "GET /filelist HTTP/1.1") {
+                this.send_museic_list(ostream, this.app.get_all_filelist_files());
+            }else if (message == "GET /playlist HTTP/1.1") {
+                this.send_museic_list(ostream, this.app.get_all_playlist_files());
             }
     	}catch (Error e) {
             stdout.printf ("Error! %s\n", e.message);
@@ -84,6 +88,24 @@ public class MuseicServer : GLib.Object {
         ostream.flush ();
     }
 
+    private void send_museic_list(DataOutputStream ostream, MuseicFile[] fileslist) {
+        // Response: json with list of Museic files
+        var res = new StringBuilder ();
+        res.append ("HTTP/1.0 200 OK\r\n");
+        res.append ("Content-Type: application/json\r\n");
+        var content = new StringBuilder ();
+        content.append("{\"museic_list\": [");
+        foreach (MuseicFile file in fileslist[0:fileslist.length-1])
+            content.append(this.get_file_data_json(file)+",");
+        // Don't add "," in last file
+        content.append(this.get_file_data_json(fileslist[fileslist.length-1]));
+        content.append("]}");
+        res.append_printf ("Content-Length: %lu\r\n\r\n", content.str.length);
+        res.append(content.str);
+        ostream.write (res.data);
+        ostream.flush ();
+    }
+
     private string get_current_data_json(MuseicFile file, string status, bool random) {
         var res = new StringBuilder ();
         res.append ("HTTP/1.0 200 OK\r\n");
@@ -97,8 +119,12 @@ public class MuseicServer : GLib.Object {
     }
 
     private string get_file_data_json(MuseicFile file) {
-        return @"{\"name\":\"$(file.name)\", \"artist\": \"$(file.artist)\", \"album\": \"$(file.album)\"}";
+        string name = file.name.replace("\"", "''");
+        string artist = file.artist.replace("\"", "''");
+        string album = file.album.replace("\"", "''");
+        return @"{\"name\":\"$name\", \"artist\": \"$artist\", \"album\": \"$album\"}";
     }
+
     private string get_html_player(MuseicFile file) {
         var res = new StringBuilder ();
         res.append ("HTTP/1.0 200 OK\r\n");
