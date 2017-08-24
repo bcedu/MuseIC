@@ -119,10 +119,17 @@ public class MuseicServer : GLib.Object {
     }
 
     private string get_file_data_json(MuseicFile file) {
-        string name = file.name.replace("\"", "''");
-        string artist = file.artist.replace("\"", "''");
-        string album = file.album.replace("\"", "''");
+        string name = this.clean_string(file.name);
+        string artist = this.clean_string(file.artist);
+        string album = this.clean_string(file.album);
         return @"{\"name\":\"$name\", \"artist\": \"$artist\", \"album\": \"$album\"}";
+    }
+
+    public string clean_string(string text) {
+        string aux = text.strip();
+        aux = aux.replace("\"", "''");
+        aux = aux.replace("\t", "");
+        return aux;
     }
 
     private string get_html_player(MuseicFile file) {
