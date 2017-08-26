@@ -44,6 +44,13 @@ public class MuseIC : Gtk.Application {
     public MuseIC (string[] args) {
         Object (application_id: "com.github.bcedu.museic", flags: ApplicationFlags.HANDLES_OPEN);
         argsv = args;
+        // Create museic dir in home
+        try {
+            File file = File.new_for_path (Environment.get_home_dir()+"/.museic");
+            if (!file.query_exists()) file.make_directory ();
+        } catch (Error e) {
+            stdout.printf ("Error: %s\n", e.message);
+        }
     }
 
     public override void open (File[] files, string hint) {
@@ -59,7 +66,7 @@ public class MuseIC : Gtk.Application {
         this.streamplayer = new MuseicStreamPlayer(this.argsv, "MAIN");
         this.museic_filelist = new MuseicFileList();
         this.museic_playlist = new MuseicFileList();
-        this.museic_library = new MuseicLibrary(Environment.get_home_dir()+"/.museic_library");
+        this.museic_library = new MuseicLibrary(Environment.get_home_dir()+"/.museic/museic_library");
         this.museic_filelist.add_files(this.museic_library.get_library_filenames(), true);
         setup_dbus();
         this.main_window = new MuseicGui (this);
