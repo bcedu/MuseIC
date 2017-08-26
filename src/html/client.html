@@ -2,16 +2,26 @@
 <head>
 <style media="screen" type="text/css">
 
-    body {}
+    body {
+        margin-top: 100px;
+    }
 
     .player {
         width: 100%;
-        height: 20%;
+        height: 40%;
         text-align: center
     }
 
     .player td{
         width: 33%;
+    }
+
+    .media_info {
+        height: 60%;
+    }
+
+    .media_controler {
+        height: 40%;
     }
 
     .arrow-left {
@@ -54,12 +64,6 @@
     }
     .controler:hover {
         border: 5px solid black;
-    }
-
-    .player-separator {
-        width: 100%;
-        margin-top: 20px;
-        margin-bottom: 20px;
     }
 
     .listStore {
@@ -169,14 +173,14 @@
 </head>
 <body>
     <table class="player">
-        <tr>
+    <tr class="media_info">
             <td colspan="3">
                 <div><h1 style="margin-left:1%;" id="file-name">*TITLE*</h1></div>
                 <div><h4 style="margin-left:1%;" id="file-album">*ALBUM*</h4></div>
                 <div><h2 style="margin-left:1%"; id="file-artist">*ARTIST*</h2></div>
             </td>
         </tr>
-        <tr>
+        <tr class="media_controler">
             <td class="controler" onclick="prev()">
                 <div class="arrow-left"></div><div class="arrow-left"></div>
             </td>
@@ -196,13 +200,6 @@
         </tr>
         <tr><td></td></tr>
     </table>
-    <hr class="player-separator"/>
-    <div class="listStore">
-
-    </div>
-    <div class="listStore">
-
-    </div>
 <script>update_status();</script>
 </body>
 </html>
