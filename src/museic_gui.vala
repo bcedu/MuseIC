@@ -2,6 +2,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     private MuseIC museic_app;
     private Gtk.Builder builder;
+    private Museic.Settings saved_state;
     private Gtk.ListStore fileListStore;
     private Gtk.ListStore playListStore;
     // Aux variables needed to open files
@@ -13,12 +14,8 @@ public class MuseicGui : Gtk.ApplicationWindow {
         Object (application: app, title: "MuseIC");
         museic_app = app;
         // Define main window
-        this.set_position (Gtk.WindowPosition.CENTER);
-        try {
-            this.icon = new Gdk.Pixbuf.from_file (Constants.ICON);
-        }catch (GLib.Error e) {
-            stdout.printf("Logo not found. Error: %s\n", e.message);
-        }
+        this.load_window_state();
+        this.delete_event.connect(save_window_state);
         // Load interface from file
         this.builder = new Gtk.Builder ();
         try {
@@ -77,6 +74,39 @@ public class MuseicGui : Gtk.ApplicationWindow {
             update_stream_status();
             update_playlist_to_tree();
         }
+    }
+
+    private void load_window_state() {
+        this.saved_state = Museic.Settings.get_default();
+        // Load size
+        this.set_default_size (this.saved_state.window_width, this.saved_state.window_height);
+        // Load position
+        this.move(this.saved_state.window_posx, this.saved_state.window_posy);
+        // Maximize window if necessary
+        if (this.saved_state.window_state == 1) this.maximize ();
+        // Load position
+        this.set_position (Gtk.WindowPosition.CENTER);
+
+        // Set logo
+        try {
+            this.icon = new Gdk.Pixbuf.from_file (Constants.ICON);
+        }catch (GLib.Error e) {
+            stdout.printf("Logo not found. Error: %s\n", e.message);
+        }
+    }
+
+    private bool save_window_state(Gdk.EventAny event) {
+        int aux1;
+        int aux2;
+        this.get_size (out aux1, out aux2);
+        saved_state.window_width = aux1;
+        saved_state.window_height = aux2;
+        this.get_position (out aux1, out aux2);
+        saved_state.window_posx = aux1;
+        saved_state.window_posy = aux2;
+        if (this.is_maximized) saved_state.window_state = 1;
+        else saved_state.window_state = 0;
+        return false;
     }
 
     public void notify(string text) {

@@ -6,7 +6,6 @@ cmake_minimum_required (VERSION 2.6)
 
 # tell cmake where its modules can be found in our project directory
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
-list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/src)
 list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/vala)
 
 # where we install data directory (if we have any)
@@ -34,7 +33,8 @@ pkg_check_modules(DEPS REQUIRED
         gio-2.0
         gmodule-2.0
         gstreamer-1.0
-        dbus-glib-1)
+        dbus-glib-1
+        granite)
 
 add_definitions(${DEPS_CFLAGS})
 link_libraries(${DEPS_LIBRARIES})
@@ -58,6 +58,7 @@ vala_precompile(VALA_C
     src/museic_library.vala
     src/museic_dbus.vala
     src/museic_remote.vala
+    src/settings.vala
     src/config.vala
 
 # tell what libraries to use when compiling
@@ -67,6 +68,7 @@ PACKAGES
     gmodule-2.0
     gstreamer-1.0
     dbus-glib-1
+    granite
 )
 
 # tell cmake what to call the executable we just made
@@ -83,6 +85,10 @@ install (FILES ${CMAKE_CURRENT_SOURCE_DIR}/data/com.github.bcedu.museic.appdata.
 
 # Translation files
 add_subdirectory (po)
+
+# Gschema settings
+include (GSettings)
+add_schema (data/com.github.bcedu.museic.gschema.xml)
 
 # Install data
 INSTALL(FILES data/com.github.bcedu.museic.glade DESTINATION ${PKGDATADIR}/data)
