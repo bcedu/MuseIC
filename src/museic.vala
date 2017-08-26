@@ -150,6 +150,20 @@ public class MuseIC : Gtk.Application {
         return this.museic_playlist.get_current_file();
     }
 
+    public MuseicFile get_ant_file() {
+        // Returns the previous played file (ant file in playlist from current playlist file)
+        // If no prevous file returns a MuseicFile with name "unknown"
+        return this.museic_playlist.get_ant_file();
+    }
+
+    public MuseicFile get_next_file() {
+        // Returns the next file to play (next on playlist if any, otherwise next from filelist)
+        // If no next file or we are in random state returns a MuseicFile with name "unknown"
+        if (this.museic_playlist.has_next()) return this.museic_playlist.get_next_file();
+        else if (!this.is_random()) return this.museic_filelist.get_next_file();
+        else return new MuseicFile("");
+    }
+
     public MuseicFile get_current_filelist_file() {
         // Returns current file from filelist
         return this.museic_filelist.get_current_file();

@@ -8,7 +8,6 @@
 
     .player {
         width: 100%;
-        height: 40%;
         text-align: center
     }
 
@@ -16,12 +15,19 @@
         width: 33%;
     }
 
-    .media_info {
-        height: 60%;
+    .media_info>td {
+        padding-bottom: 50px;
     }
 
-    .media_controler {
-        height: 40%;
+    .file-info {
+        width: 30%;
+        float: left;
+        color: gray;
+    }
+
+    .file-info-current {
+        width: 40%;
+        float: left;
     }
 
     .arrow-left {
@@ -64,20 +70,6 @@
     }
     .controler:hover {
         border: 5px solid black;
-    }
-
-    .listStore {
-        width: 50%;
-        height: 80%;
-        float: left;
-    }
-
-    .mfile {
-        width: 100%;
-        border: 1px solid white;
-    }
-    .mfile:hover {
-        border: 1px solid black;
     }
 
 </style>
@@ -142,6 +134,7 @@
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             update_random(JSON.parse(this.responseText));
+            update_ant_next_info();
         };
         xhttp.open("GET", "/random", true);
         xhttp.send();
@@ -164,9 +157,40 @@
     }
 
     function update_file_info(jsonInfo) {
+        /* If file has changed, update next and ant files*/
+        if (jsonInfo.file.name != document.getElementById("file-name").innerHTML) {
+            update_ant_next_info();
+        }
         document.getElementById("file-name").innerHTML = jsonInfo.file.name;
         document.getElementById("file-artist").innerHTML = jsonInfo.file.artist;
         document.getElementById("file-album").innerHTML = jsonInfo.file.album;
+    }
+
+    function update_ant_next_info() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            var jsonInfoExtr = JSON.parse(this.responseText);
+            if (jsonInfoExtr.ant_file) {
+                document.getElementById("file-name-ant").innerHTML = jsonInfoExtr.ant_file.name;
+                document.getElementById("file-artist-ant").innerHTML = jsonInfoExtr.ant_file.artist;
+                document.getElementById("file-album-ant").innerHTML = jsonInfoExtr.ant_file.album;
+            }else {
+                document.getElementById("file-name-ant").innerHTML = "";
+                document.getElementById("file-artist-ant").innerHTML = "";
+                document.getElementById("file-album-ant").innerHTML = "";
+            }
+            if (jsonInfoExtr.next_file) {
+                document.getElementById("file-name-next").innerHTML = jsonInfoExtr.next_file.name;
+                document.getElementById("file-artist-next").innerHTML = jsonInfoExtr.next_file.artist;
+                document.getElementById("file-album-next").innerHTML = jsonInfoExtr.next_file.album;
+            }else {
+                document.getElementById("file-name-next").innerHTML = "";
+                document.getElementById("file-artist-next").innerHTML = "";
+                document.getElementById("file-album-next").innerHTML = "";
+            }
+        };
+        xhttp.open("GET", "/info-ant-next", true);
+        xhttp.send();
     }
 
 </script>
@@ -175,12 +199,24 @@
     <table class="player">
     <tr class="media_info">
             <td colspan="3">
-                <div><h1 style="margin-left:1%;" id="file-name">*TITLE*</h1></div>
-                <div><h4 style="margin-left:1%;" id="file-album">*ALBUM*</h4></div>
-                <div><h2 style="margin-left:1%"; id="file-artist">*ARTIST*</h2></div>
+                <div class="file-info">
+                    <div><h2 style="margin-left:1%;" id="file-name-ant"></h2></div>
+                    <div><h5 style="margin-left:1%;" id="file-album-ant"></h5></div>
+                    <div><h3 style="margin-left:1%"; id="file-artist-ant"></h3></div>
+                </div>
+                <div class="file-info-current">
+                    <div><h1 style="margin-left:1%;" id="file-name">*TITLE*</h1></div>
+                    <div><h4 style="margin-left:1%;" id="file-album">*ALBUM*</h4></div>
+                    <div><h2 style="margin-left:1%"; id="file-artist">*ARTIST*</h2></div>
+                </div>
+                <div class="file-info">
+                    <div><h2 style="margin-left:1%;" id="file-name-next"></h2></div>
+                    <div><h5 style="margin-left:1%;" id="file-album-next"></h5></div>
+                    <div><h3 style="margin-left:1%"; id="file-artist-next"></h3></div>
+                </div>
             </td>
         </tr>
-        <tr class="media_controler">
+        <tr>
             <td class="controler" onclick="prev()">
                 <div class="arrow-left"></div><div class="arrow-left"></div>
             </td>

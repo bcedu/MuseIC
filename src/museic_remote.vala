@@ -70,6 +70,9 @@ public class MuseicServer : GLib.Object {
                 this.send_museic_list(ostream, this.app.get_all_filelist_files());
             }else if (message == "GET /playlist HTTP/1.1") {
                 this.send_museic_list(ostream, this.app.get_all_playlist_files());
+            }else if (message == "GET /info-ant-next HTTP/1.1") {
+                /* Returns info about previous (if any) and next (if any) files */
+                this.send_prev_next_info(ostream);
             }
     	}catch (Error e) {
             stdout.printf ("Error! %s\n", e.message);
@@ -100,6 +103,32 @@ public class MuseicServer : GLib.Object {
         // Don't add "," in last file
         content.append(this.get_file_data_json(fileslist[fileslist.length-1]));
         content.append("]}");
+        res.append_printf ("Content-Length: %lu\r\n\r\n", content.str.length);
+        res.append(content.str);
+        ostream.write (res.data);
+        ostream.flush ();
+    }
+
+    private void send_prev_next_info(DataOutputStream ostream) {
+        // Response: json with info about next abd previous files
+        var res = new StringBuilder ();
+        res.append ("HTTP/1.0 200 OK\r\n");
+        res.append ("Content-Type: application/json\r\n");
+        var content = new StringBuilder ();
+        content.append("{");
+
+        MuseicFile next = this.app.get_next_file();
+        if (next.name != "unknown") {
+            content.append("\"next_file\": "+this.get_file_data_json(next));
+        }
+
+        MuseicFile ant = this.app.get_ant_file();
+        if (ant.name != "unknown") {
+            if (next.name != "unknown") content.append(",");
+            content.append("\"ant_file\": "+this.get_file_data_json(ant));
+        }
+
+        content.append("}");
         res.append_printf ("Content-Length: %lu\r\n\r\n", content.str.length);
         res.append(content.str);
         ostream.write (res.data);

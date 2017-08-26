@@ -57,6 +57,26 @@ public class MuseicFileList {
         return get_current_file();
     }
 
+    public MuseicFile get_next_file() {
+        int aux_pos = this.filepos;
+        if (this.random_state){
+            aux_pos = Random.int_range (0, this.nfiles);
+        }else {
+            aux_pos += 1;
+            if (aux_pos >= this.nfiles) aux_pos = 0;
+        }
+        if (aux_pos < 0) return new MuseicFile("");
+        else return this.files_list[aux_pos];
+    }
+
+    public MuseicFile get_ant_file() {
+        int aux_pos = this.filepos;
+        aux_pos -= 1;
+        if (aux_pos < 0) aux_pos = this.nfiles-1;
+        if (aux_pos < 0) return new MuseicFile("");
+        else return this.files_list[aux_pos];
+    }
+
     public void clean() {
         filepos = -1;
         nfiles = 0;
