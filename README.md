@@ -1,5 +1,5 @@
 # MuseIC
-Simple audio player made with Vala to learn Vala and how elementary OS (and other linux distros) apps are made. 
+Simple audio player made with Vala to learn Vala and how elementary OS (and other linux distros) apps are made.
 
 Any resemblance between the name and some awesome music band is pure coincidence.
 
@@ -25,4 +25,4 @@ Or you can just use the python script I made (must be run as sudo):
 
 To uninstall your application, run the script "cmake_uninstaller.py".
 It must be run as sudo:
-- sudo python cmake_uninstaller.py
+- sudo python3.5 cmake_uninstaller.py

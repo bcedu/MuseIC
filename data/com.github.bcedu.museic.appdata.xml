@@ -11,7 +11,7 @@
         <p>MuseIC is a fast and simple music player with remote control from any device through internet browser.</p>
         <ul>
           <li>Play music files and add them to music library</li>
-          <li>Connect to the address given by MuseIC and control the media from any device (mobile phone, tablet, etc. any device with a web browser)</li>
+          <li>Connect to the address given by MuseIC and control the media from any device (mobile phone, tablet, etc.) with a web browser</li>
           <li>Sort by name, artis and album (it handles ID3 metadata tags)</li>
         </ul>
         <p>Any resemblance between the name and some awesome music band is pure coincidence.</p>
