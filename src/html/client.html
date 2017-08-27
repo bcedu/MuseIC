@@ -193,6 +193,30 @@
         xhttp.send();
     }
 
+    var museic_filelist;
+
+    function set_filelist() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var obj = JSON.parse(this.responseText).museic_list;
+                museic_filelist = Object.keys(obj).map(function(k) { return obj[k] });
+            }
+        };
+        xhttp.open("GET", "/filelist", true);
+        xhttp.send();
+    }
+
+    function search_files(text, filelist) {
+        var res = [];
+        for (var i = 0, len = filelist.length; i < len; i++) if (pass_filter(text, filelist[i])) res.push(filelist[i]);
+        return res;
+    }
+
+    function pass_filter(text, file) {
+        return (file.name.indexOf(text) !== -1 || file.album.indexOf(text) !== -1 || file.artist.indexOf(text) !== -1);
+    }
+
 </script>
 </head>
 <body>
@@ -234,8 +258,7 @@
                 </tr></table>
             </td>
         </tr>
-        <tr><td></td></tr>
     </table>
-<script>update_status();update_ant_next_info();</script>
+<script>update_status();update_ant_next_info();set_filelist();</script>
 </body>
 </html>
