@@ -73,7 +73,8 @@ public class MuseicServer : GLib.Object {
             }else if (message == "GET /info-ant-next HTTP/1.1") {
                 /* Returns info about previous (if any) and next (if any) files */
                 this.send_prev_next_info(ostream);
-            }
+            }else if (message.split("/").length > 3 && message.split("/")[0] == "GET " && message.split("/")[1] == "search")
+                this.send_search_results(ostream, message.split("/")[2].split(" ")[0]);
     	}catch (Error e) {
             stdout.printf ("Error! %s\n", e.message);
     	}
@@ -133,6 +134,29 @@ public class MuseicServer : GLib.Object {
         res.append(content.str);
         ostream.write (res.data);
         ostream.flush ();
+    }
+
+    private void send_search_results(DataOutputStream ostream, string search_text) {
+        // Response: json with list of Museic files which contains search_text
+        MuseicFile[] filtered_list = new MuseicFile[4];
+        int nfiles = 0;
+        foreach (MuseicFile file in this.app.get_all_filelist_files()) {
+            if (pass_filter(search_text, file)) {
+                filtered_list[nfiles] = file;
+                nfiles += 1;
+                if (nfiles == filtered_list.length) filtered_list.resize(filtered_list.length*2);
+            }
+        }
+        if (nfiles == 0) {
+            MuseicFile aux = new MuseicFile("");
+            aux.name = "No results :(";
+            filtered_list[0] = aux;
+            this.send_museic_list(ostream, filtered_list[0:1]);
+        }else this.send_museic_list(ostream, filtered_list[0:nfiles]);
+    }
+
+    private bool pass_filter(string text, MuseicFile file) {
+        return file.name.contains(text) || file.artist.contains(text) || file.album.contains(text);
     }
 
     private string get_current_data_json(MuseicFile file, string status, bool random) {
