@@ -74,6 +74,7 @@
 
     #search-group {
         margin-top: 50px;
+        margin-bottom: 50px;
         text-align: center;
         height: 25px;
     }
@@ -96,6 +97,31 @@
         padding: 0px;
     }
 
+    #liststore {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    #liststore tr:nth-child(odd) {
+        background: #f2f2f2;
+    }
+
+    #liststore tr>td {
+        padding: 10px 0px;
+    }
+
+    .filelist-info {
+        outline: 2px solid white;
+    }
+    .filelist-info:hover {
+        outline: 2px solid black;
+    }
+    .filelist-info-elem {
+        width: 20%;
+    }
+    .filelist-info-button {
+        width: 10%;
+    }
 
 </style>
 <script>
@@ -224,13 +250,13 @@
             if (this.readyState == 4 && this.status == 200) {
                 var obj = JSON.parse(this.responseText).museic_list;
                 var res = Object.keys(obj).map(function(k) { return obj[k] });
-                var row_text = "<tr class=<\"file-info\"> <td>*NAME*</td> <td>*ARTIST*</td> <td>*ALBUM*</td> </tr>";
+                var row_text = "<tr class=\"filelist-info\" id=\"museicfile-NELEM\"> <td class=\"filelist-info-elem\">*NAME*</td> <td class=\"filelist-info-elem\">*ARTIST*</td> <td class=\"filelist-info-elem\">*ALBUM*</td> <td class=\"filelist-info-button\" onclick=\"play_museicfile(NELEM)\">Play</td> <td class=\"filelist-info-button\" onclick=\"queque_museicfile(NELEM)\">Addd</td></tr>";
                 var result = "";
-                for (var i = 0, len = res.length; i < len; i++) result = result + row_text.replace("*NAME*", res[i].name).replace("*ARTIST*", res[i].artist).replace("*ALBUM*", res[i].album);
+                for (var i = 0, len = res.length; i < len; i++) result = result + row_text.replace("*NAME*", res[i].name).replace("*ARTIST*", res[i].artist).replace("*ALBUM*", res[i].album).replace(/NELEM/g , i);
                 document.getElementById("liststore").innerHTML = result;
             }
         };
-        xhttp.open("GET", "/search/"+document.getElementById("search-box").value, true);
+        xhttp.open("GET", "/search/"+document.getElementById("search-box").value.replace(/ /g , "_"), true);
         xhttp.send();
     }
 
@@ -277,7 +303,7 @@
         </tr>
     </table>
     <div id="search-group">
-            <input id="search-box" type="text" placeholder="  Search files to play! :D "/>
+            <input id="search-box" type="text" placeholder="Search files to play! :D "/>
             <div id="search-btn" onclick="set_search_results()">Search</div>
     </div>
     <table id="liststore"></table>
