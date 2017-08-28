@@ -3,7 +3,7 @@
 <style media="screen" type="text/css">
 
     body {
-        margin-top: 100px;
+        margin-top: 10px;
     }
 
     .player {
@@ -218,32 +218,20 @@
         xhttp.send();
     }
 
-    var museic_filelist;
-
-    function set_filelist() {
+    function set_search_results() {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 var obj = JSON.parse(this.responseText).museic_list;
-                museic_filelist = Object.keys(obj).map(function(k) { return obj[k] });
+                var res = Object.keys(obj).map(function(k) { return obj[k] });
+                var row_text = "<tr class=<\"file-info\"> <td>*NAME*</td> <td>*ARTIST*</td> <td>*ALBUM*</td> </tr>";
+                var result = "";
+                for (var i = 0, len = res.length; i < len; i++) result = result + row_text.replace("*NAME*", res[i].name).replace("*ARTIST*", res[i].artist).replace("*ALBUM*", res[i].album);
+                document.getElementById("liststore").innerHTML = result;
             }
         };
-        xhttp.open("GET", "/filelist", true);
+        xhttp.open("GET", "/search/"+document.getElementById("search-box").value, true);
         xhttp.send();
-    }
-
-    function search_files(text, filelist) {
-        var res = [];
-        for (var i = 0, len = filelist.length; i < len; i++) if (pass_filter(text, filelist[i])) res.push(filelist[i]);
-        return res;
-    }
-
-    function pass_filter(text, file) {
-        return (file.name.indexOf(text) !== -1 || file.album.indexOf(text) !== -1 || file.artist.indexOf(text) !== -1);
-    }
-
-    function set_search_results() {
-        var res = search_files(document.getElementById("search-box").value, museic_filelist);
     }
 
 </script>
@@ -290,8 +278,9 @@
     </table>
     <div id="search-group">
             <input id="search-box" type="text" placeholder="  Search files to play! :D "/>
-            <div id="search-btn">Search</div>
+            <div id="search-btn" onclick="set_search_results()">Search</div>
     </div>
-<script>update_status();update_ant_next_info();set_filelist();</script>
+    <table id="liststore"></table>
+<script>update_status();update_ant_next_info();</script>
 </body>
 </html>

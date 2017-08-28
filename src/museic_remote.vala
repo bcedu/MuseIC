@@ -150,6 +150,8 @@ public class MuseicServer : GLib.Object {
         if (nfiles == 0) {
             MuseicFile aux = new MuseicFile("");
             aux.name = "No results :(";
+            aux.artist = "";
+            aux.album = "";
             filtered_list[0] = aux;
             this.send_museic_list(ostream, filtered_list[0:1]);
         }else this.send_museic_list(ostream, filtered_list[0:nfiles]);
