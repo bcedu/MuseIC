@@ -73,8 +73,15 @@ public class MuseicServer : GLib.Object {
             }else if (message == "GET /info-ant-next HTTP/1.1") {
                 /* Returns info about previous (if any) and next (if any) files */
                 this.send_prev_next_info(ostream);
-            }else if (message.split("/").length > 3 && message.split("/")[0] == "GET " && message.split("/")[1] == "search")
-                this.send_search_results(ostream, message.split("/")[2].split(" ")[0]);
+            }else if (message.split("/").length > 3 && message.split("/")[0] == "GET " && message.split("/")[1] == "search")  // search request
+                /*
+                    Check if split by '/' is len > 3: we need "GET ", "search" and "{text_to_search} HTTP"
+                    Split by " " and get first elem to get only the {text_to_search} instead of the hole "{text_to_search} HTTP".
+                    The {text_to_search} has "_" instead of spaces, so we replace them when searching for files.
+
+                    Example of search request: "GET /search/Muse_Knights_Cydonia HTTP/1.1"
+                */
+                this.send_search_results(ostream, message.split("/")[2].split(" ")[0].replace("_", " "));
     	}catch (Error e) {
             stdout.printf ("Error! %s\n", e.message);
     	}
