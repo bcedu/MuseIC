@@ -72,6 +72,31 @@
         border: 5px solid black;
     }
 
+    #search-group {
+        margin-top: 50px;
+        text-align: center;
+        height: 25px;
+    }
+
+    #search-box {
+        background-color: white;
+        width: 20%;
+        height: 100%;
+    }
+
+    #search-btn {
+        display: inline-block;
+        width: 10%;
+        border: 1px solid black;
+        padding: 1px;
+        vertical-align: middle;
+    }
+    #search-btn:hover {
+        border: 2px solid black;
+        padding: 0px;
+    }
+
+
 </style>
 <script>
 
@@ -217,6 +242,10 @@
         return (file.name.indexOf(text) !== -1 || file.album.indexOf(text) !== -1 || file.artist.indexOf(text) !== -1);
     }
 
+    function set_search_results() {
+        var res = search_files(document.getElementById("search-box").value, museic_filelist);
+    }
+
 </script>
 </head>
 <body>
@@ -259,6 +288,10 @@
             </td>
         </tr>
     </table>
+    <div id="search-group">
+            <input id="search-box" type="text" placeholder="  Search files to play! :D "/>
+            <div id="search-btn">Search</div>
+    </div>
 <script>update_status();update_ant_next_info();set_filelist();</script>
 </body>
 </html>
