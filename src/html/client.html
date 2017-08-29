@@ -275,6 +275,17 @@
     }
 
     function queque_museicfile(id) {
+        var aux = document.getElementById("museicfile-"+id);
+        var name = aux.getElementsByClassName("filelist-info-elem")[0].innerHTML.replace(/ /g , "_");
+        var artist = aux.getElementsByClassName("filelist-info-elem")[1].innerHTML.replace(/ /g , "_");
+        var album = aux.getElementsByClassName("filelist-info-elem")[2].innerHTML.replace(/ /g , "_");
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            var jsonInfo = JSON.parse(this.responseText);
+            update_ant_next_info(jsonInfo);
+        };
+        xhttp.open("GET", "/queque-file/"+name+"--"+artist+"--"+album, true);
+        xhttp.send();
     }
 
 </script>

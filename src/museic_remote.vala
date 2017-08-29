@@ -94,6 +94,18 @@ public class MuseicServer : GLib.Object {
                 string aux = message.split("/")[2].split(" ")[0].replace("_", " ").replace("&amp;", "&");
                 this.play_file(aux.split("--")[0], aux.split("--")[1], aux.split("--")[2]);
                 this.send_current_status(ostream);
+            }else if (message.split("/").length > 3 && message.split("/")[0] == "GET " && message.split("/")[1] == "queque-file") { // queque-file request
+                /*
+                    Check if split by '/' is len > 3: we need "GET ", "queque-file" and "{name--artist--album} HTTP"
+                    Split by " " and get first elem to get only the {name--artist--album} instead of the hole "{name--artist--album} HTTP".
+                    The {name--artist--album} has "_" instead of spaces, so we replace them when searching for files.
+                    Finnaly we split by "--" to get the name, artist and album.
+
+                    Example of search request: "GET /queque-file/Knights_Of_Cydonia--Muse--Black_Holes_And_Revelations HTTP/1.1"
+                */
+                string aux = message.split("/")[2].split(" ")[0].replace("_", " ").replace("&amp;", "&");
+                this.queque_file(aux.split("--")[0], aux.split("--")[1], aux.split("--")[2]);
+                this.send_prev_next_info(ostream);
             }
     	}catch (Error e) {
             stdout.printf ("Error! %s\n", e.message);
@@ -254,6 +266,19 @@ public class MuseicServer : GLib.Object {
         for (int index=0; index < files.length; index++) {
             if (pass_filter(name+" "+artist+" "+album, files[index])) {
                 this.app.main_window.action_play_selected_file_filelist(new Gtk.TreeView(), new Gtk.TreePath.from_string(index.to_string()), new Gtk.TreeViewColumn());
+                index = files.length;
+            }
+        }
+    }
+
+    private void queque_file(string name, string artist, string album) {
+        MuseicFile[] files = this.app.get_all_filelist_files();
+        for (int index=0; index < files.length; index++) {
+            if (pass_filter(name+" "+artist+" "+album, files[index])) {
+                int[] files_to_queque = new int[1];
+                files_to_queque[0] = index;
+                this.app.add_files_to_playlist(files_to_queque);
+                this.app.main_window.update_playlist_to_tree();
                 index = files.length;
             }
         }
