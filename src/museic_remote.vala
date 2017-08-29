@@ -82,6 +82,19 @@ public class MuseicServer : GLib.Object {
                     Example of search request: "GET /search/Muse_Knights_Cydonia HTTP/1.1"
                 */
                 this.send_search_results(ostream, message.split("/")[2].split(" ")[0].replace("_", " "));
+            else if (message.split("/").length > 3 && message.split("/")[0] == "GET " && message.split("/")[1] == "play-file") { // play-file request
+                /*
+                    Check if split by '/' is len > 3: we need "GET ", "ply-file" and "{name--artist--album} HTTP"
+                    Split by " " and get first elem to get only the {name--artist--album} instead of the hole "{name--artist--album} HTTP".
+                    The {name--artist--album} has "_" instead of spaces, so we replace them when searching for files.
+                    Finnaly we split by "--" to get the name, artist and album.
+
+                    Example of search request: "GET /play-file/Knights_Of_Cydonia--Muse--Black_Holes_And_Revelations HTTP/1.1"
+                */
+                string aux = message.split("/")[2].split(" ")[0].replace("_", " ").replace("&amp;", "&");
+                this.play_file(aux.split("--")[0], aux.split("--")[1], aux.split("--")[2]);
+                this.send_current_status(ostream);
+            }
     	}catch (Error e) {
             stdout.printf ("Error! %s\n", e.message);
     	}
@@ -165,7 +178,14 @@ public class MuseicServer : GLib.Object {
     }
 
     private bool pass_filter(string text, MuseicFile file) {
-        return file.name.contains(text) || file.artist.contains(text) || file.album.contains(text);
+        if (text == "") return true;
+        bool filter_passed = true;
+        foreach (string aux in text.split(" ")) {
+            if ((file.name.contains(aux) || file.artist.contains(aux) || file.album.contains(aux)) && filter_passed) filter_passed = true;
+            else filter_passed = false;
+        }
+        if (file.artist == "Muse") stdout.printf("TEXT: |%s|, FILE:|%s|%s|%s|, succes:%s\n", text, file.name, file.artist, file.album, filter_passed.to_string());
+        return filter_passed;
     }
 
     private string get_current_data_json(MuseicFile file, string status, bool random) {
@@ -227,6 +247,16 @@ public class MuseicServer : GLib.Object {
        var conn = client.connect (new InetSocketAddress (address, 80));
        InetSocketAddress local = conn.get_local_address() as InetSocketAddress;
        return local.get_address().to_string();
+    }
+
+    private void play_file(string name, string artist, string album) {
+        MuseicFile[] files = this.app.get_all_filelist_files();
+        for (int index=0; index < files.length; index++) {
+            if (pass_filter(name+" "+artist+" "+album, files[index])) {
+                this.app.main_window.action_play_selected_file_filelist(new Gtk.TreeView(), new Gtk.TreePath.from_string(index.to_string()), new Gtk.TreeViewColumn());
+                index = files.length;
+            }
+        }
     }
 
 }
