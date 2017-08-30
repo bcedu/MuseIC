@@ -72,13 +72,6 @@
         border: 5px solid black;
     }
 
-    #search-group {
-        margin-top: 50px;
-        margin-bottom: 50px;
-        text-align: center;
-        height: 25px;
-    }
-
     #search-box {
         background-color: white;
         width: 20%;
@@ -97,17 +90,26 @@
         padding: 0px;
     }
 
-    #liststore {
+    .liststore {
         width: 100%;
         border-collapse: collapse;
+        float: left
     }
 
-    #liststore tr:nth-child(odd) {
+    .liststore tr:nth-child(odd) {
         background: #f2f2f2;
     }
 
-    #liststore tr>td {
+    .liststore tr>td {
         padding: 10px 0px;
+    }
+
+    .liststore-header {
+        padding-top: 50px;
+        padding-bottom: 50px;
+        text-align: center;
+        height: 28px;
+        background-color: white;
     }
 
     .filelist-info {
@@ -253,7 +255,7 @@
                 var row_text = "<tr class=\"filelist-info\" id=\"museicfile-NELEM\"> <td class=\"filelist-info-elem\">*NAME*</td> <td class=\"filelist-info-elem\">*ARTIST*</td> <td class=\"filelist-info-elem\">*ALBUM*</td> <td class=\"filelist-info-button\" onclick=\"play_museicfile(NELEM)\">Play</td> <td class=\"filelist-info-button\" onclick=\"queque_museicfile(NELEM)\">Addd</td></tr>";
                 var result = "";
                 for (var i = 0, len = res.length; i < len; i++) result = result + row_text.replace("*NAME*", res[i].name).replace("*ARTIST*", res[i].artist).replace("*ALBUM*", res[i].album).replace(/NELEM/g , i);
-                document.getElementById("liststore").innerHTML = result;
+                document.getElementById("searched_files").innerHTML = result;
             }
         };
         xhttp.open("GET", "/search/"+document.getElementById("search-box").value.replace(/ /g , "_"), true);
@@ -285,6 +287,22 @@
             update_ant_next_info(jsonInfo);
         };
         xhttp.open("GET", "/queque-file/"+name+"--"+artist+"--"+album, true);
+        xhttp.send();
+    }
+
+    function set_playlist() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var obj = JSON.parse(this.responseText).museic_list;
+                var res = Object.keys(obj).map(function(k) { return obj[k] });
+                var row_text = "<tr class=\"filelist-info\" id=\"museicfile-NELEM\"> <td class=\"filelist-info-elem\">*NAME*</td> <td class=\"filelist-info-elem\">*ARTIST*</td> <td class=\"filelist-info-elem\">*ALBUM*</td> <td class=\"filelist-info-button\" onclick=\"play_museicfile(NELEM)\">Play</td> <td class=\"filelist-info-button\" onclick=\"queque_museicfile(NELEM)\">Addd</td></tr>";
+                var result = "";
+                for (var i = 0, len = res.length; i < len; i++) result = result + row_text.replace("*NAME*", res[i].name).replace("*ARTIST*", res[i].artist).replace("*ALBUM*", res[i].album).replace(/NELEM/g , i);
+                document.getElementById("playlist").innerHTML = result;
+            }
+        };
+        xhttp.open("GET", "/playlist", true);
         xhttp.send();
     }
 
@@ -330,11 +348,27 @@
             </td>
         </tr>
     </table>
-    <div id="search-group">
-            <input id="search-box" type="text" placeholder="Search files to play! :D "/>
-            <div id="search-btn" onclick="set_search_results()">Search</div>
-    </div>
-    <table id="liststore"></table>
+    <!-- <table class="liststore">
+        <thead>
+            <tr>
+                <th class="liststore-header" colspan="5">
+                    Playlist
+                </th>
+            </tr>
+        </thead>
+        <tbody id="playlist"></tbody>
+    </table> -->
+    <table class="liststore">
+        <thead>
+            <tr>
+                <th class="liststore-header" colspan="5">
+                    <input id="search-box" type="text" placeholder="Search files to play! :D "/>
+                    <div id="search-btn" onclick="set_search_results()">Search</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody id="searched_files"></tbody>
+    </table>
 <script>update_status();update_ant_next_info();</script>
 </body>
 </html>
