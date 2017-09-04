@@ -78,14 +78,14 @@
         height: 100%;
     }
 
-    #search-btn {
+    .btn {
         display: inline-block;
         width: 10%;
         border: 1px solid black;
         padding: 1px;
         vertical-align: middle;
     }
-    #search-btn:hover {
+    .btn:hover {
         border: 2px solid black;
         padding: 0px;
     }
@@ -306,6 +306,10 @@
         xhttp.send();
     }
 
+    function clear_search_results() {
+        document.getElementById("searched_files").innerHTML = "";
+    }
+
 </script>
 </head>
 <body>
@@ -363,7 +367,8 @@
             <tr>
                 <th class="liststore-header" colspan="5">
                     <input id="search-box" type="text" placeholder="Search files to play! :D "/>
-                    <div id="search-btn" onclick="set_search_results()">Search</div>
+                    <div id="search-btn" class="btn" onclick="set_search_results()">Search</div>
+                    <div class="btn" onclick="clear_search_results()">Clear</div>
                 </th>
             </tr>
         </thead>
