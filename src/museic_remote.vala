@@ -180,7 +180,7 @@ public class MuseicServer : GLib.Object {
             }
         }
         if (nfiles == 0) {
-            MuseicFile aux = new MuseicFile("");
+            MuseicFile aux = new MuseicFile("", "");
             aux.name = "No results :(";
             aux.artist = "";
             aux.album = "";

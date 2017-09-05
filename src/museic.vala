@@ -67,7 +67,7 @@ public class MuseIC : Gtk.Application {
         this.museic_filelist = new MuseicFileList();
         this.museic_playlist = new MuseicFileList();
         this.museic_library = new MuseicLibrary(Environment.get_home_dir()+"/.museic/museic_library");
-        this.museic_filelist.add_files(this.museic_library.get_library_filenames(), true);
+        this.museic_filelist.add_files(this.museic_library.get_library_filenames(), true, "filelist");
         setup_dbus();
         this.main_window = new MuseicGui (this);
         this.museic_server = new MuseicServer(this);
@@ -123,7 +123,7 @@ public class MuseIC : Gtk.Application {
         // Set the playlist pos to the next file and ready it in stream.
         // If there isn't next file in playlist, add the next file of filelist
         // to the playlist and play it.
-        if (!this.museic_playlist.has_next()) this.museic_playlist.add_museic_file(this.museic_filelist.next_file());
+        if (!this.museic_playlist.has_next()) this.museic_playlist.add_museic_file(this.museic_filelist.next_file(), "filelist");
         ready_file(this.museic_playlist.next_file());
     }
 
@@ -168,7 +168,7 @@ public class MuseIC : Gtk.Application {
         // If no next file or we are in random state returns a MuseicFile with name "unknown"
         if (this.museic_playlist.has_next()) return this.museic_playlist.get_next_file();
         else if (!this.is_random()) return this.museic_filelist.get_next_file();
-        else return new MuseicFile("");
+        else return new MuseicFile("", "");
     }
 
     public MuseicFile get_current_filelist_file() {
@@ -183,7 +183,7 @@ public class MuseIC : Gtk.Application {
 
     public void add_files_to_filelist(string[] filenames) {
         // Add the files from filenames to the filelist
-        this.museic_filelist.add_files(filenames, true);
+        this.museic_filelist.add_files(filenames, true, "filelist");
         // Store them on library
         this.museic_library.add_files(filenames, true);
     }
@@ -191,7 +191,7 @@ public class MuseIC : Gtk.Application {
     public void add_files_to_playlist(int[] file_indexs) {
         // Add the files from filelist referenced with file_index to the playlist
         MuseicFile[] files = this.museic_filelist.get_files_list();
-        foreach (int i in file_indexs) this.museic_playlist.add_museic_file(files[i]);
+        foreach (int i in file_indexs) this.museic_playlist.add_museic_file(files[i], "quequed");
     }
 
     public void clear_filelist() {

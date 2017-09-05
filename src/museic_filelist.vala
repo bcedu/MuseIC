@@ -9,8 +9,8 @@ public class MuseicFileList {
 
     public MuseicFileList () {}
 
-    public void add_files(string[] filenames, bool filter_repeated) {
-        foreach (string filename in filenames) if (!filter_repeated || (filter_repeated && !is_in_filelist(filename))) add_file(filename);
+    public void add_files(string[] filenames, bool filter_repeated, string origin) {
+        foreach (string filename in filenames) if (!filter_repeated || (filter_repeated && !is_in_filelist(filename))) add_file(filename, origin);
     }
 
     public bool is_in_filelist(string filename) {
@@ -18,14 +18,15 @@ public class MuseicFileList {
         return false;
     }
 
-    public void add_file(string filename) {
+    public void add_file(string filename, string origin) {
         if (this.nfiles == this.files_list.length) this.files_list.resize(this.files_list.length*2);
-        this.files_list[this.nfiles] = new MuseicFile(filename);
+        this.files_list[this.nfiles] = new MuseicFile(filename, origin);
         this.nfiles += 1;
         if (this.nfiles == 1) this.filepos = 0;
     }
 
-    public void add_museic_file(MuseicFile file) {
+    public void add_museic_file(MuseicFile file, string origin) {
+        file.origin = origin;
         if (this.nfiles == this.files_list.length) this.files_list.resize(this.files_list.length*2);
         this.files_list[this.nfiles] = file;
         this.nfiles += 1;
@@ -33,7 +34,7 @@ public class MuseicFileList {
     }
 
     public MuseicFile get_current_file() {
-        if (filepos < 0) return new MuseicFile("");
+        if (filepos < 0) return new MuseicFile("", "");
         else return this.files_list[this.filepos];
     }
 
@@ -65,7 +66,7 @@ public class MuseicFileList {
             aux_pos += 1;
             if (aux_pos >= this.nfiles) aux_pos = 0;
         }
-        if (aux_pos < 0) return new MuseicFile("");
+        if (aux_pos < 0) return new MuseicFile("", "");
         else return this.files_list[aux_pos];
     }
 
@@ -73,7 +74,7 @@ public class MuseicFileList {
         int aux_pos = this.filepos;
         aux_pos -= 1;
         if (aux_pos < 0) aux_pos = this.nfiles-1;
-        if (aux_pos < 0) return new MuseicFile("");
+        if (aux_pos < 0) return new MuseicFile("", "");
         else return this.files_list[aux_pos];
     }
 

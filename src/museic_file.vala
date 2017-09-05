@@ -13,11 +13,12 @@ public class MuseicFile {
     public string album = "unknown";
     public string duration = "unknown";
     public string image = "unknown";
+    public string origin = "unknown";
 
-    public MuseicFile (string path) {
+    public MuseicFile (string path, string origin) {
         this.path = path;
         if (path=="") return;
-
+        this.origin = origin;
         var file = File.new_for_path (path);
         var file_stream = file.read ();
         var data_stream = new DataInputStream (file_stream);
