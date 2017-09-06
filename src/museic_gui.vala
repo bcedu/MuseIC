@@ -69,7 +69,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         GLib.Timeout.add_seconds (1, update_stream_status);
         // Update tree view with files from library
         if (this.museic_app.get_filelist_len() > 0) {
-            this.museic_app.play_filelist_file(0);
+            this.museic_app.play_next_file();
             update_files_to_tree();
             update_stream_status();
             update_playlist_to_tree();
@@ -126,6 +126,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             this.museic_app.play_ant_file();
             this.notify(this.museic_app.get_current_file().name);
             update_stream_status();
+            update_files_to_tree();
             update_playlist_to_tree();
             this.museic_app.update_dbus_status();
         }
@@ -137,6 +138,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             this.museic_app.play_next_file();
             this.notify(this.museic_app.get_current_file().name);
             update_stream_status();
+            update_files_to_tree();
             update_playlist_to_tree();
             this.museic_app.update_dbus_status();
         }
@@ -286,11 +288,14 @@ public class MuseicGui : Gtk.ApplicationWindow {
         rgba_next.parse ("#e7f2f1");
         Gdk.RGBA rgba_default = Gdk.RGBA ();
         rgba_default.parse ("#ffffff");
+        Gdk.RGBA rgba_quequed = Gdk.RGBA ();
+        rgba_quequed.parse ("#c1c1d7");
         int pos = museic_app.get_playlist_pos();
         for (int i=aux.length-1;i>=0;i--) {
             file = aux[i];
             this.playListStore.append (out iter);
-            this.playListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album, 3, "", 4, rgba_default);
+            if (file.origin == "filelist") this.playListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album, 3, "", 4, rgba_default);
+            else this.playListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album, 3, "", 4, rgba_quequed);
             if (i == pos) {
                 this.playListStore.set (iter, 3, "Playing...", 4, rgba_act);
                 if (this.playListStore.iter_previous(ref iter)) {
@@ -332,13 +337,13 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     [CCode(instance_pos=-1)]
     public void action_random (Gtk.ToggleButton button) {
-        clean_files_status();
         this.museic_app.set_random(button.active);
         if (button.active) {
             Gdk.RGBA rgba = Gdk.RGBA ();
             rgba.parse ("#CCCCCC");
             button.override_background_color (Gtk.StateFlags.NORMAL,rgba);
         }else button.override_background_color (Gtk.StateFlags.NORMAL, null);
+        update_files_to_tree();
         update_playlist_to_tree();
     }
 
@@ -358,32 +363,25 @@ public class MuseicGui : Gtk.ApplicationWindow {
             i++;
         }
         this.museic_app.add_files_to_playlist(files_to_add);
+        update_files_to_tree();
         update_playlist_to_tree();
     }
 
     [CCode(instance_pos=-1)]
     public void action_play_selected_file_playlist (Gtk.TreeView view, Gtk.TreePath path, Gtk.TreeViewColumn column) {
         this.museic_app.play_playlist_file(this.museic_app.get_all_playlist_files().length-1-int.parse(path.to_string()));
-        clean_files_status();
+        update_files_to_tree();
         update_playlist_to_tree();
         this.museic_app.update_dbus_status();
     }
 
     [CCode(instance_pos=-1)]
     public void action_play_selected_file_filelist (Gtk.TreeView view, Gtk.TreePath path, Gtk.TreeViewColumn column) {
-        clean_files_status();
+        update_files_to_tree();
         this.museic_app.clear_playlist();
         this.museic_app.play_filelist_file(int.parse(path.to_string()));
         update_playlist_to_tree();
         this.museic_app.update_dbus_status();
-    }
-
-    private void clean_files_status() {
-        Gdk.RGBA rgba_default = Gdk.RGBA ();
-        rgba_default.parse ("#ffffff");
-        Gtk.TreeIter iter;
-        this.fileListStore.get_iter_from_string(out iter, this.museic_app.get_next_filelist_pos().to_string());
-        this.fileListStore.set (iter, 3, "", 4, rgba_default);  // I use an string i know it's incorrect because i don't know how to say the tree to use the default color
     }
 
     private void sort_by_song() {
