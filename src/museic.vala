@@ -115,7 +115,13 @@ public class MuseIC : Gtk.Application {
     //// PLAYLIST AND FILELIST RELATED METHODS
 
     public void play_ant_file() {
-        // Set the playlist pos to the previous file and ready it in stream.
+        // Set the playlist pos to the ant file and ready it in stream.
+        // If the origin of the new playlist file is "filelist", set filelist,
+        // set filelist pos to ant file (of filelist).
+        // If there isn't ant file in playlist, add the ant file of filelist
+        // to the playlist and play it.
+        if (!this.museic_playlist.has_ant()) this.museic_playlist.add_museic_file_init(this.museic_filelist.ant_file(), "filelist");
+        else if (this.museic_playlist.get_ant_file().origin == "filelist") this.museic_filelist.ant_file();
         ready_file(this.museic_playlist.ant_file());
     }
 
@@ -124,6 +130,7 @@ public class MuseIC : Gtk.Application {
         // If there isn't next file in playlist, add the next file of filelist
         // to the playlist and play it.
         if (!this.museic_playlist.has_next()) this.museic_playlist.add_museic_file(this.museic_filelist.next_file(), "filelist");
+        else if (this.museic_playlist.get_next_file().origin == "filelist") this.museic_filelist.next_file();
         ready_file(this.museic_playlist.next_file());
     }
 

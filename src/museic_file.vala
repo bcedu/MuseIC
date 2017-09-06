@@ -113,6 +113,16 @@ public class MuseicFile {
         stdout.printf("INFO: %s processed\n", this.path);
     }
 
+    public MuseicFile.from_museicfile (MuseicFile file) {
+        this.path = file.path;
+        this.name = file.name;
+        this.artist = file.artist;
+        this.album = file.album;
+        this.duration = file.duration;
+        this.image = file.image;
+        this.origin = file.origin;
+    }
+
     private BytesInfo get_rep_of_bytes(DataInputStream src, long nbytes) {
         string rep = "";
         string str = "";

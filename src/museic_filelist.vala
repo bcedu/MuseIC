@@ -25,12 +25,25 @@ public class MuseicFileList {
         if (this.nfiles == 1) this.filepos = 0;
     }
 
-    public void add_museic_file(MuseicFile file, string origin) {
+    public void add_museic_file(MuseicFile afile, string origin) {
+        MuseicFile file = new MuseicFile.from_museicfile(afile);
         file.origin = origin;
         if (this.nfiles == this.files_list.length) this.files_list.resize(this.files_list.length*2);
         this.files_list[this.nfiles] = file;
         this.nfiles += 1;
         if (this.nfiles == 1) this.filepos = 0;
+    }
+
+    public void add_museic_file_init(MuseicFile afile, string origin) {
+        MuseicFile file = new MuseicFile.from_museicfile(afile);
+        file.origin = origin;
+        MuseicFile[] aux_list = new MuseicFile[this.nfiles+1];
+        for (int i=0;i<this.nfiles;i++) aux_list[i+1] = this.files_list[i];
+        aux_list[0] = file;
+        this.nfiles += 1;
+        if (this.nfiles == 1) this.filepos = 0;
+        else this.filepos += 1;
+        this.files_list = aux_list;
     }
 
     public MuseicFile get_current_file() {
@@ -86,6 +99,10 @@ public class MuseicFileList {
 
     public bool has_next() {
         return (this.nfiles - this.filepos) > 1;
+    }
+
+    public bool has_ant() {
+        return this.filepos > 0;
     }
 
     public void sort() {
