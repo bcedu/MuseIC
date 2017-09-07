@@ -2,7 +2,7 @@ public class MuseicLibrary {
 
     private string path;
     private File file;
-    private string[] filenames;
+    private MuseicFile[] museic_files;
     private int nfiles=0;
 
     public MuseicLibrary (string path) {
@@ -13,26 +13,26 @@ public class MuseicLibrary {
         if (!file.query_exists()) file.create(FileCreateFlags.NONE);
     }
 
-    public string[] get_library_filenames() {
-        if (this.filenames != null) return this.filenames[0:this.nfiles];
-        this.filenames = new string[5];
+    public MuseicFile[] get_library_files() {
+        if (this.museic_files != null) return this.museic_files[0:this.nfiles];
+        this.museic_files = new MuseicFile[5];
         this.nfiles = 0;
         try {
             DataInputStream reader = new DataInputStream(this.file.read());
             string line;
             File aux;
             while ((line=reader.read_line(null)) != null) {
-                aux = File.new_for_path(line);
+                aux = File.new_for_path(line.split(";")[0]);
                 if (aux.query_exists()) {
-                    if (this.filenames.length == this.nfiles) this.filenames.resize(this.filenames.length*2);
-                    this.filenames[this.nfiles] = line;
+                    if (this.museic_files.length == this.nfiles) this.museic_files.resize(this.museic_files.length*2);
+                    this.museic_files[this.nfiles] = new MuseicFile.from_data(line.split(";")[0], line.split(";")[1], line.split(";")[2], line.split(";")[3], "unknown", "unknown", "filelist");
                     this.nfiles++;
                 }
             }
         }catch (Error e){
             error("%s", e.message);
         }
-        return this.filenames[0:nfiles];
+        return this.museic_files[0:nfiles];
     }
 
     public void add_files(string[] files, bool filter_repeated) {
@@ -40,18 +40,19 @@ public class MuseicLibrary {
     }
 
     public void add_file(string filename) {
-        if (this.nfiles == this.filenames.length) this.filenames.resize(this.filenames.length*2);
-        this.filenames[this.nfiles] = filename;
+        if (this.nfiles == this.museic_files.length) this.museic_files.resize(this.museic_files.length*2);
+        MuseicFile aux = new MuseicFile(filename, "filelist");
+        this.museic_files[this.nfiles] = aux;
         this.nfiles += 1;
         FileIOStream io = this.file.open_readwrite();
         io.seek (0, SeekType.END);
         var writer = new DataOutputStream(io.output_stream);
-        writer.put_string(filename+"\n");
+        writer.put_string(aux.path+";"+aux.name+";"+aux.artist+";"+aux.album+"\n");
 
     }
 
     public bool is_in_filelist(string filename) {
-        foreach (string file in this.filenames[0:this.nfiles]) if (file == filename) return true;
+        foreach (MuseicFile file in this.museic_files[0:this.nfiles]) if (file.path == filename) return true;
         return false;
     }
 

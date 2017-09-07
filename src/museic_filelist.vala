@@ -25,6 +25,10 @@ public class MuseicFileList {
         if (this.nfiles == 1) this.filepos = 0;
     }
 
+    public void add_museic_files(MuseicFile[] files, bool filter_repeated, string origin) {
+        foreach (MuseicFile file in files) if (!filter_repeated || (filter_repeated && !is_in_filelist(file.path))) add_museic_file(file, origin);
+    }
+
     public void add_museic_file(MuseicFile afile, string origin) {
         MuseicFile file = new MuseicFile.from_museicfile(afile);
         file.origin = origin;

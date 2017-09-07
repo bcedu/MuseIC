@@ -123,6 +123,16 @@ public class MuseicFile {
         this.origin = file.origin;
     }
 
+    public MuseicFile.from_data (string apath, string aname, string aartist, string aalbum, string aduration, string aimage, string aorigin) {
+        this.path = apath;
+        this.name = aname;
+        this.artist = aartist;
+        this.album = aalbum;
+        this.duration = aduration;
+        this.image = aimage;
+        this.origin = aorigin;
+    }
+
     private BytesInfo get_rep_of_bytes(DataInputStream src, long nbytes) {
         string rep = "";
         string str = "";
