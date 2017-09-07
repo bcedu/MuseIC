@@ -2,8 +2,6 @@ public class MuseicLibrary {
 
     private string path;
     private File file;
-    private MuseicFile[] museic_files;
-    private int nfiles=0;
 
     public MuseicLibrary (string path) {
         // Check if file exists. If it doesn't, create it.
@@ -14,9 +12,8 @@ public class MuseicLibrary {
     }
 
     public MuseicFile[] get_library_files() {
-        if (this.museic_files != null) return this.museic_files[0:this.nfiles];
-        this.museic_files = new MuseicFile[5];
-        this.nfiles = 0;
+        MuseicFile[] museic_files = new MuseicFile[5];
+        int nfiles = 0;
         try {
             DataInputStream reader = new DataInputStream(this.file.read());
             string line;
@@ -24,15 +21,15 @@ public class MuseicLibrary {
             while ((line=reader.read_line(null)) != null) {
                 aux = File.new_for_path(line.split(";")[0]);
                 if (aux.query_exists()) {
-                    if (this.museic_files.length == this.nfiles) this.museic_files.resize(this.museic_files.length*2);
-                    this.museic_files[this.nfiles] = new MuseicFile.from_data(line.split(";")[0], line.split(";")[1], line.split(";")[2], line.split(";")[3], "unknown", "unknown", "filelist");
-                    this.nfiles++;
+                    if (museic_files.length == nfiles) museic_files.resize(museic_files.length*2);
+                    museic_files[nfiles] = new MuseicFile.from_data(line.split(";")[0], line.split(";")[1], line.split(";")[2], line.split(";")[3], "unknown", "unknown", "filelist");
+                    nfiles++;
                 }
             }
         }catch (Error e){
             error("%s", e.message);
         }
-        return this.museic_files[0:nfiles];
+        return museic_files[0:nfiles];
     }
 
     public void add_files(string[] files, bool filter_repeated) {
@@ -40,19 +37,17 @@ public class MuseicLibrary {
     }
 
     public void add_file(string filename) {
-        if (this.nfiles == this.museic_files.length) this.museic_files.resize(this.museic_files.length*2);
-        MuseicFile aux = new MuseicFile(filename, "filelist");
-        this.museic_files[this.nfiles] = aux;
-        this.nfiles += 1;
-        FileIOStream io = this.file.open_readwrite();
-        io.seek (0, SeekType.END);
-        var writer = new DataOutputStream(io.output_stream);
-        writer.put_string(aux.path+";"+aux.name+";"+aux.artist+";"+aux.album+"\n");
-
+        if (File.new_for_path(filename).query_exists()) {
+            MuseicFile aux = new MuseicFile(filename, "filelist");
+            FileIOStream io = this.file.open_readwrite();
+            io.seek (0, SeekType.END);
+            var writer = new DataOutputStream(io.output_stream);
+            writer.put_string(aux.path+";"+aux.name+";"+aux.artist+";"+aux.album+"\n");
+        }else stdout.printf("ERROR: %s doesn't exist\n", filename);
     }
 
     public bool is_in_filelist(string filename) {
-        foreach (MuseicFile file in this.museic_files[0:this.nfiles]) if (file.path == filename) return true;
+        foreach (MuseicFile file in get_library_files()) if (file.path == filename) return true;
         return false;
     }
 

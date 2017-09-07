@@ -267,6 +267,23 @@ public class MuseIC : Gtk.Application {
         this.museic_library.clear();
     }
 
+    public void reload_library() {
+        // Stop stream
+        this.pause_file();
+        // Get all filelist files
+        MuseicFile[] files = this.museic_filelist.get_files_list();
+        // Get the paths
+        string [] filenames = new string[files.length];
+        for (int i=0;i<filenames.length;i++) filenames[i] = files[i].path;
+        // Clear library, filelist and playlist
+        this.clear_library();
+        this.clear_filelist();
+        this.clear_playlist();
+        // Add files to library and filelist
+        this.museic_library.add_files(filenames, true);
+        this.museic_filelist.add_museic_files(this.museic_library.get_library_files(), true, "filelist");
+    }
+
 
     //// STREAM RELATED METHODS
 

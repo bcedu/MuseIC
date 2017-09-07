@@ -72,10 +72,26 @@
               <object class="GtkToolButton" id="helpRemote">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="is_important">True</property>
                 <property name="label" translatable="yes">Remote</property>
                 <property name="use_underline">True</property>
                 <property name="icon_name">network-wireless</property>
                 <signal name="clicked" handler="museic_gui_action_help_remote" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="toolbutton1">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="is_important">True</property>
+                <property name="label" translatable="yes">Reload</property>
+                <property name="use_underline">True</property>
+                <property name="icon_name">view-refresh</property>
+                <signal name="clicked" handler="museic_gui_action_reload_library" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>

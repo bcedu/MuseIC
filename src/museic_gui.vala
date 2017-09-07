@@ -435,5 +435,11 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
         helpw.show_all();
     }
+    [CCode(instance_pos=-1)]
+    public void action_reload_library(Gtk.Button button) {
+        this.museic_app.reload_library();
+        this.update_files_to_tree();
+        this.update_playlist_to_tree();
+    }
 
 }
