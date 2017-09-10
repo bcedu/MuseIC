@@ -338,6 +338,8 @@ public class MuseicGui : Gtk.ApplicationWindow {
         if (faux.artist != "unknown") aux = faux.artist;
         else aux = "";
         (builder.get_object ("statusLabel1") as Gtk.Label).set_label (aux);
+        // Update volume bar
+        (this.builder.get_object ("volumebar") as Gtk.Scale).set_value (this.museic_app.get_stream_volume());
         // Check if stream, has ended
         if (this.museic_app.state() == "endstream") action_seg_file((builder.get_object ("segButton") as Gtk.Button));
         return true;

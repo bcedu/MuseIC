@@ -106,6 +106,16 @@ public class MuseicServer : GLib.Object {
                 string aux = message.split("/")[2].split(" ")[0].replace("_", " ").replace("&amp;", "&");
                 this.queque_file(aux.split("--")[0], aux.split("--")[1], aux.split("--")[2]);
                 this.send_prev_next_info(ostream);
+            }else if (message.split("/").length > 3 && message.split("/")[0] == "POST " && message.split("/")[1] == "volume") { // set volume
+                /*
+                    Check if split by '/' is len > 3: we need "POST ", "volume" and "{value} HTTP"
+                    Split by " " and get first elem to get only the {value} instead of the hole "{value} HTTP".
+
+                    Example of search request: "POST /volume/2.3 HTTP/1.1"
+                */
+                string aux = message.split("/")[2];
+                stdout.printf("VOLUME LEVEL TO SET: "+aux+"\n");
+                this.update_volume(double.parse(aux));
             }
     	}catch (Error e) {
             stdout.printf ("Error! %s\n", e.message);
@@ -206,7 +216,8 @@ public class MuseicServer : GLib.Object {
         res.append ("Content-Type: application/json\r\n");
         string srandom = random.to_string();
         string file_json = this.get_file_data_json(file);
-        string content = @"{\"status\": \"$status\", \"random\": \"$srandom\", \"file\": $file_json}";
+        double volume = this.app.get_stream_volume();
+        string content = @"{\"status\": \"$status\", \"random\": \"$srandom\", \"file\": $file_json, \"volume\": $volume}";
         res.append_printf ("Content-Length: %lu\r\n\r\n", content.length);
         res.append(content);
         return res.str;
@@ -282,6 +293,10 @@ public class MuseicServer : GLib.Object {
                 index = files.length;
             }
         }
+    }
+
+    private void update_volume(double volume) {
+        this.app.set_stream_volume(volume);
     }
 
 }

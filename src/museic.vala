@@ -340,4 +340,8 @@ public class MuseIC : Gtk.Application {
         this.streamplayer.set_volume(level);
     }
 
+    public double get_stream_volume() {
+        return this.streamplayer.volume;
+    }
+
 }

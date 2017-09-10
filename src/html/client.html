@@ -125,6 +125,16 @@
         width: 10%;
     }
 
+    .volume-control {
+        width: 100%;
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    #volume {
+        width: 50%;
+    }
+
 </style>
 <script>
 
@@ -177,6 +187,8 @@
                 /* Update random button */
                 update_random(jsonInfo);
                 setTimeout(update_status, 1000);
+                /* Update volume level */
+                document.getElementById("volume").value=jsonInfo.volume;
             }
         };
         xhttp.open("GET", "/info", true);
@@ -312,11 +324,19 @@
         document.getElementById("searched_files").innerHTML = "";
     }
 
+    function updateVol(newVal){
+        document.getElementById("volume").value=newVal;
+        /* Send request to update volume */
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/volume/"+newVal, true);
+        xhttp.send();
+    }
+
 </script>
 </head>
 <body>
     <table class="player">
-    <tr class="media_info">
+        <tr class="media_info">
             <td colspan="3">
                 <div class="file-info">
                     <div><h2 style="margin-left:1%;" id="file-name-ant"></h2></div>
@@ -351,6 +371,15 @@
                         <div>Rand</div>
                     </td>
                 </tr></table>
+            </td>
+        </tr>
+    </table>
+    <table class="volume-control">
+        <tr>
+            <td colspan="3">
+                <form>
+                    <input id="volume" type="range" name="volume" min="0" max="3" step="0.1"  oninput="updateVol(this.value)" onchange="updateVol(this.value)">
+                </form>
             </td>
         </tr>
     </table>
