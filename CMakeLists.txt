@@ -33,6 +33,7 @@ pkg_check_modules(DEPS REQUIRED
         gio-2.0
         gmodule-2.0
         gstreamer-1.0
+        gstreamer-audio-1.0
         dbus-glib-1
         granite)
 
@@ -67,6 +68,7 @@ PACKAGES
     gio-2.0
     gmodule-2.0
     gstreamer-1.0
+    gstreamer-audio-1.0
     dbus-glib-1
     granite
 )
