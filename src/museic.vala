@@ -336,4 +336,8 @@ public class MuseIC : Gtk.Application {
         }else this.streamplayer.ready_file("file://"+file.path);
     }
 
+    public void set_stream_volume(double level) {
+        this.streamplayer.set_volume(level);
+    }
+
 }

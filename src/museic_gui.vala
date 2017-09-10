@@ -442,4 +442,11 @@ public class MuseicGui : Gtk.ApplicationWindow {
         this.update_playlist_to_tree();
     }
 
+    [CCode(instance_pos=-1)]
+    public bool action_change_volume (Gtk.Scale slider, Gtk.ScrollType scroll, double new_value) {
+        this.museic_app.set_stream_volume((double)new_value);
+        slider.adjustment.value = new_value;
+        return true;
+    }
+
 }

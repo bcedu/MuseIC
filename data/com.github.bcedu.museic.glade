@@ -7,6 +7,12 @@
     <property name="step_increment">0.001</property>
     <property name="page_increment">0.1</property>
   </object>
+  <object class="GtkAdjustment" id="adjustment-volum">
+    <property name="upper">3</property>
+    <property name="value">1</property>
+    <property name="step_increment">0.001</property>
+    <property name="page_increment">0.1</property>
+  </object>
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -111,6 +117,7 @@
             <property name="can_focus">False</property>
             <property name="valign">start</property>
             <property name="margin_top">5</property>
+            <property name="orientation">vertical</property>
             <child>
               <object class="GtkLabel" id="statusLabel">
                 <property name="visible">True</property>
@@ -186,6 +193,8 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="valign">start</property>
+            <property name="margin_left">5</property>
+            <property name="margin_right">5</property>
             <property name="layout_style">center</property>
             <child>
               <object class="GtkButton" id="antButton">
@@ -224,6 +233,7 @@
               <object class="GtkGrid" id="grid1">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin_right">225</property>
                 <child>
                   <object class="GtkButton" id="segButton">
                     <property name="label">gtk-media-next</property>
@@ -258,6 +268,49 @@
                 <property name="expand">True</property>
                 <property name="fill">True</property>
                 <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkGrid" id="grid2">
+                <property name="width_request">150</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_right">20</property>
+                <property name="hexpand">True</property>
+                <child>
+                  <object class="GtkScale" id="volumebar">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="hexpand">True</property>
+                    <property name="adjustment">adjustment-volum</property>
+                    <property name="digits">2</property>
+                    <property name="draw_value">False</property>
+                    <signal name="change-value" handler="museic_gui_action_change_volume" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="image3">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_left">5</property>
+                    <property name="margin_right">10</property>
+                    <property name="icon_name">audio-headphones-symbolic</property>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">4</property>
+                <property name="secondary">True</property>
               </packing>
             </child>
           </object>

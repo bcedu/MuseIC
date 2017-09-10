@@ -7,6 +7,7 @@ public class MuseicStreamPlayer {
     public string state = "pause";
     public StreamMetadata? metadata = null;
     public string n;
+    public double volume = 1.0;
 
     public MuseicStreamPlayer (string[]? args, string name) {
         if (args != null) Gst.init (ref args);
@@ -78,6 +79,7 @@ public class MuseicStreamPlayer {
         this.player.set_state (State.NULL);
         this.player = ElementFactory.make ("playbin", "play");
         this.player.uri = stream;
+        this.player["volume"] = this.volume;
         this.metadata = null;
         this.state = "pause";
         Gst.Bus bus = this.player.get_bus ();
@@ -113,6 +115,13 @@ public class MuseicStreamPlayer {
 
     public void set_position(float fvalue) {
         this.player.seek_simple (Gst.Format.TIME, Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT, (int64)(fvalue * this.get_duration()));
+    }
+
+    public void set_volume(double level) {
+        if (level < 0) level = 0;
+        else if (level > 3) level = 3;
+        this.volume = level;
+        this.player["volume"] = this.volume;
     }
 
 }
