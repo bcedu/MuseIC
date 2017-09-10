@@ -328,8 +328,16 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Update progres bar
         double progres = (double)pos_info.nanoseconds/(double)dur_info.nanoseconds;
         (this.builder.get_object ("scalebar") as Gtk.Scale).set_value (progres);
-        // Update status label with filename
-        (builder.get_object ("statusLabel") as Gtk.Label).set_label (this.museic_app.get_current_file().name);
+        // Update status label with filename and album
+        MuseicFile faux = this.museic_app.get_current_file();
+        string aux;
+        if (faux.album != "unknown") aux = faux.name +" - "+ faux.album;
+        else aux = faux.name;
+        (builder.get_object ("statusLabel") as Gtk.Label).set_label (aux);
+        // Update status label 2 with artist
+        if (faux.artist != "unknown") aux = faux.artist;
+        else aux = "";
+        (builder.get_object ("statusLabel1") as Gtk.Label).set_label (aux);
         // Check if stream, has ended
         if (this.museic_app.state() == "endstream") action_seg_file((builder.get_object ("segButton") as Gtk.Button));
         return true;
