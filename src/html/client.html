@@ -222,24 +222,26 @@
     function update_ant_next_info() {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
-            var jsonInfoExtr = JSON.parse(this.responseText);
-            if (jsonInfoExtr.ant_file) {
-                document.getElementById("file-name-ant").innerHTML = jsonInfoExtr.ant_file.name;
-                document.getElementById("file-artist-ant").innerHTML = jsonInfoExtr.ant_file.artist;
-                document.getElementById("file-album-ant").innerHTML = jsonInfoExtr.ant_file.album;
-            }else {
-                document.getElementById("file-name-ant").innerHTML = "";
-                document.getElementById("file-artist-ant").innerHTML = "";
-                document.getElementById("file-album-ant").innerHTML = "";
-            }
-            if (jsonInfoExtr.next_file) {
-                document.getElementById("file-name-next").innerHTML = jsonInfoExtr.next_file.name;
-                document.getElementById("file-artist-next").innerHTML = jsonInfoExtr.next_file.artist;
-                document.getElementById("file-album-next").innerHTML = jsonInfoExtr.next_file.album;
-            }else {
-                document.getElementById("file-name-next").innerHTML = "";
-                document.getElementById("file-artist-next").innerHTML = "";
-                document.getElementById("file-album-next").innerHTML = "";
+            if (this.responseText != "") {
+                var jsonInfoExtr = JSON.parse(this.responseText);
+                if (jsonInfoExtr.ant_file) {
+                    document.getElementById("file-name-ant").innerHTML = jsonInfoExtr.ant_file.name;
+                    document.getElementById("file-artist-ant").innerHTML = jsonInfoExtr.ant_file.artist;
+                    document.getElementById("file-album-ant").innerHTML = jsonInfoExtr.ant_file.album;
+                }else {
+                    document.getElementById("file-name-ant").innerHTML = "";
+                    document.getElementById("file-artist-ant").innerHTML = "";
+                    document.getElementById("file-album-ant").innerHTML = "";
+                }
+                if (jsonInfoExtr.next_file) {
+                    document.getElementById("file-name-next").innerHTML = jsonInfoExtr.next_file.name;
+                    document.getElementById("file-artist-next").innerHTML = jsonInfoExtr.next_file.artist;
+                    document.getElementById("file-album-next").innerHTML = jsonInfoExtr.next_file.album;
+                }else {
+                    document.getElementById("file-name-next").innerHTML = "";
+                    document.getElementById("file-artist-next").innerHTML = "";
+                    document.getElementById("file-album-next").innerHTML = "";
+                }
             }
         };
         xhttp.open("GET", "/info-ant-next", true);

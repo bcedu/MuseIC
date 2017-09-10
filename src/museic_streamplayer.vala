@@ -103,7 +103,7 @@ public class MuseicStreamPlayer {
     }
 
     public ulong get_position () {
-        // Returns duration in nanoseconds
+        // Returns position in nanoseconds
         int64 current = 0;
         if (!this.player.query_position (Gst.Format.TIME, out current)) {
             stderr.puts ("Could not query current position.\n");
