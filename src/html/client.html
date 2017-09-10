@@ -130,10 +130,22 @@
         text-align: center;
         margin-top: 50px;
     }
-
     #volume {
-        width: 50%;
+        width: 80%;
+        margin-left: -5%;
     }
+    .volume-group {
+        display: inline-block;
+        width: 80%;
+    }
+
+    /* VOLUME ICON */
+    .demoSpan1{background-color: black; display: inline-block;float: left;}
+    .demoSpan1:before{content:''; height:16px; width:12px;  background:black; top:12px; left:0px;}
+    .demoSpan1:after{content:''; height:16px; width:0; border:10px transparent solid; border-left-width:0; border-right-color:black; top:2px; left:12px;}
+    .demoSpan2{ display: inline-block;float: left;}
+    .demoSpan2:before{content:''; height:40px; width:40px;  border:4px solid transparent; border-right:4px solid black; border-radius:40px;-webkit-border-radius:40px;-moz-border-radius:40px;  top:-4px; left:-6px; }
+    .demoSpan2:after{content:''; height:30px; width:30px;  border:4px solid transparent; border-right:4px solid black; border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;  top:2px; left:-4px; }
 
 </style>
 <script>
@@ -377,9 +389,13 @@
     <table class="volume-control">
         <tr>
             <td colspan="3">
-                <form>
-                    <input id="volume" type="range" name="volume" min="0" max="3" step="0.1"  oninput="updateVol(this.value)" onchange="updateVol(this.value)">
-                </form>
+                <div class="volume-group">
+                    <div class="demoSpan1">...</div>
+                    <div class="demoSpan2"></div>
+                    <form>
+                        <input id="volume" type="range" name="volume" min="0" max="3" step="0.1"  oninput="updateVol(this.value)" onchange="updateVol(this.value)">
+                    </form>
+                </div>
             </td>
         </tr>
     </table>
