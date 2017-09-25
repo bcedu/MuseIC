@@ -284,6 +284,10 @@ public class MuseIC : Gtk.Application {
         this.museic_filelist.add_museic_files(this.museic_library.get_library_files(), true, "filelist");
     }
 
+    public string[] get_all_artists() {
+        return this.museic_library.get_artists();
+    }
+
 
     //// STREAM RELATED METHODS
 

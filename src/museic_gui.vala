@@ -74,6 +74,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             update_stream_status();
             update_playlist_to_tree();
         }
+        update_filelist_chooser_options();
     }
 
     private void load_window_state() {
@@ -457,6 +458,13 @@ public class MuseicGui : Gtk.ApplicationWindow {
         this.museic_app.set_stream_volume((double)new_value);
         slider.adjustment.value = new_value;
         return true;
+    }
+
+    private void update_filelist_chooser_options() {
+        var chooser = (builder.get_object ("filelist_chooser") as Gtk.ComboBoxText);
+        chooser.append_text("All");
+        foreach (string artist in this.museic_app.get_all_artists()) chooser.append_text(artist);
+        chooser.active = 0;
     }
 
 }

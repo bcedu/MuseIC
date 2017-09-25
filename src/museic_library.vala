@@ -56,5 +56,21 @@ public class MuseicLibrary {
         file.create(FileCreateFlags.NONE);
     }
 
+    public string[] get_artists() {
+        // Returns a list with all artists of library
+        MuseicFileList aux = new MuseicFileList();
+        aux.add_museic_files(this.get_library_files(), true, "filelist");
+        aux.sort_field = "artist";
+        aux.sort();
+        string[] artists = new string[aux.nfiles];
+        int nartists = 0;
+        foreach (MuseicFile mfile in aux.get_files_list()) {
+            if (nartists == 0 || mfile.artist != artists[nartists-1]) {
+                artists[nartists] = mfile.artist;
+                nartists++;
+            }
+        }
+        return artists[0:nartists];
+    }
 
 }
