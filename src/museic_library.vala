@@ -11,7 +11,9 @@ public class MuseicLibrary {
         if (!file.query_exists()) file.create(FileCreateFlags.NONE);
     }
 
-    public MuseicFile[] get_library_files() {
+    public MuseicFile[] get_library_files(string artist) {
+        // Returns thhe files from library of the passed artist. If the passed artist
+        // is "all", returns all files
         MuseicFile[] museic_files = new MuseicFile[5];
         int nfiles = 0;
         try {
@@ -22,7 +24,8 @@ public class MuseicLibrary {
                 aux = File.new_for_path(line.split(";")[0]);
                 if (aux.query_exists()) {
                     if (museic_files.length == nfiles) museic_files.resize(museic_files.length*2);
-                    museic_files[nfiles] = new MuseicFile.from_data(line.split(";")[0], line.split(";")[1], line.split(";")[2], line.split(";")[3], "unknown", "unknown", "filelist");
+                    if (artist == "all" || line.split(";")[2] == artist)
+                        museic_files[nfiles] = new MuseicFile.from_data(line.split(";")[0], line.split(";")[1], line.split(";")[2], line.split(";")[3], "unknown", "unknown", "filelist");
                     nfiles++;
                 }
             }
@@ -47,7 +50,7 @@ public class MuseicLibrary {
     }
 
     public bool is_in_filelist(string filename) {
-        foreach (MuseicFile file in get_library_files()) if (file.path == filename) return true;
+        foreach (MuseicFile file in get_library_files("all")) if (file.path == filename) return true;
         return false;
     }
 
@@ -59,7 +62,7 @@ public class MuseicLibrary {
     public string[] get_artists() {
         // Returns a list with all artists of library
         MuseicFileList aux = new MuseicFileList();
-        aux.add_museic_files(this.get_library_files(), true, "filelist");
+        aux.add_museic_files(this.get_library_files("all"), true, "filelist");
         aux.sort_field = "artist";
         aux.sort();
         string[] artists = new string[aux.nfiles];
