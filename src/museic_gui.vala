@@ -244,6 +244,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         this.files_window = null;
         this.chooser = null;
         this.is_open = false;
+        update_filelist_chooser_options();
     }
 
     private string[] rec_open(File file) {
