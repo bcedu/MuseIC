@@ -381,6 +381,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
     [CCode(instance_pos=-1)]
     public void action_play_selected_file_playlist (Gtk.TreeView view, Gtk.TreePath path, Gtk.TreeViewColumn column) {
         this.museic_app.play_playlist_file(this.museic_app.get_all_playlist_files().length-1-int.parse(path.to_string()));
+        if (museic_app.state() == "pause") action_play_file((builder.get_object ("playButton") as Gtk.Button));
         update_files_to_tree();
         update_playlist_to_tree();
         this.museic_app.update_dbus_status();
@@ -391,6 +392,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         update_files_to_tree();
         this.museic_app.clear_playlist();
         this.museic_app.play_filelist_file(int.parse(path.to_string()));
+        if (museic_app.state() == "pause") action_play_file((builder.get_object ("playButton") as Gtk.Button));
         update_playlist_to_tree();
         this.museic_app.update_dbus_status();
     }
