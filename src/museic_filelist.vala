@@ -114,20 +114,22 @@ public class MuseicFileList {
         // The filepos is updated to continue refering to the same file
         if (this.sorted == 0 || this.sorted == -1) this.sorted = 1;
         else this.sorted = -1;
-        MuseicFile current = this.files_list[this.filepos];
-        quicksort(ref files_list, 0, this.nfiles-1);
-        if (sorted == -1) {
-            MuseicFile[] aux = new MuseicFile[this.nfiles];
-            for (int i=0; i<this.nfiles; i++) {
-                aux[this.nfiles-i-1] = files_list[i];
-                if (this.files_list[i].name == current.name) this.filepos = this.nfiles-i-1;
-            }
-            files_list = aux;
-        }else {
-            for (int i=0; i<this.nfiles; i++) {
-                if (this.files_list[i].name == current.name) {
-                    this.filepos = i;
-                    i = this.nfiles+1;
+        if (this.nfiles != 0) {
+            MuseicFile current = this.files_list[this.filepos];
+            quicksort(ref files_list, 0, this.nfiles-1);
+            if (sorted == -1) {
+                MuseicFile[] aux = new MuseicFile[this.nfiles];
+                for (int i=0; i<this.nfiles; i++) {
+                    aux[this.nfiles-i-1] = files_list[i];
+                    if (this.files_list[i].name == current.name) this.filepos = this.nfiles-i-1;
+                }
+                files_list = aux;
+            }else {
+                for (int i=0; i<this.nfiles; i++) {
+                    if (this.files_list[i].name == current.name) {
+                        this.filepos = i;
+                        i = this.nfiles+1;
+                    }
                 }
             }
         }
