@@ -162,7 +162,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
     [CCode(instance_pos=-1)]
     public void action_open_file (Gtk.Button button) {
         // If we were playing, pause
-        action_play_file((builder.get_object ("playButton") as Gtk.Button));
+        if (museic_app.state() != "pause") action_play_file((builder.get_object ("playButton") as Gtk.Button));
         create_file_open_window(true);
     }
 
