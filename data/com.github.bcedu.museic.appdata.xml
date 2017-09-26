@@ -20,8 +20,8 @@
         <category>Music</category>
     </categories>
     <custom>
-        <value key="x-appcenter-color-primary">#151515</value>
-        <value key="x-appcenter-color-primary-text">rgb(255,255,255)</value>
+        <value key="x-appcenter-color-primary">#ffffff</value>
+        <value key="x-appcenter-color-primary-text">rgb(0,0,0)</value>
         <value key="x-appcenter-suggested-price">0</value>
     </custom>
     <screenshots>
