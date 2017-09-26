@@ -69,7 +69,6 @@ public class MuseicGui : Gtk.ApplicationWindow {
         GLib.Timeout.add_seconds (1, update_stream_status);
         // Update tree view with files from library
         if (this.museic_app.get_filelist_len() > 0) {
-            this.museic_app.play_next_file();
             update_files_to_tree();
             update_stream_status();
             update_playlist_to_tree();
