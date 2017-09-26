@@ -288,6 +288,16 @@ public class MuseIC : Gtk.Application {
         return this.museic_library.get_artists();
     }
 
+    public void change_filelist(string artist) {
+        // Change current filelist to a filelist with only files of passed artist.
+        // If passed artist is "all", filelist will have all files.
+        // After changing filelits, playlist is cleaned.
+        pause_file();
+        clear_playlist();
+        clear_filelist();
+        this.museic_filelist.add_museic_files(this.museic_library.get_library_files(artist), true, "filelist");
+    }
+
 
     //// STREAM RELATED METHODS
 

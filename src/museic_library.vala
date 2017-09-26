@@ -24,9 +24,10 @@ public class MuseicLibrary {
                 aux = File.new_for_path(line.split(";")[0]);
                 if (aux.query_exists()) {
                     if (museic_files.length == nfiles) museic_files.resize(museic_files.length*2);
-                    if (artist == "all" || line.split(";")[2] == artist)
+                    if (artist == "all" || line.split(";")[2] == artist) {
                         museic_files[nfiles] = new MuseicFile.from_data(line.split(";")[0], line.split(";")[1], line.split(";")[2], line.split(";")[3], "unknown", "unknown", "filelist");
-                    nfiles++;
+                        nfiles++;
+                    }
                 }
             }
         }catch (Error e){

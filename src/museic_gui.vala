@@ -318,7 +318,6 @@ public class MuseicGui : Gtk.ApplicationWindow {
                 this.playListStore.iter_next(ref iter);
             }
         }
-
     }
 
     public bool update_stream_status() {
@@ -463,9 +462,23 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     private void update_filelist_chooser_options() {
         var chooser = (builder.get_object ("filelist_chooser") as Gtk.ComboBoxText);
+        chooser.remove_all();
         chooser.append_text("All");
         foreach (string artist in this.museic_app.get_all_artists()) chooser.append_text(artist);
         chooser.active = 0;
+    }
+
+    [CCode(instance_pos=-1)]
+    public void action_select_filelist(Gtk.ComboBoxText box) {
+        if (box.get_active_text() != null) {
+            if (museic_app.state() != "pause") action_play_file((builder.get_object ("playButton") as Gtk.Button));
+            string artist = box.get_active_text();
+            if (artist == "All") artist = "all";
+            this.museic_app.change_filelist(artist);
+            update_files_to_tree();
+            update_playlist_to_tree();
+
+        }
     }
 
 }
