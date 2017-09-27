@@ -55,6 +55,7 @@ public class MuseicFile {
         BytesInfo tag_header, tag_size;
         long tsize;
         int count = 0;
+        string content;
         while (readed_bytes < size) {
             // tag name
             tag_header = get_rep_of_bytes(data_stream, 4);
@@ -68,14 +69,16 @@ public class MuseicFile {
                 info = get_rep_of_bytes(data_stream, tsize);
                 // update readed bytes
                 readed_bytes += (10 + tsize);
+                if (info.bytes_str.length > 10 && info.bytes_str[0:10] == ".1.255.254") content = info.rep[3:info.rep.length];
+                else content = info.rep;
                 if (tag_header.rep == "TOPE") { // artist
-                    this.artist = info.rep[3:info.rep.length];found+=1;
+                    this.artist = content;found+=1;
                     // stdout.printf("TOPE:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
                 }else if (tag_header.rep == "TALB") { // album
-                    this.album = info.rep[3:info.rep.length];found+=1;
+                    this.album = content;found+=1;
                     // stdout.printf("TALB:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
                 }else if (tag_header.rep == "TOAL") { // album2
-                    if (this.album == "unknown") {this.album = info.rep[3:info.rep.length];found+=1;}
+                    if (this.album == "unknown") {this.album = content;found+=1;}
                     // stdout.printf("TOAL:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
                 }else if (tag_header.rep == "TIME") { // time
                     // stdout.printf("TIME:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
@@ -83,7 +86,7 @@ public class MuseicFile {
                     this.duration = info.rep;
                     // stdout.printf("TLEN:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
                 }else if(tag_header.rep == "TPE1") { // leader
-                    if (this.artist == "unknown") {this.artist = info.rep[3:info.rep.length];found+=1;}
+                    if (this.artist == "unknown") {this.artist = content;found+=1;}
                     // stdout.printf("TPE1:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
                 }else if(tag_header.rep == "TPOS") { // part of set
                     // stdout.printf("TPOS:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
@@ -93,7 +96,7 @@ public class MuseicFile {
                 }else if(tag_header.rep == "TIT1") { // group desc.
                     // stdout.printf("TIT1:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
                 }else if(tag_header.rep == "TIT2") { // songname desc.
-                    if (this.name == "unknown") {this.name = info.rep[3:info.rep.length];found+=1;}
+                    if (this.name == "unknown") {this.name = content;found+=1;}
                     // stdout.printf("TIT2:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
                 }else if(tag_header.rep == "TIT3") { // subtitle refinement
                     // stdout.printf("TIT3:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
