@@ -9,6 +9,8 @@ public class MuseicGui : Gtk.ApplicationWindow {
     private Gtk.Window files_window;
     private Gtk.FileChooserWidget chooser;
     private bool is_open = false;
+    private Gtk.ProgressBar progress_bar;
+    private Gtk.Label progress_label;
 
     public MuseicGui(MuseIC app) {
         Object (application: app, title: "MuseIC");
@@ -237,12 +239,12 @@ public class MuseicGui : Gtk.ApplicationWindow {
         foreach (string sfile in sfiles) {
             aux[0] = sfile;
             this.progress_bar.set_text (sfile);
+            Idle.add(open_files.callback);
+            yield;
             this.museic_app.add_files_to_filelist(aux);
             processed_files += 1;
             fraction = (double)processed_files/(double)sfiles.length;
             this.progress_bar.set_fraction (fraction);
-            Idle.add(open_files.callback);
-            yield;
         }
         if (this.is_open) this.museic_app.play_filelist_file(0);
         update_files_to_tree();
