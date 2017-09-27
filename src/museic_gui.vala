@@ -202,6 +202,9 @@ public class MuseicGui : Gtk.ApplicationWindow {
         hbox.add (select);
         hbox.add (cancel);
         vbox.add(hbox);
+        // proogress bar
+        this.progress_bar = new Gtk.ProgressBar();
+        vbox.add(this.progress_bar);
         // Setup buttons callbacks
         cancel.clicked.connect (() => {this.files_window.destroy ();});
         this.is_open = is_open_files;
@@ -209,7 +212,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         this.files_window.show_all ();
     }
 
-    private void open_files () {
+    private async void open_files () {
         string[] sfiles = {};
         SList<File> files = this.chooser.get_files ();
         foreach (unowned File file in files) {
@@ -224,7 +227,20 @@ public class MuseicGui : Gtk.ApplicationWindow {
             this.museic_app.clear_filelist();
             this.museic_app.clear_library();
         }
-        this.museic_app.add_files_to_filelist(sfiles);
+
+        double fraction = 0.0;
+        this.progress_bar.set_fraction (fraction);
+        int processed_files = 0;
+        string[] aux = new string[1];
+        foreach (string sfile in sfiles) {
+            aux[0] = sfile;
+            this.museic_app.add_files_to_filelist(aux);
+            processed_files += 1;
+            fraction = (double)processed_files/(double)sfiles.length;
+            this.progress_bar.set_fraction (fraction);
+            Idle.add(open_files.callback);
+            yield;
+        }
         if (this.is_open) this.museic_app.play_filelist_file(0);
         update_files_to_tree();
         update_stream_status();
