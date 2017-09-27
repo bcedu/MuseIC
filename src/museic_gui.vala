@@ -204,6 +204,8 @@ public class MuseicGui : Gtk.ApplicationWindow {
         vbox.add(hbox);
         // proogress bar
         this.progress_bar = new Gtk.ProgressBar();
+        this.progress_bar.set_text ("");
+        this.progress_bar.set_show_text (true);
         vbox.add(this.progress_bar);
         // Setup buttons callbacks
         cancel.clicked.connect (() => {this.files_window.destroy ();});
@@ -234,6 +236,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         string[] aux = new string[1];
         foreach (string sfile in sfiles) {
             aux[0] = sfile;
+            this.progress_bar.set_text (sfile);
             this.museic_app.add_files_to_filelist(aux);
             processed_files += 1;
             fraction = (double)processed_files/(double)sfiles.length;
