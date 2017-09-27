@@ -26,6 +26,7 @@ public class MuseicFile {
 
         // Read signature (check if file is ID3)
         BytesInfo info = get_rep_of_bytes(data_stream, 3);
+        // stdout.printf("Is ID3?: |%s|\n", info.rep);
         if (info.rep != "ID3") {
             stderr.printf ("Error: %s is not a valid ID3 file\n", file.get_basename ());
             if (path.split("/").length > 1) this.name = path.split("/")[path.split("/").length-1];
@@ -35,6 +36,7 @@ public class MuseicFile {
         }
         // Read ID3 version (check if file is v2.3)
         info = get_rep_of_bytes(data_stream, 2);
+        // stdout.printf("Is ID3 v3.0?: |%s||%s|\n", info.rep, info.bytes_str);
         if (info.bytes_str != ".3.0") {
             stderr.printf ("Error: %s is not ID3v2.3 version file\n", file.get_basename ());
             if (path.split("/").length > 1) this.name = path.split("/")[path.split("/").length-1];
@@ -43,18 +45,18 @@ public class MuseicFile {
             return;
         }
         // Read flags (don't used)
-        get_rep_of_bytes(data_stream, 1);
-
+        info = get_rep_of_bytes(data_stream, 1);
+        // stdout.printf("Unused bytes: |%s||%s|\n", info.rep, info.bytes_str);
         // Read and calc. tags size
         info = get_rep_of_bytes(data_stream, 4);
         long size = calc_id3_tag_size(info);
+        // stdout.printf("Tags size: bytes:|%s||%s|, calculated:|%s|\n", info.rep, info.bytes_str, size.to_string());
 
         // Read all the frames of the tag and fill used information.
         long readed_bytes = 0;
         int found = 0;
         BytesInfo tag_header, tag_size;
         long tsize;
-        int count = 0;
         string content;
         while (readed_bytes < size) {
             // tag name
@@ -63,51 +65,59 @@ public class MuseicFile {
             tag_size = get_rep_of_bytes(data_stream, 4);
             tsize = bytes_to_dec(tag_size.bytes);
             if (tsize > 0) { // I don't know why but this happens...
+                // stdout.printf("Tags:|%s||%s|, size:|%s|\n", tag_header.rep, tag_header.bytes_str, tsize.to_string());
                 // tag flags (don't used)
-                get_rep_of_bytes(data_stream, 2);
+                info = get_rep_of_bytes(data_stream, 2);
+                stdout.printf("    unused flags: |%s||%s|\n", info.rep, info.bytes_str);
                 // read tag content
-                info = get_rep_of_bytes(data_stream, tsize);
-                // update readed bytes
-                readed_bytes += (10 + tsize);
-                if (info.bytes_str.length > 10 && info.bytes_str[0:10] == ".1.255.254") content = info.rep[3:info.rep.length];
-                else content = info.rep;
-                if (tag_header.rep == "TOPE") { // artist
-                    this.artist = content;found+=1;
-                    // stdout.printf("TOPE:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
-                }else if (tag_header.rep == "TALB") { // album
-                    this.album = content;found+=1;
-                    // stdout.printf("TALB:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
-                }else if (tag_header.rep == "TOAL") { // album2
-                    if (this.album == "unknown") {this.album = content;found+=1;}
-                    // stdout.printf("TOAL:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
-                }else if (tag_header.rep == "TIME") { // time
-                    // stdout.printf("TIME:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
-                }else if (tag_header.rep == "TLEN") { // length
-                    this.duration = info.rep;
-                    // stdout.printf("TLEN:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
-                }else if(tag_header.rep == "TPE1") { // leader
-                    if (this.artist == "unknown") {this.artist = content;found+=1;}
-                    // stdout.printf("TPE1:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
-                }else if(tag_header.rep == "TPOS") { // part of set
-                    // stdout.printf("TPOS:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
-                }else if(tag_header.rep == "APIC") { // image
-                    this.image = info.rep;
-                    //stdout.printf("APIC:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
-                }else if(tag_header.rep == "TIT1") { // group desc.
-                    // stdout.printf("TIT1:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
-                }else if(tag_header.rep == "TIT2") { // songname desc.
-                    if (this.name == "unknown") {this.name = content;found+=1;}
-                    // stdout.printf("TIT2:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
-                }else if(tag_header.rep == "TIT3") { // subtitle refinement
-                    // stdout.printf("TIT3:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
-                }else if (tag_header.rep != "" && tag_header.rep != "TXXX") {
-                    // stdout.printf("OTHER:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
+                if (tsize > 10000) {
+                    // Currently tags with a large size aren't suported because in get_rep_of_bytes() make program stop responding, so I skip them.
+                    readed_bytes += (10 + tsize);
+                }else {
+                    info = get_rep_of_bytes(data_stream, tsize);
+                    // stdout.printf("    tag content: |%s||%s|\n", info.rep, info.bytes_str);
+                    // update readed bytes
+                    readed_bytes += (10 + tsize);
+                    // For some reason there are tags contents that start with bytes 1 255 254 (unprintable bytes), I skip them;
+                    if (info.bytes_str.length > 10 && info.bytes_str[0:10] == ".1.255.254") content = info.rep[3:info.rep.length];
+                    else if (info.rep == "") content = "unknown"; // some tags are fucking bullshit and they are empty....
+                    else content = info.rep;
+                    if (tag_header.rep == "TOPE") { // artist
+                        this.artist = content;found+=1;
+                        // stdout.printf("TOPE:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
+                    }else if (tag_header.rep == "TALB") { // album
+                        this.album = content;found+=1;
+                        // stdout.printf("TALB:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
+                    }else if (tag_header.rep == "TOAL") { // album2
+                        if (this.album == "unknown") {this.album = content;found+=1;}
+                        // stdout.printf("TOAL:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
+                    }else if (tag_header.rep == "TIME") { // time
+                        // stdout.printf("TIME:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
+                    }else if (tag_header.rep == "TLEN") { // length
+                        this.duration = info.rep;
+                        // stdout.printf("TLEN:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
+                    }else if(tag_header.rep == "TPE1") { // leader
+                        if (this.artist == "unknown") {this.artist = content;found+=1;}
+                        // stdout.printf("TPE1:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
+                    }else if(tag_header.rep == "TPOS") { // part of set
+                        // stdout.printf("TPOS:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
+                    }else if(tag_header.rep == "APIC") { // image
+                        this.image = info.rep;
+                        //stdout.printf("APIC:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
+                    }else if(tag_header.rep == "TIT1") { // group desc.
+                        // stdout.printf("TIT1:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
+                    }else if(tag_header.rep == "TIT2") { // songname desc.
+                        if (this.name == "unknown") {this.name = content;found+=1;}
+                        // stdout.printf("TIT2:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
+                    }else if(tag_header.rep == "TIT3") { // subtitle refinement
+                        // stdout.printf("TIT3:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
+                    }else if (tag_header.rep != "" && tag_header.rep != "TXXX") {
+                        // stdout.printf("OTHER:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
+                    }
                 }
-            }else {
-                count ++;
             }
             // Check if we already have all the information that we want
-            if (found == 3 || count > 3) readed_bytes = size;
+            if (found == 3) readed_bytes = size;
         }
         if (this.name == "unknown") {
             if (path.split("/").length > 1) this.name = path.split("/")[path.split("/").length-1];
