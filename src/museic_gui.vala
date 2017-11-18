@@ -102,6 +102,12 @@ public class MuseicGui : Gtk.ApplicationWindow {
         (this.builder.get_object ("label1") as Gtk.Label).get_style_context().add_class ("filelisttitle");
         (this.builder.get_object ("label2") as Gtk.Label).get_style_context().add_class ("playlisttitle");
         (this.builder.get_object ("addToPlay") as Gtk.Button).get_style_context().add_class ("addToPlayButton");
+        (this.builder.get_object ("separator1") as Gtk.Separator).get_style_context().add_class ("separator1");
+        (this.builder.get_object ("statusBox") as Gtk.Box).get_style_context().add_class ("statusBox");
+        (this.builder.get_object ("progresBox") as Gtk.Box).get_style_context().add_class ("progresBox");
+        (this.builder.get_object ("statusButtons") as Gtk.Box).get_style_context().add_class ("statusButtons");
+        (this.builder.get_object ("filelist_chooser") as Gtk.ComboBoxText).get_style_context().add_class ("filelist_chooser");
+
         // Start time function to update info about stream duration and position each second
         GLib.Timeout.add_seconds (1, update_stream_status);
         // Update tree view with files from library
@@ -346,7 +352,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         Gdk.RGBA rgba_default = Gdk.RGBA ();
         rgba_default.parse ("#ffffff");
         Gdk.RGBA rgba_quequed = Gdk.RGBA ();
-        rgba_quequed.parse ("#c1c1d7");
+        rgba_quequed.parse ("#ebebe0");
         int pos = museic_app.get_playlist_pos();
         for (int i=aux.length-1;i>=0;i--) {
             file = aux[i];

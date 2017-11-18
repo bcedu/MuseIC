@@ -8,37 +8,75 @@
 }
 
 .songtitle {
+    font-size: 12px;
+    padding-bottom: 8px;
 }
 
 .songartist {
+    font-size: 10px;
+    font-weight: bold;
+    padding-bottom: 16px;
 }
 
 .streamprogresbar {
+    background-color: white;
+    border: 0;
 }
 
 .streamtime {
 }
 
 .antButton{
+    border-color: white;
+    background-color: white;
 }
 
 .playButton {
+    border-color: white;
+    background-color: white;
 }
 
 .segButton {
+    border-color: white;
+    background-color: white;
 }
 
 .randButton {
+    border-radius: 50%;
+    border-color: white;
 }
 
 .volumebar {
+    background-color: white;
+    border: 0;
 }
 
 .filelisttitle {
+    font-size: 12px;
 }
 
 .playlisttitle {
+    font-size: 12px;
+}
+
+.filelist_chooser {
+    font-weight: bold;
 }
 
 .addToPlayButton {
+    border-radius: 50%;
+    border-color: white;
+    background-color: white;
+}
+
+.separator1{
+}
+
+.statusBox {
+}
+
+.progresBox {
+}
+
+.statusButtons {
 }
