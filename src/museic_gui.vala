@@ -149,7 +149,11 @@ public class MuseicGui : Gtk.ApplicationWindow {
         saved_state.window_posy = aux2;
         if (this.is_maximized) saved_state.window_state = 1;
         else saved_state.window_state = 0;
-        return false;
+
+        if (this.museic_app.state() == "play") {
+            this.museic_app.closed = true;
+            return this.hide_on_delete ();
+        }else return false;
     }
 
     public void notify(string text) {

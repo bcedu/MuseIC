@@ -40,6 +40,7 @@ public class MuseIC : Gtk.Application {
     public MuseicGui main_window;
     public MprisPlayer mpris_player;
     public MuseicServer museic_server;
+    public bool closed;
 
     public MuseIC (string[] args) {
         Object (application_id: "com.github.bcedu.museic", flags: ApplicationFlags.HANDLES_OPEN);
@@ -63,14 +64,18 @@ public class MuseIC : Gtk.Application {
     }
 
     protected override void activate () {
-        this.streamplayer = new MuseicStreamPlayer(this.argsv, "MAIN");
-        this.museic_filelist = new MuseicFileList();
-        this.museic_playlist = new MuseicFileList();
-        this.museic_library = new MuseicLibrary(Environment.get_home_dir()+"/.museic/museic_library_v1_4");
-        this.museic_filelist.add_museic_files(this.museic_library.get_library_files("all"), true, "filelist");
-        setup_dbus();
-        this.main_window = new MuseicGui (this);
-        this.museic_server = new MuseicServer(this);
+        if (!this.closed) {
+            this.streamplayer = new MuseicStreamPlayer(this.argsv, "MAIN");
+            this.museic_filelist = new MuseicFileList();
+            this.museic_playlist = new MuseicFileList();
+            this.museic_library = new MuseicLibrary(Environment.get_home_dir()+"/.museic/museic_library_v1_4");
+            this.museic_filelist.add_museic_files(this.museic_library.get_library_files("all"), true, "filelist");
+            setup_dbus();
+            this.museic_server = new MuseicServer(this);
+            this.main_window = new MuseicGui (this);
+        }
+        this.main_window.present();
+        closed = false;
     }
 
     private void setup_dbus() {
