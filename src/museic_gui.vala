@@ -27,6 +27,16 @@ public class MuseicGui : Gtk.ApplicationWindow {
         }
         // Connect signals
         builder.connect_signals (this);
+        // Add HeaderBar
+        var header_bar = new Gtk.HeaderBar ();
+        header_bar.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
+        header_bar.show_close_button = true;
+        header_bar.pack_start  ((builder.get_object ("openFile") as Gtk.ToolButton));
+        header_bar.pack_start  ((builder.get_object ("addFile") as Gtk.ToolButton));
+        header_bar.pack_start  ((builder.get_object ("helpRemote") as Gtk.ToolButton));
+        // header_bar.pack_end  ((builder.get_object ("reload") as Gtk.ToolButton));
+        header_bar.set_title("MuseIC");
+        this.set_titlebar (header_bar);
         // Add main box to window
         this.add (builder.get_object ("mainW") as Gtk.Grid);
         // Set fileListStore
