@@ -21,6 +21,7 @@ set (VERSION "1.2")
 set (VERSION_INFO "MuseIC beta version")
 set (ICON "${PKGDATADIR}/data/icons/com.github.bcedu.museic.svg")
 set (HTMLDIR "${PKGDATADIR}/data/html/")
+set (CSSDIR "${PKGDATADIR}/data/css/")
 
 configure_file (${CMAKE_SOURCE_DIR}/src/config.vala.cmake ${CMAKE_SOURCE_DIR}/src/config.vala)
 
@@ -94,6 +95,7 @@ add_schema (data/com.github.bcedu.museic.gschema.xml)
 INSTALL(FILES data/com.github.bcedu.museic.glade DESTINATION ${PKGDATADIR}/data)
 INSTALL(FILES data/icons/com.github.bcedu.museic.svg DESTINATION ${PKGDATADIR}/data/icons)
 INSTALL(FILES src/html/client.html DESTINATION ${PKGDATADIR}/data/html)
+INSTALL(FILES src/css/main.css DESTINATION ${PKGDATADIR}/data/css)
 # Install icons
 install(FILES data/icons/com.github.bcedu.museic.svg DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/)
 install(FILES data/icons/com.github.bcedu.museic.svg DESTINATION ${CMAKE_INSTALL_PREFIX}/share/icons/hicolor/scalable/apps/)

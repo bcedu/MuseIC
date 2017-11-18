@@ -4,4 +4,5 @@ namespace Constants {
     public const string VERSION = "";
     public const string ICON = "data/icons/com.github.bcedu.museic.svg";
     public const string HTMLDIR = "src/html/";
+    public const string CSSDIR = "src/css/";
 }

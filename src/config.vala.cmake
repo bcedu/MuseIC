@@ -4,4 +4,5 @@ namespace Constants {
     public const string VERSION = "@VERSION@";
     public const string ICON = "@ICON@";
     public const string HTMLDIR = "@HTMLDIR@";
+    public const string CSSDIR = "@CSSDIR@";
 }

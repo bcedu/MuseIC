@@ -25,6 +25,15 @@ public class MuseicGui : Gtk.ApplicationWindow {
         }catch (GLib.Error e) {
             stdout.printf("Glade file not found. Error: %s\n", e.message);
         }
+        // Load CSS
+        string css_file = Constants.CSSDIR + "/main.css";
+        var provider = new Gtk.CssProvider();
+        try {
+            provider.load_from_path(css_file);
+            Gtk.StyleContext.add_provider_for_screen(Gdk.Screen.get_default(), provider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
+        } catch (Error e) {
+            stderr.printf("Error: %s\n", e.message);
+        }
         // Connect signals
         builder.connect_signals (this);
         // Add HeaderBar
@@ -36,12 +45,14 @@ public class MuseicGui : Gtk.ApplicationWindow {
         header_bar.pack_start  ((builder.get_object ("helpRemote") as Gtk.ToolButton));
         // header_bar.pack_end  ((builder.get_object ("reload") as Gtk.ToolButton));
         header_bar.set_title("MuseIC");
+        header_bar.get_style_context().add_class ("headerbar");
         this.set_titlebar (header_bar);
         // Add main box to window
         this.add (builder.get_object ("mainW") as Gtk.Grid);
         // Set fileListStore
         this.fileListStore = new Gtk.ListStore (5, typeof (string), typeof (string), typeof (string), typeof (string), typeof (Gdk.RGBA));
         var tree = (this.builder.get_object ("fileTree") as Gtk.TreeView);
+        tree.get_style_context().add_class ("fileListStore");
         tree.set_model (this.fileListStore);
         tree.insert_column_with_attributes (-1, "Song", new Gtk.CellRendererText (), "text", 0, "background-rgba", 4);
         tree.get_column(0).set_resizable(true);
@@ -62,6 +73,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Set playListStore
         this.playListStore = new Gtk.ListStore (5, typeof (string), typeof (string), typeof (string), typeof (string), typeof (Gdk.RGBA));
         tree = (this.builder.get_object ("playTree") as Gtk.TreeView);
+        tree.get_style_context().add_class ("playListStore");
         tree.set_model (this.playListStore);
         tree.insert_column_with_attributes (-1, "Song", new Gtk.CellRendererText (), "text", 0, "background-rgba", 4);
         tree.get_column(0).set_resizable(true);
@@ -77,6 +89,19 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Show window
         this.show_all ();
         this.show ();
+        // Set some more css classes
+        (this.builder.get_object ("statusLabel") as Gtk.Label).get_style_context().add_class ("songtitle");
+        (this.builder.get_object ("statusLabel1") as Gtk.Label).get_style_context().add_class ("songartist");
+        (this.builder.get_object ("scalebar") as Gtk.Scale).get_style_context().add_class ("streamprogresbar");
+        (this.builder.get_object ("timeLabel") as Gtk.Label).get_style_context().add_class ("streamtime");
+        (this.builder.get_object ("antButton") as Gtk.Button).get_style_context().add_class ("antButton");
+        (this.builder.get_object ("playButton") as Gtk.Button).get_style_context().add_class ("playButton");
+        (this.builder.get_object ("segButton") as Gtk.Button).get_style_context().add_class ("segButton");
+        (this.builder.get_object ("randButton") as Gtk.Button).get_style_context().add_class ("randButton");
+        (this.builder.get_object ("volumebar") as Gtk.Scale).get_style_context().add_class ("volumebar");
+        (this.builder.get_object ("label1") as Gtk.Label).get_style_context().add_class ("filelisttitle");
+        (this.builder.get_object ("label2") as Gtk.Label).get_style_context().add_class ("playlisttitle");
+        (this.builder.get_object ("addToPlay") as Gtk.Button).get_style_context().add_class ("addToPlayButton");
         // Start time function to update info about stream duration and position each second
         GLib.Timeout.add_seconds (1, update_stream_status);
         // Update tree view with files from library
