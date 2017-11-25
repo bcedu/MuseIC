@@ -160,4 +160,10 @@ public class MuseicFileList {
         return list;
     }
 
+    public MuseicFileList copy() {
+        MuseicFileList aux = new MuseicFileList(this.name);
+        foreach (MuseicFile f in this.files_list[0:this.nfiles]) aux.add_museic_file(f, f.origin);
+        return aux;
+    }
+
 }

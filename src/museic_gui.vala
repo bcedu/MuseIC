@@ -5,6 +5,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
     private Museic.Settings saved_state;
     private Gtk.ListStore fileListStore;
     private Gtk.ListStore playListStore;
+    private MuseicFileList museic_shown_filelist;
     // Aux variables needed to open files
     private Gtk.Window files_window;
     private Gtk.FileChooserWidget chooser;
@@ -108,6 +109,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         (this.builder.get_object ("statusButtons") as Gtk.Box).get_style_context().add_class ("statusButtons");
         (this.builder.get_object ("filelist_chooser") as Gtk.ComboBoxText).get_style_context().add_class ("filelist_chooser");
 
+        this.museic_shown_filelist = this.museic_app.get_active_filelist();
         // Start time function to update info about stream duration and position each second
         GLib.Timeout.add_seconds (1, update_stream_status);
         // Update tree view with files from library
@@ -292,6 +294,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             this.progress_bar.set_fraction (fraction);
         }
         if (this.is_open) this.museic_app.play_filelist_file(0);
+        this.museic_shown_filelist = this.museic_app.get_active_filelist();
         update_files_to_tree();
         update_stream_status();
         if (this.is_open) {
@@ -337,7 +340,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         Gtk.TreeIter iter;
         Gdk.RGBA rgba_default = Gdk.RGBA ();
         rgba_default.parse ("#ffffff");
-        foreach (MuseicFile file in this.museic_app.get_all_filelist_files()) {
+        foreach (MuseicFile file in this.museic_shown_filelist.get_files_list()) {
             this.fileListStore.append (out iter);
             this.fileListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album, 3, "", 4, rgba_default);
         }
@@ -369,7 +372,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
                     this.playListStore.set (iter, 3, "Next", 4, rgba_next);
                     this.fileListStore.get_iter_from_string(out iterfile, this.museic_app.get_next_filelist_pos().to_string());
                     this.fileListStore.set (iterfile, 3, "", 4, rgba_default);
-                }else if (!this.museic_app.is_random()) {
+                }else if (!this.museic_app.is_random() && this.museic_shown_filelist.name == this.museic_app.get_active_filelist().name) {
                     int filepos = this.museic_app.get_next_filelist_pos();
                     this.fileListStore.get_iter_from_string(out iterfile, filepos.to_string());
                     this.fileListStore.set (iterfile, 3, "Next", 4, rgba_next);
@@ -432,13 +435,14 @@ public class MuseicGui : Gtk.ApplicationWindow {
     [CCode(instance_pos=-1)]
     public void action_add_to_play (Gtk.Button button) {
         List<Gtk.TreePath> selected = (this.builder.get_object ("fileTree") as Gtk.TreeView).get_selection().get_selected_rows(null);
-        int[] files_to_add = new int[selected.length()];
+        MuseicFile[] files_to_add = new MuseicFile[selected.length()];
         int i = 0;
+        MuseicFile[] files = this.museic_shown_filelist.get_files_list();
         foreach (Gtk.TreePath p in selected) {
-            files_to_add[i] = int.parse(p.to_string());
+            files_to_add[i] = files[int.parse(p.to_string())];
             i++;
         }
-        this.museic_app.add_files_to_playlist(files_to_add);
+        this.museic_app.add_museic_files_to_playlist(files_to_add);
         update_files_to_tree();
         update_playlist_to_tree();
     }
@@ -454,6 +458,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     [CCode(instance_pos=-1)]
     public void action_play_selected_file_filelist (Gtk.TreeView view, Gtk.TreePath path, Gtk.TreeViewColumn column) {
+        this.museic_app.change_filelist(this.museic_shown_filelist.name);
         update_files_to_tree();
         this.museic_app.clear_playlist();
         this.museic_app.play_filelist_file(int.parse(path.to_string()));
@@ -473,29 +478,34 @@ public class MuseicGui : Gtk.ApplicationWindow {
     }
 
     private void sort_filelist(string field) {
-        // Sort filelist
-        this.museic_app.set_filelist_sort_field(field);
-        this.museic_app.sort_filelist();
-        // Update tree view
-        update_files_to_tree();
-        // Set status of next file if necessari
-        if (this.museic_app.get_playlist_pos() == this.museic_app.get_playlist_len()-1 & !this.museic_app.is_random()) {
-            Gtk.TreeIter iterfile;
-            Gdk.RGBA rgba_next = Gdk.RGBA ();
-            rgba_next.parse ("#e7f2f1");
-            Gdk.RGBA rgba_default = Gdk.RGBA ();
-            rgba_default.parse ("#ffffff");
-            int filepos = this.museic_app.get_next_filelist_pos();
-            this.fileListStore.get_iter_from_string(out iterfile, filepos.to_string());
-            this.fileListStore.set (iterfile, 3, "Next", 4, rgba_next);
-            if (this.museic_app.get_filelist_len() != 1) {
-                if (filepos == 0) filepos = this.museic_app.get_filelist_len()-1;
-                else filepos = filepos -1;
+        this.museic_shown_filelist.sort_field = field;
+        this.museic_shown_filelist.sort();
+        if (this.museic_shown_filelist.name == this.museic_app.get_active_filelist().name) {
+            // Sort filelist
+            this.museic_app.set_filelist_sort_field(field);
+            this.museic_app.sort_filelist();
+            // Set status of next file if necessari
+            if (this.museic_app.get_playlist_pos() == this.museic_app.get_playlist_len()-1 & !this.museic_app.is_random()) {
+                Gtk.TreeIter iterfile;
+                Gdk.RGBA rgba_next = Gdk.RGBA ();
+                rgba_next.parse ("#e7f2f1");
+                Gdk.RGBA rgba_default = Gdk.RGBA ();
+                rgba_default.parse ("#ffffff");
+                int filepos = this.museic_app.get_next_filelist_pos();
                 this.fileListStore.get_iter_from_string(out iterfile, filepos.to_string());
-                this.fileListStore.set (iterfile, 3, "", 4, rgba_default);
+                this.fileListStore.set (iterfile, 3, "Next", 4, rgba_next);
+                if (this.museic_app.get_filelist_len() != 1) {
+                    if (filepos == 0) filepos = this.museic_app.get_filelist_len()-1;
+                    else filepos = filepos -1;
+                    this.fileListStore.get_iter_from_string(out iterfile, filepos.to_string());
+                    this.fileListStore.set (iterfile, 3, "", 4, rgba_default);
+                }
             }
         }
+        // Update tree view
+        update_files_to_tree();
     }
+
     [CCode(instance_pos=-1)]
     public void action_help_remote(Gtk.Button button) {
         string help_string = "Control MuseIC from any device!\n1. Open your favourite browser\n2. Type "+this.museic_app.museic_server.get_server_info()+"\n3. Control MuseIC playback: play/pause, next, previous, etc.\n\nIn order to be able to connect to MuseIC, both devices must be in the same Wifi network.\n";
@@ -538,10 +548,16 @@ public class MuseicGui : Gtk.ApplicationWindow {
     [CCode(instance_pos=-1)]
     public void action_select_filelist(Gtk.ComboBoxText box) {
         if (box.get_active_text() != null) {
-            if (museic_app.state() != "pause") action_play_file((builder.get_object ("playButton") as Gtk.Button));
             string artist = box.get_active_text();
             if (artist == "All") artist = "all";
-            this.museic_app.change_filelist(artist);
+
+            if (this.museic_app.museic_filelist.name == artist) this.museic_shown_filelist = this.museic_app.get_active_filelist();
+            else {
+                this.museic_shown_filelist.clean();
+                this.museic_shown_filelist.add_museic_files(this.museic_app.museic_library.get_library_files(artist), true, "filelist");
+                this.museic_shown_filelist.name = artist;
+            }
+
             update_files_to_tree();
             update_playlist_to_tree();
 

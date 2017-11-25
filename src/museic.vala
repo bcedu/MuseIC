@@ -33,10 +33,10 @@ public struct StreamMetadata {
 public class MuseIC : Gtk.Application {
 
     public string[] argsv;
-    private MuseicStreamPlayer streamplayer;
-    private MuseicFileList museic_filelist;
-    private MuseicFileList museic_playlist;
-    private MuseicLibrary museic_library;
+    public MuseicStreamPlayer streamplayer;
+    public MuseicFileList museic_filelist;
+    public MuseicFileList museic_playlist;
+    public MuseicLibrary museic_library;
     public MuseicGui main_window;
     public MprisPlayer mpris_player;
     public MuseicServer museic_server;
@@ -206,6 +206,11 @@ public class MuseIC : Gtk.Application {
         foreach (int i in file_indexs) this.museic_playlist.add_museic_file(files[i], "quequed");
     }
 
+    public void add_museic_files_to_playlist(MuseicFile[] files) {
+        // Add the files from filelist to the playlist
+        foreach (MuseicFile i in files) this.museic_playlist.add_museic_file(i, "quequed");
+    }
+
     public void clear_filelist() {
         // Delete all files from the filelist.
         this.museic_filelist.clean();
@@ -219,6 +224,10 @@ public class MuseIC : Gtk.Application {
     public MuseicFile[] get_all_filelist_files() {
         // Get all files from filelist
         return this.museic_filelist.get_files_list();
+    }
+
+    public MuseicFileList get_active_filelist() {
+        return this.museic_filelist.copy();
     }
 
     public MuseicFile[] get_all_playlist_files() {
@@ -301,6 +310,7 @@ public class MuseIC : Gtk.Application {
         clear_playlist();
         clear_filelist();
         this.museic_filelist.add_museic_files(this.museic_library.get_library_files(artist), true, "filelist");
+        this.museic_filelist.name = artist;
     }
 
 
