@@ -62,7 +62,7 @@ public class MuseicLibrary {
 
     public string[] get_artists() {
         // Returns a list with all artists of library
-        MuseicFileList aux = new MuseicFileList();
+        MuseicFileList aux = new MuseicFileList("aux");
         aux.add_museic_files(this.get_library_files("all"), true, "filelist");
         aux.sort_field = "artist";
         aux.sort();

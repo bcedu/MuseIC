@@ -6,8 +6,11 @@ public class MuseicFileList {
     public bool random_state = false;
     private int sorted = 0; // -1 -> desc, 0 -> not sorted, 1 -> asc
     public string sort_field = "name"; // name | artist | album
+    public string name;
 
-    public MuseicFileList () {}
+    public MuseicFileList (string name) {
+        this.name = name;
+    }
 
     public void add_files(string[] filenames, bool filter_repeated, string origin) {
         foreach (string filename in filenames) if (!filter_repeated || (filter_repeated && !is_in_filelist(filename))) add_file(filename, origin);
