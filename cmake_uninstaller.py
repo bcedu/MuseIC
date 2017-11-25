@@ -12,10 +12,9 @@ if input("Do you wish to continue? (y/N)\n") == "y":
                 subprocess.call(["rm", installed_file])
             except Exception as e:
                 print(e)
-    if input("Uninstalled.\nDo you wish to clean 'build' and 'po' folders? (y/N)\n") == "y":
-        if os.path.exists("build"):
-            os.system("rm -r build/*")
-        else:
-            os.system("mkdir build")
-        if os.path.exists("po"):
-            os.system("rm -r po/*.po")
+    if os.path.exists("build"):
+        os.system("rm -r build/*")
+    else:
+        os.system("mkdir build")
+    if os.path.exists("po"):
+        os.system("rm -r po/*.po")
