@@ -33,12 +33,13 @@
         </screenshot>
     </screenshots>
     <releases>
-  ​    <release version="1.4.1" date="2017-11-18">
+  ​    <release version="1.5.0" date="2017-11-25">
   ​      <description>
   ​        <p>MuseIC Release</p>
           <ul>
               <li>New style (better style, I hope...)</li>
               <li>Continue playing music when window is closed</li>
+              <li>Allow navigate through artists (and adding files to queque) without stoping playback</li>
           </ul>
   ​      </description>
   ​    </release>
