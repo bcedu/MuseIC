@@ -33,6 +33,14 @@
         </screenshot>
     </screenshots>
     <releases>
+        <release version="1.5.1" date="2018-01-20">
+        ​      <description>
+        ​        <p>MuseIC Release</p>
+                <ul>
+                    <li>Fixes a bug which made that when sorting the current filelist and playing a file it wasn't played the correct file</li>
+                </ul>
+        ​      </description>
+    ​    </release>
   ​    <release version="1.5.0" date="2017-11-25">
   ​      <description>
   ​        <p>MuseIC Release</p>

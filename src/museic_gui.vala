@@ -458,7 +458,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     [CCode(instance_pos=-1)]
     public void action_play_selected_file_filelist (Gtk.TreeView view, Gtk.TreePath path, Gtk.TreeViewColumn column) {
-        this.museic_app.change_filelist(this.museic_shown_filelist.name);
+        this.museic_app.change_filelist(this.museic_shown_filelist);
         update_files_to_tree();
         this.museic_app.clear_playlist();
         this.museic_app.play_filelist_file(int.parse(path.to_string()));
