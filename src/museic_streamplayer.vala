@@ -119,7 +119,7 @@ public class MuseicStreamPlayer {
 
     public void set_volume(double level) {
         if (level < 0) level = 0;
-        else if (level > 3) level = 3;
+        else if (level > 2) level = 2;
         this.volume = level;
         this.player["volume"] = this.volume;
     }
