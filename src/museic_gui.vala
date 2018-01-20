@@ -510,11 +510,10 @@ public class MuseicGui : Gtk.ApplicationWindow {
     public void action_help_remote(Gtk.Button button) {
         string help_string = "Control MuseIC from any device!\n1. Open your favourite browser\n2. Type "+this.museic_app.museic_server.get_server_info()+"\n3. Control MuseIC playback: play/pause, next, previous, etc.\n\nIn order to be able to connect to MuseIC, both devices must be in the same Wifi network.\n";
 
-        var helpw = new Gtk.Window();
-        helpw.window_position = Gtk.WindowPosition.CENTER;
-        helpw.destroy.connect (Gtk.main_quit);
+        var helpw = new Gtk.Popover(button);
 
         Gtk.Box vbox = new Gtk.Box (Gtk.Orientation.VERTICAL, 1);
+        vbox.margin = 20;
         var helptext = new Gtk.Label(help_string);
         helptext.set_line_wrap(true);
         helptext.set_justify(Gtk.Justification.LEFT);
