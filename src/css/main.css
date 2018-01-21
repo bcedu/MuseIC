@@ -42,7 +42,7 @@
 }
 
 .randButton {
-    border-radius: 50%;
+    /*border-radius: 50%;*/
     border-color: white;
 }
 
@@ -64,7 +64,7 @@
 }
 
 .addToPlayButton {
-    border-radius: 50%;
+    /*border-radius: 50%;*/
     border-color: white;
     background-color: white;
 }

@@ -118,7 +118,6 @@ public class MuseicGui : Gtk.ApplicationWindow {
             update_stream_status();
             update_playlist_to_tree();
         }
-        update_filelist_chooser_options();
     }
 
     private void load_window_state() {
@@ -312,7 +311,6 @@ public class MuseicGui : Gtk.ApplicationWindow {
         this.files_window = null;
         this.chooser = null;
         this.is_open = false;
-        update_filelist_chooser_options();
     }
 
     private string[] rec_open(File file) {
@@ -536,12 +534,38 @@ public class MuseicGui : Gtk.ApplicationWindow {
         return true;
     }
 
-    private void update_filelist_chooser_options() {
-        var chooser = (builder.get_object ("filelist_chooser") as Gtk.ComboBoxText);
-        chooser.remove_all();
-        chooser.append_text("All");
-        foreach (string artist in this.museic_app.get_all_artists()) chooser.append_text(artist);
-        chooser.active = 0;
+    [CCode(instance_pos=-1)]
+    public void action_show_filelist_options(Gtk.Button artists_button) {
+        stdout.printf("LOOOOL\n");
+        var helpw = new Gtk.Popover(artists_button);
+        /*
+        Ha de haverhi un tree amb els artistes. A dalt de tot un cercador
+        */
+        Gtk.ListStore list_store = new Gtk.ListStore (1, typeof (string));
+    	Gtk.TreeIter iter;
+
+        list_store.append (out iter);
+        list_store.set (iter, 0, "All Artists");
+
+        foreach (string artist_name in this.museic_app.get_all_artists()) {
+            list_store.append (out iter);
+            list_store.set (iter, 0, artist_name);
+        }
+
+        Gtk.TreeView view = new Gtk.TreeView.with_model (list_store);
+        Gtk.CellRendererText cell = new Gtk.CellRendererText ();
+		view.insert_column_with_attributes (-1, "Artist", cell, "text", 0);
+
+        Gtk.ScrolledWindow scrolled = new Gtk.ScrolledWindow (null, null);
+        scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
+        scrolled.min_content_width = 500;
+        scrolled.expand = true;
+        helpw.vexpand = true;
+        helpw.set_position (Gtk.PositionType.BOTTOM);
+
+        scrolled.add(view);
+		helpw.add (scrolled);
+        helpw.show_all();
     }
 
     [CCode(instance_pos=-1)]

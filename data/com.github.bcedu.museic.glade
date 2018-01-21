@@ -329,7 +329,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkBox" id="box1">
+              <object class="GtkBox" id="boxFileTitle">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
@@ -350,13 +350,15 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkComboBoxText" id="filelist_chooser">
+                  <object class="GtkButton" id="artists_button">
+                    <property name="label" translatable="yes">All Artists</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <signal name="changed" handler="museic_gui_action_select_filelist" swapped="no"/>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <signal name="clicked" handler="museic_gui_action_show_filelist_options" swapped="no"/>
                   </object>
                   <packing>
-                    <property name="expand">True</property>
+                    <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">1</property>
                   </packing>
