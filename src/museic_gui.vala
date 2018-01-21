@@ -536,7 +536,6 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     [CCode(instance_pos=-1)]
     public void action_show_filelist_options(Gtk.Button artists_button) {
-        stdout.printf("LOOOOL\n");
         var helpw = new Gtk.Popover(artists_button);
         /*
         Ha de haverhi un tree amb els artistes. A dalt de tot un cercador
@@ -555,6 +554,14 @@ public class MuseicGui : Gtk.ApplicationWindow {
         Gtk.TreeView view = new Gtk.TreeView.with_model (list_store);
         Gtk.CellRendererText cell = new Gtk.CellRendererText ();
 		view.insert_column_with_attributes (-1, "Artist", cell, "text", 0);
+        view.row_activated.connect((path, column) => {
+            Value val;
+            list_store.get_iter (out iter, path);
+            list_store.get_value (iter, 0, out val);
+            artists_button.set_label((string)val);
+            this.change_shown_filelist((string)val);
+            helpw.destroy();
+        });
 
         Gtk.ScrolledWindow scrolled = new Gtk.ScrolledWindow (null, null);
         scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
@@ -568,23 +575,18 @@ public class MuseicGui : Gtk.ApplicationWindow {
         helpw.show_all();
     }
 
-    [CCode(instance_pos=-1)]
-    public void action_select_filelist(Gtk.ComboBoxText box) {
-        if (box.get_active_text() != null) {
-            string artist = box.get_active_text();
-            if (artist == "All") artist = "all";
+    private void change_shown_filelist(string artist) {
+        if (artist == "All Artists") artist = "all";
 
-            if (this.museic_app.museic_filelist.name == artist) this.museic_shown_filelist = this.museic_app.get_active_filelist();
-            else {
-                this.museic_shown_filelist.clean();
-                this.museic_shown_filelist.add_museic_files(this.museic_app.museic_library.get_library_files(artist), true, "filelist");
-                this.museic_shown_filelist.name = artist;
-            }
-
-            update_files_to_tree();
-            update_playlist_to_tree();
-
+        if (this.museic_app.museic_filelist.name == artist) this.museic_shown_filelist = this.museic_app.get_active_filelist();
+        else {
+            this.museic_shown_filelist.clean();
+            this.museic_shown_filelist.add_museic_files(this.museic_app.museic_library.get_library_files(artist), true, "filelist");
+            this.museic_shown_filelist.name = artist;
         }
+
+        update_files_to_tree();
+        update_playlist_to_tree();
     }
 
 }
