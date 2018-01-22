@@ -69,7 +69,7 @@ public class MuseIC : Gtk.Application {
             this.museic_filelist = new MuseicFileList("all");
             this.museic_playlist = new MuseicFileList("playlist");
             this.museic_library = new MuseicLibrary(Environment.get_home_dir()+"/.museic/museic_library_v1_4");
-            this.museic_filelist.add_museic_files(this.museic_library.get_library_files("all"), true, "filelist");
+            this.museic_filelist.add_museic_files(this.museic_library.get_library_files_by_artist("all"), true, "filelist");
             setup_dbus();
             this.museic_server = new MuseicServer(this);
             this.main_window = new MuseicGui (this);
@@ -295,7 +295,7 @@ public class MuseIC : Gtk.Application {
         this.clear_playlist();
         // Add files to library and filelist
         this.museic_library.add_files(filenames, true);
-        this.museic_filelist.add_museic_files(this.museic_library.get_library_files("all"), true, "filelist");
+        this.museic_filelist.add_museic_files(this.museic_library.get_library_files_by_artist("all"), true, "filelist");
     }
 
     public string[] get_all_artists() {

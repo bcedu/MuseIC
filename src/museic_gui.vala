@@ -14,6 +14,8 @@ public class MuseicGui : Gtk.ApplicationWindow {
     private Gtk.Label progress_label;
     // Aux variable to show artists list
     private Gtk.TreeView artists_view;
+    // Aux variable to store filtered filelist
+    private MuseicFile[] filtered_filelist;
 
     public MuseicGui(MuseIC app) {
         Object (application: app, title: "MuseIC");
@@ -52,6 +54,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         this.set_titlebar (header_bar);
         // Add main box to window
         this.add (builder.get_object ("mainW") as Gtk.Grid);
+        this.height_request = 460;
         // Set fileListStore
         this.fileListStore = new Gtk.ListStore (5, typeof (string), typeof (string), typeof (string), typeof (string), typeof (Gdk.RGBA));
         var tree = (this.builder.get_object ("fileTree") as Gtk.TreeView);
@@ -543,7 +546,6 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
         // Search bar
         Gtk.SearchEntry sbar = new Gtk.SearchEntry ();
-		sbar.set_text ("Search artists...");
         sbar.search_changed.connect((sbar) => {
             Gtk.ListStore list_store_filtered = new Gtk.ListStore (1, typeof (string));
         	Gtk.TreeIter iter;
@@ -582,7 +584,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             this.artists_view.get_model().get_iter (out iter, path);
             this.artists_view.get_model().get_value (iter, 0, out val);
             artists_button.set_label((string)val);
-            this.change_shown_filelist((string)val);
+            this.change_shown_filelist_by_artist((string)val);
             helpw.destroy();
         });
 
@@ -601,18 +603,61 @@ public class MuseicGui : Gtk.ApplicationWindow {
         helpw.show_all();
     }
 
-    private void change_shown_filelist(string artist) {
+    private void change_shown_filelist_by_artist(string artist) {
         if (artist == "All Artists") artist = "all";
 
         if (this.museic_app.museic_filelist.name == artist) this.museic_shown_filelist = this.museic_app.get_active_filelist();
         else {
             this.museic_shown_filelist.clean();
-            this.museic_shown_filelist.add_museic_files(this.museic_app.museic_library.get_library_files(artist), true, "filelist");
+            this.museic_shown_filelist.add_museic_files(this.museic_app.museic_library.get_library_files_by_artist(artist), true, "filelist");
             this.museic_shown_filelist.name = artist;
         }
 
         update_files_to_tree();
         update_playlist_to_tree();
+    }
+
+    [CCode(instance_pos=-1)]
+    public void action_search_files(Gtk.SearchEntry sentry) {
+        string stext = sentry.get_text();
+        var searchpopover = new Gtk.Popover(sentry);
+
+        // Scrolled view with artists
+        Gtk.ListStore list_store = new Gtk.ListStore (3, typeof (string), typeof (string), typeof (string));
+    	Gtk.TreeIter iter;
+        this.filtered_filelist = this.museic_app.museic_library.get_library_files_by_search(stext);
+        foreach (MuseicFile mfile in this.filtered_filelist) {
+            list_store.append (out iter);
+            list_store.set (iter, 0, mfile.name, 1, mfile.artist, 2, mfile.album);
+        }
+
+        Gtk.TreeView sfiles_view = new Gtk.TreeView.with_model (list_store);
+        Gtk.CellRendererText cell = new Gtk.CellRendererText ();
+		sfiles_view.insert_column_with_attributes (-1, "Name", cell, "text", 0);
+		sfiles_view.insert_column_with_attributes (-1, "Artist", cell, "text", 1);
+		sfiles_view.insert_column_with_attributes (-1, "Album", cell, "text", 2);
+        sfiles_view.row_activated.connect((path, column) => {
+            MuseicFile[] auxfl = new MuseicFile[1];
+            auxfl[0] = this.filtered_filelist[int.parse(path.to_string())];
+            this.museic_app.add_museic_files_to_playlist(auxfl);
+            this.museic_app.play_playlist_file(this.museic_app.get_all_playlist_files().length-1);
+            if (museic_app.state() == "pause") action_play_file((builder.get_object ("playButton") as Gtk.Button));
+            update_files_to_tree();
+            update_playlist_to_tree();
+            this.museic_app.update_dbus_status();
+            searchpopover.destroy();
+        });
+
+        Gtk.ScrolledWindow scrolled = new Gtk.ScrolledWindow (null, null);
+        scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
+        scrolled.min_content_width = 500;
+        scrolled.expand = true;
+        scrolled.add(sfiles_view);
+
+        searchpopover.add (scrolled);
+        searchpopover.vexpand = true;
+        searchpopover.set_position (Gtk.PositionType.BOTTOM);
+        searchpopover.show_all();
     }
 
 }

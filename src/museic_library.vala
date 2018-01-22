@@ -11,7 +11,7 @@ public class MuseicLibrary {
         if (!file.query_exists()) file.create(FileCreateFlags.NONE);
     }
 
-    public MuseicFile[] get_library_files(string artist) {
+    public MuseicFile[] get_library_files_by_artist(string artist) {
         // Returns thhe files from library of the passed artist. If the passed artist
         // is "all", returns all files
         MuseicFile[] museic_files = new MuseicFile[5];
@@ -51,7 +51,7 @@ public class MuseicLibrary {
     }
 
     public bool is_in_filelist(string filename) {
-        foreach (MuseicFile file in get_library_files("all")) if (file.path == filename) return true;
+        foreach (MuseicFile file in get_library_files_by_artist("all")) if (file.path == filename) return true;
         return false;
     }
 
@@ -63,7 +63,7 @@ public class MuseicLibrary {
     public string[] get_artists() {
         // Returns a list with all artists of library
         MuseicFileList aux = new MuseicFileList("aux");
-        aux.add_museic_files(this.get_library_files("all"), true, "filelist");
+        aux.add_museic_files(this.get_library_files_by_artist("all"), true, "filelist");
         aux.sort_field = "artist";
         aux.sort();
         string[] artists = new string[aux.nfiles];
@@ -75,6 +75,41 @@ public class MuseicLibrary {
             }
         }
         return artists[0:nartists];
+    }
+
+    public MuseicFile[] get_library_files_by_search(string search_text) {
+        MuseicFile[] museic_files = new MuseicFile[5];
+        int nfiles = 0;
+        try {
+            DataInputStream reader = new DataInputStream(this.file.read());
+            string line;
+            File aux;
+            MuseicFile mfile;
+            while ((line=reader.read_line(null)) != null) {
+                aux = File.new_for_path(line.split(";")[0]);
+                if (aux.query_exists()) {
+                    if (museic_files.length == nfiles) museic_files.resize(museic_files.length*2);
+                    mfile = new MuseicFile.from_data(line.split(";")[0], line.split(";")[1], line.split(";")[2], line.split(";")[3], "unknown", "unknown", "filelist");
+                    if (this.pass_filter(search_text, mfile)) {
+                        museic_files[nfiles] = mfile;
+                        nfiles++;
+                    }
+                }
+            }
+        }catch (Error e){
+            error("%s", e.message);
+        }
+        return museic_files[0:nfiles];
+    }
+
+    private bool pass_filter(string text, MuseicFile file) {
+        if (text == "") return true;
+        bool filter_passed = true;
+        foreach (string aux in text.split(" ")) {
+            if ((file.name.down().contains(aux.down()) || file.artist.down().contains(aux.down()) || file.album.down().contains(aux.down())) && filter_passed) filter_passed = true;
+            else filter_passed = false;
+        }
+        return filter_passed;
     }
 
 }

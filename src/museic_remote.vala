@@ -206,7 +206,6 @@ public class MuseicServer : GLib.Object {
             if ((file.name.contains(aux) || file.artist.contains(aux) || file.album.contains(aux)) && filter_passed) filter_passed = true;
             else filter_passed = false;
         }
-        if (file.artist == "Muse") stdout.printf("TEXT: |%s|, FILE:|%s|%s|%s|, succes:%s\n", text, file.name, file.artist, file.album, filter_passed.to_string());
         return filter_passed;
     }
 
