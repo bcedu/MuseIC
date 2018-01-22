@@ -542,9 +542,9 @@ public class MuseicGui : Gtk.ApplicationWindow {
         var vbox = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
 
         // Search bar
-        Gtk.Entry sbar = new Gtk.Entry ();
+        Gtk.SearchEntry sbar = new Gtk.SearchEntry ();
 		sbar.set_text ("Search artists...");
-        sbar.activate.connect((sbar) => {
+        sbar.search_changed.connect((sbar) => {
             Gtk.ListStore list_store_filtered = new Gtk.ListStore (1, typeof (string));
         	Gtk.TreeIter iter;
 
@@ -554,7 +554,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
             string searched_text = sbar.get_text();
 
             foreach (string artist_name in this.museic_app.get_all_artists()) {
-                if (artist_name.down().contains(searched_text)) {
+                if (artist_name.down().contains(searched_text.down())) {
                     list_store_filtered.append (out iter);
                     list_store_filtered.set (iter, 0, artist_name);
                 }
