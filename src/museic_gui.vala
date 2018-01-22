@@ -12,6 +12,8 @@ public class MuseicGui : Gtk.ApplicationWindow {
     private bool is_open = false;
     private Gtk.ProgressBar progress_bar;
     private Gtk.Label progress_label;
+    // Aux variable to show artists list
+    private Gtk.TreeView artists_view;
 
     public MuseicGui(MuseIC app) {
         Object (application: app, title: "MuseIC");
@@ -537,9 +539,30 @@ public class MuseicGui : Gtk.ApplicationWindow {
     [CCode(instance_pos=-1)]
     public void action_show_filelist_options(Gtk.Button artists_button) {
         var helpw = new Gtk.Popover(artists_button);
-        /*
-        Ha de haverhi un tree amb els artistes. A dalt de tot un cercador
-        */
+        var vbox = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
+
+        // Search bar
+        Gtk.Entry sbar = new Gtk.Entry ();
+		sbar.set_text ("Search artists...");
+        sbar.activate.connect((sbar) => {
+            Gtk.ListStore list_store_filtered = new Gtk.ListStore (1, typeof (string));
+        	Gtk.TreeIter iter;
+
+            list_store_filtered.append (out iter);
+            list_store_filtered.set (iter, 0, "All Artists");
+
+            string searched_text = sbar.get_text();
+
+            foreach (string artist_name in this.museic_app.get_all_artists()) {
+                if (artist_name.down().contains(searched_text)) {
+                    list_store_filtered.append (out iter);
+                    list_store_filtered.set (iter, 0, artist_name);
+                }
+            }
+            this.artists_view.set_model(list_store_filtered);
+        });
+
+        // Scrolled view with artists
         Gtk.ListStore list_store = new Gtk.ListStore (1, typeof (string));
     	Gtk.TreeIter iter;
 
@@ -551,13 +574,13 @@ public class MuseicGui : Gtk.ApplicationWindow {
             list_store.set (iter, 0, artist_name);
         }
 
-        Gtk.TreeView view = new Gtk.TreeView.with_model (list_store);
+        this.artists_view = new Gtk.TreeView.with_model (list_store);
         Gtk.CellRendererText cell = new Gtk.CellRendererText ();
-		view.insert_column_with_attributes (-1, "Artist", cell, "text", 0);
-        view.row_activated.connect((path, column) => {
+		artists_view.insert_column_with_attributes (-1, "Artist", cell, "text", 0);
+        artists_view.row_activated.connect((path, column) => {
             Value val;
-            list_store.get_iter (out iter, path);
-            list_store.get_value (iter, 0, out val);
+            this.artists_view.get_model().get_iter (out iter, path);
+            this.artists_view.get_model().get_value (iter, 0, out val);
             artists_button.set_label((string)val);
             this.change_shown_filelist((string)val);
             helpw.destroy();
@@ -567,11 +590,14 @@ public class MuseicGui : Gtk.ApplicationWindow {
         scrolled.set_policy(Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC);
         scrolled.min_content_width = 500;
         scrolled.expand = true;
+        scrolled.add(artists_view);
+
+        vbox.pack_start (sbar, false, true, 0);
+        vbox.pack_start (scrolled, true, true, 0);
+        vbox.vexpand = true;
+        helpw.add (vbox);
         helpw.vexpand = true;
         helpw.set_position (Gtk.PositionType.BOTTOM);
-
-        scrolled.add(view);
-		helpw.add (scrolled);
         helpw.show_all();
     }
 
