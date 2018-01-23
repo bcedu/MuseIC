@@ -41,6 +41,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         }
         // Connect signals
         builder.connect_signals (this);
+        this.key_press_event.connect(action_press_key);
         // Add HeaderBar
         var header_bar = new Gtk.HeaderBar ();
         header_bar.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
@@ -658,6 +659,14 @@ public class MuseicGui : Gtk.ApplicationWindow {
         searchpopover.vexpand = true;
         searchpopover.set_position (Gtk.PositionType.BOTTOM);
         searchpopover.show_all();
+    }
+
+    public bool action_press_key(Gtk.Widget widget, Gdk.EventKey event) {
+        if (event.str == " " && !(builder.get_object ("searchentry_files") as Gtk.SearchEntry).has_focus) {
+            this.action_play_file((builder.get_object ("playButton") as Gtk.Button));
+            return true;
+        }
+        return false;
     }
 
 }
