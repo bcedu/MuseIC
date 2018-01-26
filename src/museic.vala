@@ -54,7 +54,7 @@ public class MuseIC : Gtk.Application {
         }
     }
 
-    public override void open (File[] files, string hint) {
+    public void action_open (File[] files, string hint) {
         // Activate, then play files
         this.activate ();
         string[] sfiles = {};
@@ -113,7 +113,9 @@ public class MuseIC : Gtk.Application {
 
     public static int main (string[] args) {
         GLib.Environ.set_variable ({"PULSE_PROP_media.role"}, "audio", "true");
-        return new MuseIC (args).run (args);
+        MuseIC app =  new MuseIC (args);
+        app.open.connect(app.action_open);
+        return app.run (args);
     }
 
 
