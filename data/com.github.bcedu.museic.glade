@@ -66,13 +66,13 @@
             <property name="margin_top">5</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkLabel" id="statusLabel">
+              <object class="GtkLinkButton" id="statusLabel">
+                <property name="label" translatable="yes">button</property>
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="hexpand">True</property>
-                <property name="label" translatable="yes">Select a file to play</property>
-                <property name="justify">center</property>
-                <property name="ellipsize">middle</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="relief">half</property>
+                <signal name="activate-link" handler="museic_gui_action_show_current_song" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>

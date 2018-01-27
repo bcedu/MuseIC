@@ -10,6 +10,8 @@
 .songtitle {
     font-size: 12px;
     padding-bottom: 8px;
+    background: linear-gradient(#F5F5F5, #F5F5F5);
+    border-color: #F5F5F5;
 }
 
 .songartist {

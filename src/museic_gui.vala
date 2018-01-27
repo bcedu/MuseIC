@@ -97,7 +97,8 @@ public class MuseicGui : Gtk.ApplicationWindow {
         this.show_all ();
         this.show ();
         // Set some more css classes
-        (this.builder.get_object ("statusLabel") as Gtk.Label).get_style_context().add_class ("songtitle");
+        (this.builder.get_object ("statusLabel") as Gtk.LinkButton).get_style_context().add_class ("songtitle");
+        (this.builder.get_object ("statusLabel") as Gtk.LinkButton).set_label("Select a file to play");
         (this.builder.get_object ("statusLabel1") as Gtk.Label).get_style_context().add_class ("songartist");
         (this.builder.get_object ("scalebar") as Gtk.Scale).get_style_context().add_class ("streamprogresbar");
         (this.builder.get_object ("timeLabel") as Gtk.Label).get_style_context().add_class ("streamtime");
@@ -406,7 +407,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         string aux;
         if (faux.album != "unknown") aux = faux.name +" - "+ faux.album;
         else aux = faux.name;
-        (builder.get_object ("statusLabel") as Gtk.Label).set_label (aux);
+        (builder.get_object ("statusLabel") as Gtk.LinkButton).set_label (aux);
         // Update status label 2 with artist
         if (faux.artist != "unknown") aux = faux.artist;
         else aux = "";
@@ -669,4 +670,30 @@ public class MuseicGui : Gtk.ApplicationWindow {
         return false;
     }
 
+    [CCode(instance_pos=-1)]
+    public void action_show_current_song(Gtk.LinkButton lb) {
+        bool must_repeat = this.museic_shown_filelist.name != this.museic_app.get_active_filelist().name;
+        // Show current filelist
+        this.museic_shown_filelist = this.museic_app.get_active_filelist();
+        string aname = this.museic_shown_filelist.name;
+        if (aname == "all") aname = "All Artists";
+        (this.builder.get_object ("artists_button") as Gtk.Button).set_label(aname);
+        update_files_to_tree();
+        update_playlist_to_tree();
+
+        // Move scrollbar to position of file
+        MuseicFile current = this.museic_app.get_current_file();
+        var filelist = (this.builder.get_object ("fileTree") as Gtk.TreeView);
+        Gtk.Adjustment ajustment = filelist.get_vadjustment();
+        double step = ajustment.get_upper() / this.museic_app.get_active_filelist().get_files_list().length;
+        MuseicFile[] files = this.museic_app.get_active_filelist().get_files_list();
+        int current_file_pos = 0;
+        for (int i=0;i<files.length;i++) {
+            if (files[i].path == current.path) {
+            current_file_pos = i;
+                i = files.length;
+            }
+        }
+        ajustment.set_value(step*current_file_pos);
+    }
 }
