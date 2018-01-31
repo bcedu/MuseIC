@@ -103,7 +103,8 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Set some more css classes
         (this.builder.get_object ("statusLabel") as Gtk.LinkButton).get_style_context().add_class ("songtitle");
         (this.builder.get_object ("statusLabel") as Gtk.LinkButton).set_label("Select a file to play");
-        (this.builder.get_object ("statusLabel1") as Gtk.Label).get_style_context().add_class ("songartist");
+        (this.builder.get_object ("statusLabel1") as Gtk.LinkButton).get_style_context().add_class ("songartist");
+        (this.builder.get_object ("statusLabel1") as Gtk.LinkButton).set_label("");
         (this.builder.get_object ("scalebar") as Gtk.Scale).get_style_context().add_class ("streamprogresbar");
         (this.builder.get_object ("timeLabel") as Gtk.Label).get_style_context().add_class ("streamtime");
         (this.builder.get_object ("antButton") as Gtk.Button).get_style_context().add_class ("antButton");
@@ -415,7 +416,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Update status label 2 with artist
         if (faux.artist != "unknown") aux = faux.artist;
         else aux = "";
-        (builder.get_object ("statusLabel1") as Gtk.Label).set_label (aux);
+        (builder.get_object ("statusLabel1") as Gtk.LinkButton).set_label (aux);
         // Update volume bar
         (this.builder.get_object ("volumebar") as Gtk.Scale).set_value (this.museic_app.get_stream_volume());
         // Check if stream, has ended
@@ -589,7 +590,6 @@ public class MuseicGui : Gtk.ApplicationWindow {
             Value val;
             this.artists_view.get_model().get_iter (out iter, path);
             this.artists_view.get_model().get_value (iter, 0, out val);
-            artists_button.set_label((string)val);
             this.change_shown_filelist_by_artist((string)val);
             helpw.destroy();
         });
@@ -610,15 +610,14 @@ public class MuseicGui : Gtk.ApplicationWindow {
     }
 
     private void change_shown_filelist_by_artist(string artist) {
+        (this.builder.get_object ("artists_button") as Gtk.Button).set_label(artist);
         if (artist == "All Artists") artist = "all";
-
         if (this.museic_app.museic_filelist.name == artist) this.museic_shown_filelist = this.museic_app.get_active_filelist();
         else {
             this.museic_shown_filelist.clean();
             this.museic_shown_filelist.add_museic_files(this.museic_app.museic_library.get_library_files_by_artist(artist), true, "filelist");
             this.museic_shown_filelist.name = artist;
         }
-
         update_files_to_tree();
         update_playlist_to_tree();
     }
@@ -699,5 +698,12 @@ public class MuseicGui : Gtk.ApplicationWindow {
             }
         }
         ajustment.set_value(step*current_file_pos);
+    }
+
+    [CCode(instance_pos=-1)]
+    public void action_show_current_artist(Gtk.LinkButton lb) {
+        string current_artist = lb.get_label();
+        if (current_artist == "") return;
+        else change_shown_filelist_by_artist(current_artist);
     }
 }
