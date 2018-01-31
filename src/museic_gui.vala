@@ -57,41 +57,45 @@ public class MuseicGui : Gtk.ApplicationWindow {
         this.add (builder.get_object ("mainW") as Gtk.Grid);
         this.height_request = 460;
         // Set fileListStore
-        this.fileListStore = new Gtk.ListStore (5, typeof (string), typeof (string), typeof (string), typeof (string), typeof (Gdk.RGBA));
+        this.fileListStore = new Gtk.ListStore (6, typeof (string), typeof (string), typeof (string), typeof (string), typeof (string), typeof (Gdk.RGBA));
         var tree = (this.builder.get_object ("fileTree") as Gtk.TreeView);
         tree.get_style_context().add_class ("fileListStore");
         tree.set_model (this.fileListStore);
-        tree.insert_column_with_attributes (-1, "Song", new Gtk.CellRendererText (), "text", 0, "background-rgba", 4);
+        tree.insert_column_with_attributes (-1, "Song", new Gtk.CellRendererText (), "text", 0, "background-rgba", 5);
         tree.get_column(0).set_resizable(true);
         tree.get_column(0).set_clickable(true);
         tree.get_column(0).set_min_width(200);
         tree.get_column(0).clicked.connect (sort_by_song);
-        tree.insert_column_with_attributes (-1, "Artist", new Gtk.CellRendererText (), "text", 1, "background-rgba", 4);
+        tree.insert_column_with_attributes (-1, "Artist", new Gtk.CellRendererText (), "text", 1, "background-rgba", 5);
         tree.get_column(1).set_resizable(true);
         tree.get_column(1).set_clickable(true);
         tree.get_column(1).set_min_width(200);
         tree.get_column(1).clicked.connect (sort_by_artist);
-        tree.insert_column_with_attributes (-1, "Album", new Gtk.CellRendererText (), "text", 2, "background-rgba", 4);
+        tree.insert_column_with_attributes (-1, "Album", new Gtk.CellRendererText (), "text", 2, "background-rgba", 5);
         tree.get_column(2).set_resizable(true);
         tree.get_column(2).set_clickable(true);
         tree.get_column(2).set_min_width(200);
         tree.get_column(2).clicked.connect (sort_by_album);
-        tree.insert_column_with_attributes (-1, "Status", new Gtk.CellRendererText (), "text", 3, "background-rgba", 4);
+        tree.insert_column_with_attributes (-1, "Duration", new Gtk.CellRendererText (), "text", 3, "background-rgba", 5);
+        tree.get_column(4).set_resizable(true);
+        tree.insert_column_with_attributes (-1, "Status", new Gtk.CellRendererText (), "text", 4, "background-rgba", 5);
         // Set playListStore
-        this.playListStore = new Gtk.ListStore (5, typeof (string), typeof (string), typeof (string), typeof (string), typeof (Gdk.RGBA));
+        this.playListStore = new Gtk.ListStore (6, typeof (string), typeof (string), typeof (string), typeof (string), typeof (string), typeof (Gdk.RGBA));
         tree = (this.builder.get_object ("playTree") as Gtk.TreeView);
         tree.get_style_context().add_class ("playListStore");
         tree.set_model (this.playListStore);
-        tree.insert_column_with_attributes (-1, "Song", new Gtk.CellRendererText (), "text", 0, "background-rgba", 4);
+        tree.insert_column_with_attributes (-1, "Song", new Gtk.CellRendererText (), "text", 0, "background-rgba", 5);
         tree.get_column(0).set_resizable(true);
         tree.get_column(0).set_min_width(200);
-        tree.insert_column_with_attributes (-1, "Artist", new Gtk.CellRendererText (), "text", 1, "background-rgba", 4);
+        tree.insert_column_with_attributes (-1, "Artist", new Gtk.CellRendererText (), "text", 1, "background-rgba", 5);
         tree.get_column(1).set_resizable(true);
         tree.get_column(1).set_min_width(200);
-        tree.insert_column_with_attributes (-1, "Album", new Gtk.CellRendererText (), "text", 2, "background-rgba", 4);
+        tree.insert_column_with_attributes (-1, "Album", new Gtk.CellRendererText (), "text", 2, "background-rgba", 5);
         tree.get_column(2).set_resizable(true);
         tree.get_column(2).set_min_width(200);
-        tree.insert_column_with_attributes (-1, "Status", new Gtk.CellRendererText (), "text", 3, "background-rgba", 4);
+        tree.insert_column_with_attributes (-1, "Duration", new Gtk.CellRendererText (), "text", 3, "background-rgba", 5);
+        tree.get_column(4).set_resizable(true);
+        tree.insert_column_with_attributes (-1, "Status", new Gtk.CellRendererText (), "text", 4, "background-rgba", 5);
         tree.get_column(3).set_resizable(true);
         // Show window
         this.show_all ();
@@ -347,7 +351,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         rgba_default.parse ("#ffffff");
         foreach (MuseicFile file in this.museic_shown_filelist.get_files_list()) {
             this.fileListStore.append (out iter);
-            this.fileListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album, 3, "", 4, rgba_default);
+            this.fileListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album, 3, file.duration, 4, "", 5, rgba_default);
         }
     }
 
@@ -369,23 +373,23 @@ public class MuseicGui : Gtk.ApplicationWindow {
         for (int i=aux.length-1;i>=0;i--) {
             file = aux[i];
             this.playListStore.append (out iter);
-            if (file.origin == "filelist") this.playListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album, 3, "", 4, rgba_default);
-            else this.playListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album, 3, "", 4, rgba_quequed);
+            if (file.origin == "filelist") this.playListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album, 3, file.duration, 4, "", 5, rgba_default);
+            else this.playListStore.set (iter, 0, file.name, 1, file.artist, 2, file.album, 3, file.duration, 4, "", 5, rgba_quequed);
             if (i == pos) {
-                this.playListStore.set (iter, 3, "Playing...", 4, rgba_act);
+                this.playListStore.set (iter, 4, "Playing...", 5, rgba_act);
                 if (this.playListStore.iter_previous(ref iter)) {
-                    this.playListStore.set (iter, 3, "Next", 4, rgba_next);
+                    this.playListStore.set (iter, 4, "Next", 5, rgba_next);
                     this.fileListStore.get_iter_from_string(out iterfile, this.museic_app.get_next_filelist_pos().to_string());
-                    this.fileListStore.set (iterfile, 3, "", 4, rgba_default);
+                    this.fileListStore.set (iterfile, 4, "", 5, rgba_default);
                 }else if (!this.museic_app.is_random() && this.museic_shown_filelist.name == this.museic_app.get_active_filelist().name) {
                     int filepos = this.museic_app.get_next_filelist_pos();
                     this.fileListStore.get_iter_from_string(out iterfile, filepos.to_string());
-                    this.fileListStore.set (iterfile, 3, "Next", 4, rgba_next);
+                    this.fileListStore.set (iterfile, 4, "Next", 5, rgba_next);
                     if (this.museic_app.get_filelist_len() != 1) {
                         if (filepos == 0) filepos = this.museic_app.get_filelist_len()-1;
                         else filepos = filepos -1;
                         this.fileListStore.get_iter_from_string(out iterfile, filepos.to_string());
-                        this.fileListStore.set (iterfile, 3, "", 4, rgba_default);
+                        this.fileListStore.set (iterfile, 4, "", 5, rgba_default);
                     }
                 }
                 this.playListStore.iter_next(ref iter);
@@ -498,12 +502,12 @@ public class MuseicGui : Gtk.ApplicationWindow {
                 rgba_default.parse ("#ffffff");
                 int filepos = this.museic_app.get_next_filelist_pos();
                 this.fileListStore.get_iter_from_string(out iterfile, filepos.to_string());
-                this.fileListStore.set (iterfile, 3, "Next", 4, rgba_next);
+                this.fileListStore.set (iterfile, 4, "Next", 5, rgba_next);
                 if (this.museic_app.get_filelist_len() != 1) {
                     if (filepos == 0) filepos = this.museic_app.get_filelist_len()-1;
                     else filepos = filepos -1;
                     this.fileListStore.get_iter_from_string(out iterfile, filepos.to_string());
-                    this.fileListStore.set (iterfile, 3, "", 4, rgba_default);
+                    this.fileListStore.set (iterfile, 4, "", 5, rgba_default);
                 }
             }
         }
