@@ -127,6 +127,8 @@ public class MuseicFile {
             if (path.split("/").length > 1) this.name = path.split("/")[path.split("/").length-1];
             else this.name = path;
         }
+        if (this.artist != "unknown") this.artist = this.clean_name(this.artist);
+        if (this.album == "unknown") this.album = this.artist;
     }
 
     public MuseicFile.from_museicfile (MuseicFile file) {
@@ -249,6 +251,21 @@ public class MuseicFile {
             else if (this.name == file.name) return 0;
             else return -1;
         }
+    }
+
+    public string clean_name(string name) {
+        string aux = name.strip();
+        if (!aux.validate()) return aux;
+        string res = "";
+        bool previous_is_space = true;
+        unichar c = 0;
+        int index = 0;
+        for (int cnt = 0; aux.get_next_char (ref index, out c); cnt++) {
+            if (previous_is_space && c != ' ') c = c.toupper();
+            if (c.validate()) res = "%s%s".printf(res, c.to_string());
+            previous_is_space = c == ' ';
+        }
+        return res;
     }
 
 }
