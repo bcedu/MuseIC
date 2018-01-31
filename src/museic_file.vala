@@ -20,6 +20,10 @@ public class MuseicFile {
         if (path=="") return;
         this.origin = origin;
         var file = File.new_for_path (path);
+
+        this.duration = this.calc_duration(this.path);
+        // stdout.printf("Duration: %s\n", this.duration);
+
         var file_stream = file.read ();
         var data_stream = new DataInputStream (file_stream);
         data_stream.set_byte_order (DataStreamByteOrder.LITTLE_ENDIAN);
@@ -123,8 +127,6 @@ public class MuseicFile {
             if (path.split("/").length > 1) this.name = path.split("/")[path.split("/").length-1];
             else this.name = path;
         }
-        this.duration = this.calc_duration(this.path);
-        // stdout.printf("Duration: %s\n", this.duration);
     }
 
     public MuseicFile.from_museicfile (MuseicFile file) {
