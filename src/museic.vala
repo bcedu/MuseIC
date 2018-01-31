@@ -68,7 +68,7 @@ public class MuseIC : Gtk.Application {
             this.streamplayer = new MuseicStreamPlayer(this.argsv, "MAIN");
             this.museic_filelist = new MuseicFileList("all");
             this.museic_playlist = new MuseicFileList("playlist");
-            this.museic_library = new MuseicLibrary(Environment.get_home_dir()+"/.museic/museic_library_v1_4");
+            this.museic_library = new MuseicLibrary(Environment.get_home_dir()+"/.museic/museic_library_v2_0");
             this.museic_filelist.add_museic_files(this.museic_library.get_library_files_by_artist("all"), true, "filelist");
             setup_dbus();
             this.museic_server = new MuseicServer(this);
