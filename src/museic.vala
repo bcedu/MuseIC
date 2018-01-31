@@ -196,10 +196,10 @@ public class MuseIC : Gtk.Application {
     }
 
     public void add_files_to_filelist(string[] filenames) {
-        // Add the files from filenames to the filelist
-        this.museic_filelist.add_files(filenames, true, "filelist");
         // Store them on library
         this.museic_library.add_files(filenames, true);
+        // Add the files from filenames to the filelist
+        this.museic_filelist.add_museic_files(this.museic_library.get_library_files_by_artist("all"), true, "filelist");
     }
 
     public void add_files_to_playlist(int[] file_indexs) {
