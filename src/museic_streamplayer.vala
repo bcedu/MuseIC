@@ -72,6 +72,9 @@ public class MuseicStreamPlayer {
 
     public void exit () {
         this.player.set_state (State.READY);
+        this.player.set_state (State.NULL);
+        this.player.uri = null;
+        this.player = null;
     }
 
     public void ready_file(string stream) {

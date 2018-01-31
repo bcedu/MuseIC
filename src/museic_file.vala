@@ -31,7 +31,7 @@ public class MuseicFile {
             stderr.printf ("Error: %s is not a valid ID3 file\n", file.get_basename ());
             if (path.split("/").length > 1) this.name = path.split("/")[path.split("/").length-1];
             else this.name = path;
-            stdout.printf("INFO: %s processed\n", this.path);
+            // stdout.printf("INFO: %s processed\n", this.path);
             return;
         }
         // Read ID3 version (check if file is v2.3)
@@ -41,7 +41,7 @@ public class MuseicFile {
             stderr.printf ("Error: %s is not ID3v2.3 version file\n", file.get_basename ());
             if (path.split("/").length > 1) this.name = path.split("/")[path.split("/").length-1];
             else this.name = path;
-            stdout.printf("INFO: %s processed\n", this.path);
+            // stdout.printf("INFO: %s processed\n", this.path);
             return;
         }
         // Read flags (don't used)
@@ -68,7 +68,7 @@ public class MuseicFile {
                 // stdout.printf("Tags:|%s||%s|, size:|%s|\n", tag_header.rep, tag_header.bytes_str, tsize.to_string());
                 // tag flags (don't used)
                 info = get_rep_of_bytes(data_stream, 2);
-                stdout.printf("    unused flags: |%s||%s|\n", info.rep, info.bytes_str);
+                // stdout.printf("    unused flags: |%s||%s|\n", info.rep, info.bytes_str);
                 // read tag content
                 if (tsize > 10000) {
                     // Currently tags with a large size aren't suported because in get_rep_of_bytes() make program stop responding, so I skip them.
@@ -117,13 +117,14 @@ public class MuseicFile {
                 }
             }
             // Check if we already have all the information that we want
-            if (found == 3) readed_bytes = size;
+            // if (found == 3) readed_bytes = size;
         }
         if (this.name == "unknown") {
             if (path.split("/").length > 1) this.name = path.split("/")[path.split("/").length-1];
             else this.name = path;
         }
-        stdout.printf("INFO: %s processed\n", this.path);
+        this.duration = this.calc_duration(this.path);
+        // stdout.printf("Duration: %s\n", this.duration);
     }
 
     public MuseicFile.from_museicfile (MuseicFile file) {
@@ -199,6 +200,35 @@ public class MuseicFile {
         string bin = "";
         for (int i=0;i<bytes.length;i++) bin += dec_to_bin(bytes[i]);
         return bin_to_dec(bin);
+    }
+
+    private string calc_duration(string path) {
+        int64 aux_duration = 0;
+        dynamic Gst.Element aux_player = Gst.ElementFactory.make ("playbin", "play");
+        aux_player.uri = "file://"+path;
+        aux_player.set_state (Gst.State.PAUSED);
+        int aux = 0;
+        bool success = aux_player.query_duration (Gst.Format.TIME, out aux_duration);
+        int atempts = 0;
+        while (!success && atempts < 10000) {
+            if (!success) while (aux<100) aux = aux+1;
+            aux = 0;
+            success = aux_player.query_duration (Gst.Format.TIME, out aux_duration);
+            atempts += 1;
+        }
+        aux_player.set_state (Gst.State.NULL);
+        aux_player = null;
+        return nanoseconds_to_minutes_string((ulong)aux_duration);
+    }
+
+    private string nanoseconds_to_minutes_string(ulong nanoseconds) {
+        // Given nanoseconds, transform to minutes and seconds and returns in string with format %M:%S
+        int total_seconds = (int)(nanoseconds / 1000000000);
+        int minutes = total_seconds / 60;
+        int seconds = total_seconds % 60;
+        string smin = minutes < 10 ? "0"+minutes.to_string () : minutes.to_string ();
+        string ssec = seconds < 10 ? "0"+seconds.to_string () : seconds.to_string ();
+        return smin+":"+ssec;
     }
 
     public int compare(MuseicFile file, string field) {
