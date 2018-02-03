@@ -89,7 +89,7 @@ public class MuseicLibrary {
                 aux = File.new_for_path(line.split(";")[0]);
                 if (aux.query_exists()) {
                     if (museic_files.length == nfiles) museic_files.resize(museic_files.length*2);
-                    mfile = new MuseicFile.from_data(line.split(";")[0], line.split(";")[1], line.split(";")[2], line.split(";")[3], line.split(";")[3], "unknown", "filelist");
+                    mfile = new MuseicFile.from_data(line.split(";")[0], line.split(";")[1], line.split(";")[2], line.split(";")[3], line.split(";")[4], "unknown", "filelist");
                     if (this.pass_filter(search_text, mfile)) {
                         museic_files[nfiles] = mfile;
                         nfiles++;
