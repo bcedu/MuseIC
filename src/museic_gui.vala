@@ -666,8 +666,15 @@ public class MuseicGui : Gtk.ApplicationWindow {
     }
 
     public bool action_press_key(Gtk.Widget widget, Gdk.EventKey event) {
-        if (event.str == " " && !(builder.get_object ("searchentry_files") as Gtk.SearchEntry).has_focus) {
+        if ((builder.get_object ("searchentry_files") as Gtk.SearchEntry).has_focus) return false;
+        if (event.str == " ") {
             this.action_play_file((builder.get_object ("playButton") as Gtk.Button));
+            return true;
+        }else if (event.keyval == 65361) {
+            this.action_ant_file((builder.get_object ("playButton") as Gtk.Button));
+            return true;
+        }else if (event.keyval == 65363) {
+            this.action_seg_file((builder.get_object ("playButton") as Gtk.Button));
             return true;
         }
         return false;
