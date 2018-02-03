@@ -98,7 +98,7 @@ public class MuseicFile {
                     }else if (tag_header.rep == "TIME") { // time
                         // stdout.printf("TIME:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
                     }else if (tag_header.rep == "TLEN") { // length
-                        this.duration = info.rep;
+                        // this.duration = info.rep;
                         // stdout.printf("TLEN:\n    rep=|"+info.rep+"|\n    bytes=|"+info.bytes_str+"|\n");
                     }else if(tag_header.rep == "TPE1") { // leader
                         if (this.artist == "unknown") {this.artist = content;found+=1;}
