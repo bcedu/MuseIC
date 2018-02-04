@@ -1,3 +1,18 @@
+/*TODO v2.0:
+ * - DONE - Mostrar els artistes d'alguna manera mes comode per quan nhi ha molts
+ * - DONE - Un cercador a la llista de arxius que busca en la filelist actual
+ * - DONE - Pitjar "space" per fer play/pause
+ * - DONE - Al pitjar en el nom de la canço actual et posa la filelist actual i et fa scroll fins a la canço
+ * - DONE?- Obrir fitchers desde el sistema amb boto dret
+ * - DONE - Mostrar la durada de cada arxiu a la filelist i playlist
+ * - DONE - Mostrar playlist del artiste al pitjar artista de canço actual
+ * ~ DONE ~ Ajuntar artistes similars
+ * - DONE - Pitjar dreta/esquerra canvia de canço
+ * Editor de metedates (només per la llibreria museic)
+ * "Tips" button that open window with info about APP
+ * Dividir l'espai que hi ha ara per la playlist per mostarhi la caratula
+ * Mostrar la següent o següents cançons que es posaran a la playlist?
+ */
 public class MuseicGui : Gtk.ApplicationWindow {
 
     private MuseIC museic_app;
@@ -712,5 +727,30 @@ public class MuseicGui : Gtk.ApplicationWindow {
         string current_artist = lb.get_label();
         if (current_artist == "") return;
         else change_shown_filelist_by_artist(current_artist);
+    }
+
+    public void do_popup_menu (Gtk.Widget my_widget, Gdk.EventButton* event) {
+        Gtk.Menu menu;
+        uint button, event_time;
+
+        menu = new Gtk.Menu ();
+        /* add menu items */
+
+        if (event != null) {
+            button = event->button;
+            event_time = event->time;
+        } else {
+            button = 0;
+            event_time = Gtk.get_current_event_time ();
+        }
+
+        menu.attach_to_widget(my_widget, null);
+        menu.popup(null, null, null, button, event_time);
+    }
+
+    [CCode(instance_pos=-1)]
+    public bool action_popup_menu (Gtk.Widget widget) {
+        do_popup_menu (widget, null);
+        return true;
     }
 }
