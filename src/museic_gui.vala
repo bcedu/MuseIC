@@ -135,7 +135,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         (this.builder.get_object ("progresBox") as Gtk.Box).get_style_context().add_class ("progresBox");
         (this.builder.get_object ("statusButtons") as Gtk.Box).get_style_context().add_class ("statusButtons");
         (this.builder.get_object ("filelist_chooser") as Gtk.ComboBoxText).get_style_context().add_class ("filelist_chooser");
-
+        (this.builder.get_object ("footer") as Gtk.Toolbar).get_style_context().add_class ("footbar");
         this.museic_shown_filelist = this.museic_app.get_active_filelist();
         // Start time function to update info about stream duration and position each second
         GLib.Timeout.add_seconds (1, update_stream_status);
@@ -749,8 +749,44 @@ public class MuseicGui : Gtk.ApplicationWindow {
     }
 
     [CCode(instance_pos=-1)]
-    public bool action_popup_menu (Gtk.Widget widget) {
-        do_popup_menu (widget, null);
-        return true;
+    public void action_edit_files(Gtk.Button btn) {
+        // Get selected files in filelist
+        List<Gtk.TreePath> selected = (this.builder.get_object ("fileTree") as Gtk.TreeView).get_selection().get_selected_rows(null);
+        if (selected.length() == 0) return;
+        MuseicFile[] selected_files = new MuseicFile[selected.length()];
+        int i = 0;
+        MuseicFile[] files = this.museic_shown_filelist.get_files_list();
+        foreach (Gtk.TreePath p in selected) {
+            selected_files[i] = files[int.parse(p.to_string())];
+            i++;
+        }
+        if (selected.length() == 1) build_single_file_edit(selected_files[0]);
+        else build_multiple_files_edit(selected_files);
     }
+
+    private void build_single_file_edit(MuseicFile mfile) {
+        Gtk.Window edit_window = new Gtk.Window();
+        edit_window.window_position = Gtk.WindowPosition.CENTER;
+        var header_bar = new Gtk.HeaderBar ();
+        header_bar.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
+        header_bar.show_close_button = true;
+        edit_window.set_titlebar(header_bar);
+        // Add the edit grid to window
+        edit_window.add((this.builder.get_object ("editGrid") as Gtk.Grid));
+        edit_window.show_all();
+        stdout.printf("Edit file %s\n", mfile.name);
+    }
+    private void build_multiple_files_edit(MuseicFile[] mfiles) {
+        Gtk.Window edit_window = new Gtk.Window();
+        edit_window.window_position = Gtk.WindowPosition.CENTER;
+        var header_bar = new Gtk.HeaderBar ();
+        header_bar.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
+        header_bar.show_close_button = true;
+        edit_window.set_titlebar(header_bar);
+        // Add the edit grid to window
+        edit_window.add((this.builder.get_object ("editGridMulti") as Gtk.Grid));
+        edit_window.show_all();
+        stdout.printf("Edit %s files\n", mfiles.length.to_string());
+    }
+
 }
