@@ -9,7 +9,10 @@
  * ~ DONE ~ Ajuntar artistes similars
  * - DONE - Pitjar dreta/esquerra canvia de canço
  * Editor de metedates (només per la llibreria museic)
+ * Esborrar arxius de la playlist
  * "Tips" button that open window with info about APP
+TODO 2.1
+ * Guardar playlists
  * Dividir l'espai que hi ha ara per la playlist per mostarhi la caratula
  * Mostrar la següent o següents cançons que es posaran a la playlist?
  */
@@ -31,6 +34,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
     private Gtk.TreeView artists_view;
     // Aux variable to store filtered filelist
     private MuseicFile[] filtered_filelist;
+    private MuseicFile[] files_to_edit;
 
     public MuseicGui(MuseIC app) {
         Object (application: app, title: "MuseIC");
@@ -767,26 +771,116 @@ public class MuseicGui : Gtk.ApplicationWindow {
     private void build_single_file_edit(MuseicFile mfile) {
         Gtk.Window edit_window = new Gtk.Window();
         edit_window.window_position = Gtk.WindowPosition.CENTER;
+        edit_window.set_resizable(false);
         var header_bar = new Gtk.HeaderBar ();
         header_bar.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
         header_bar.show_close_button = true;
         edit_window.set_titlebar(header_bar);
+        // Create content widgets
+        Gtk.Box editBox = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
+        editBox.expand = true;
+        editBox.margin = 10;
+        Gtk.Box box1 = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
+            box1.hexpand = true;
+            Gtk.Label label1 = new Gtk.Label("Name:\t");
+            box1.pack_start (label1, false, false, 0);
+            Gtk.Entry editName = new Gtk.Entry();
+            editName.hexpand = true;
+            editName.set_text(mfile.name);
+            box1.pack_start (editName, false, false, 0);
+        Gtk.Box box2 = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
+            box2.hexpand = true;
+            Gtk.Label label2 = new Gtk.Label("Album:\t");
+            box2.pack_start (label2, false, false, 0);
+            Gtk.Entry editAlbum = new Gtk.Entry();
+            editAlbum.hexpand = true;
+            editAlbum.set_text(mfile.album);
+            box2.pack_start (editAlbum, false, false, 0);
+        Gtk.Box box3 = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
+            box3.hexpand = true;
+            Gtk.Label label3 = new Gtk.Label("Artist:\t");
+            box3.pack_start (label3, false, false, 0);
+            Gtk.Entry editArtist = new Gtk.Entry();
+            editArtist.hexpand = true;
+            editArtist.set_text(mfile.artist);
+            box3.pack_start (editArtist, false, false, 0);
+        Gtk.Button editButtonSingle = new Gtk.Button.with_label("Edita");
+        editButtonSingle.hexpand = true;
+        editButtonSingle.margin = 10;
+        editBox.pack_start(box1, false, false, 0);
+        editBox.pack_start(box2, false, false, 0);
+        editBox.pack_start(box3, false, false, 0);
+        editBox.pack_start(editButtonSingle, false, false, 0);
+        // Add onclick
+        editButtonSingle.clicked.connect(() => {
+            string name, album, artist;
+            name = editName.get_text();
+            album = editAlbum.get_text();
+            artist = editArtist.get_text();
+            MuseicFile[] mfiles = new MuseicFile[1];mfiles[0] = mfile;
+            this.museic_app.museic_library.update_files(mfiles, name, album, artist);
+            for (int i=0;i<mfiles.length;i++) {
+                mfiles[i].name = name;
+                mfiles[i].artist = artist;
+                mfiles[i].album = album;
+            }
+            this.museic_app.museic_filelist.update_museic_files(mfiles);
+            this.museic_app.museic_playlist.update_museic_files(mfiles);
+            string aux = this.museic_shown_filelist.name;
+            if (aux == "all") aux = "All Artists";
+            this.change_shown_filelist_by_artist(aux);
+            edit_window.destroy();
+        });
         // Add the edit grid to window
-        edit_window.add((this.builder.get_object ("editGrid") as Gtk.Grid));
+        edit_window.add(editBox);
         edit_window.show_all();
-        stdout.printf("Edit file %s\n", mfile.name);
     }
     private void build_multiple_files_edit(MuseicFile[] mfiles) {
+        this.files_to_edit = mfiles;
         Gtk.Window edit_window = new Gtk.Window();
         edit_window.window_position = Gtk.WindowPosition.CENTER;
+        edit_window.set_resizable(false);
         var header_bar = new Gtk.HeaderBar ();
         header_bar.get_style_context ().add_class (Gtk.STYLE_CLASS_FLAT);
         header_bar.show_close_button = true;
         edit_window.set_titlebar(header_bar);
+        // Create content widgets
+        Gtk.Box editBox = new Gtk.Box(Gtk.Orientation.VERTICAL, 0);
+        editBox.expand = true;
+        editBox.margin = 10;
+        Gtk.Box box3 = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 0);
+            box3.hexpand = true;
+            Gtk.Label label3 = new Gtk.Label("Artist:\t");
+            box3.pack_start (label3, false, false, 0);
+            Gtk.Entry editArtist = new Gtk.Entry();
+            editArtist.hexpand = true;
+            box3.pack_start (editArtist, false, false, 0);
+            editArtist.set_text("");
+        Gtk.Button editButtonSingle = new Gtk.Button.with_label("Edita");
+        editButtonSingle.hexpand = true;
+        editButtonSingle.margin = 10;
+        editBox.pack_start(box3, false, false, 0);
+        editBox.pack_start(editButtonSingle, false, false, 0);
+        // Add onclick
+        editButtonSingle.clicked.connect(() => {
+            string artist = "";
+            artist = editArtist.get_text();
+            if (artist != null && artist != "") {
+                this.museic_app.museic_library.update_files(this.files_to_edit, null, null, artist);
+                for (int i=0;i<this.files_to_edit.length;i++) {
+                    this.files_to_edit[i].artist = artist;
+                }
+                this.museic_app.museic_filelist.update_museic_files(this.files_to_edit);
+                this.museic_app.museic_playlist.update_museic_files(this.files_to_edit);
+                string aux = this.museic_shown_filelist.name;
+                if (aux == "all") aux = "All Artists";
+                this.change_shown_filelist_by_artist(aux);
+                edit_window.destroy();
+            }
+        });
         // Add the edit grid to window
-        edit_window.add((this.builder.get_object ("editGridMulti") as Gtk.Grid));
+        edit_window.add(editBox);
         edit_window.show_all();
-        stdout.printf("Edit %s files\n", mfiles.length.to_string());
     }
 
 }

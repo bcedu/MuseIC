@@ -112,4 +112,30 @@ public class MuseicLibrary {
         return filter_passed;
     }
 
+    public void update_files(MuseicFile[] mfiles, string? new_name, string? new_album, string? new_artist) {
+        try {
+            DataInputStream reader = new DataInputStream(this.file.read());
+            string line;
+            File aux;
+            int changed_files = 0;
+            while ((line=reader.read_line(null)) != null && changed_files < mfiles.length) {
+                foreach (MuseicFile mfile in mfiles) {
+                    if (mfile.path == line.split(";")[0]) {
+                        FileIOStream io = this.file.open_readwrite();
+                        io.seek (reader.tell()-(line.data.length+1), SeekType.SET);
+                        var writer = new DataOutputStream(io.output_stream);
+                        if (new_name == null) new_name = mfile.name;
+                        if (new_album == null) new_album = mfile.album;
+                        if (new_artist == null) new_artist = mfile.artist;
+                        writer.put_string(mfile.path+";"+new_name+";"+new_artist+";"+new_album+";"+mfile.duration+"\n");
+                        changed_files += 1;
+                        break;
+                    }
+                }
+            }
+        }catch (Error e){
+            error("%s", e.message);
+        }
+    }
+
 }

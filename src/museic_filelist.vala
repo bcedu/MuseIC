@@ -171,4 +171,20 @@ public class MuseicFileList {
         return aux;
     }
 
+    public void update_museic_files(MuseicFile[] mfiles) {
+        // Updates the files of files_list with the files of mfiles.
+        // Thhe updated files are the ones that have the same path.
+        int i = 0;
+        foreach (MuseicFile current_file in this.files_list[0:this.nfiles]) {
+            foreach (MuseicFile mfile in mfiles) {
+                if (mfile.path == current_file.path) {
+                    this.files_list[i].name = mfile.name;
+                    this.files_list[i].artist = mfile.artist;
+                    this.files_list[i].album = mfile.album;
+                }
+            }
+            i += 1;
+        }
+    }
+
 }
