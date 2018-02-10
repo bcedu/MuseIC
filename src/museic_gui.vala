@@ -8,7 +8,7 @@
  * - DONE - Mostrar playlist del artiste al pitjar artista de canço actual
  * ~ DONE ~ Ajuntar artistes similars
  * - DONE - Pitjar dreta/esquerra canvia de canço
- * Editor de metedates (només per la llibreria museic)
+ * - DONE- Editor de metedates (només per la llibreria museic)
  * Esborrar arxius de la playlist
  * "Tips" button that open window with info about APP
 TODO 2.1
