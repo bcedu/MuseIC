@@ -115,23 +115,30 @@ public class MuseicLibrary {
     public void update_files(MuseicFile[] mfiles, string? new_name, string? new_album, string? new_artist) {
         try {
             DataInputStream reader = new DataInputStream(this.file.read());
+            DataOutputStream writer = new DataOutputStream (this.file.replace (null, false, FileCreateFlags.NONE));
             string line;
             File aux;
+            string new_line = "";
             int changed_files = 0;
+            bool changed = false;
             while ((line=reader.read_line(null)) != null && changed_files < mfiles.length) {
                 foreach (MuseicFile mfile in mfiles) {
                     if (mfile.path == line.split(";")[0]) {
-                        FileIOStream io = this.file.open_readwrite();
-                        io.seek (reader.tell()-(line.data.length+1), SeekType.SET);
-                        var writer = new DataOutputStream(io.output_stream);
-                        if (new_name == null) new_name = mfile.name;
-                        if (new_album == null) new_album = mfile.album;
-                        if (new_artist == null) new_artist = mfile.artist;
-                        writer.put_string(mfile.path+";"+new_name+";"+new_artist+";"+new_album+";"+mfile.duration+"\n");
+                        new_line = mfile.path+";";
+                        if (new_name == null) new_line += mfile.name+";";
+                        else new_line += new_name+";";
+                        if (new_artist == null) new_line += mfile.artist+";";
+                        else new_line += new_artist+";";
+                        if (new_album == null) new_line += mfile.album+";";
+                        else new_line += new_album+";";
                         changed_files += 1;
+                        changed = true;
                         break;
                     }
                 }
+                if (changed) writer.put_string(new_line+"\n");
+                else writer.put_string(line+"\n");
+                changed = false;
             }
         }catch (Error e){
             error("%s", e.message);
