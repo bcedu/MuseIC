@@ -1,5 +1,6 @@
 /*TODO v2.0:
  * - DONE - Mostrar els artistes d'alguna manera mes comode per quan nhi ha molts
+ * - DONE - Cercador d'asrtistes
  * - DONE - Un cercador a la llista de arxius que busca en la filelist actual
  * - DONE - Pitjar "space" per fer play/pause
  * - DONE - Al pitjar en el nom de la canço actual et posa la filelist actual i et fa scroll fins a la canço
