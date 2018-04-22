@@ -1,5 +1,6 @@
 /*TODO v2.0:
  * - DONE - Mostrar els artistes d'alguna manera mes comode per quan nhi ha molts
+ * - DONE - Cercador d'asrtistes
  * - DONE - Un cercador a la llista de arxius que busca en la filelist actual
  * - DONE - Pitjar "space" per fer play/pause
  * - DONE - Al pitjar en el nom de la canço actual et posa la filelist actual i et fa scroll fins a la canço
@@ -9,9 +10,10 @@
  * ~ DONE ~ Ajuntar artistes similars
  * - DONE - Pitjar dreta/esquerra canvia de canço
  * - DONE- Editor de metedates (només per la llibreria museic)
- * Esborrar arxius de la playlist
- * "Tips" button that open window with info about APP
+ * Esborrar arxius de la filelist
 TODO 2.1
+ * "Tips" button that open window with info about APP
+ * Borrar arxius de la playlist
  * Guardar playlists
  * Dividir l'espai que hi ha ara per la playlist per mostarhi la caratula
  * Mostrar la següent o següents cançons que es posaran a la playlist?
@@ -881,6 +883,31 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Add the edit grid to window
         edit_window.add(editBox);
         edit_window.show_all();
+    }
+
+    [CCode(instance_pos=-1)]
+    public void action_delete_files(Gtk.Button btn) {
+        // Get selected files in filelist
+        List<Gtk.TreePath> selected = (this.builder.get_object ("fileTree") as Gtk.TreeView).get_selection().get_selected_rows(null);
+        if (selected.length() == 0) return;
+
+        MuseicFile[] selected_files_filelist = this.get_files_list_from_tree_path(this.museic_shown_filelist, selected);
+        // Delete files from filelist and library
+        this.museic_app.delete_from_filelist(selected_files_filelist);
+        this.museic_app.delete_from_library(selected_files_filelist);
+        // Update shown files
+        this.museic_shown_filelist = this.museic_app.get_active_filelist();
+        update_files_to_tree();
+    }
+
+    private MuseicFile[] get_files_list_from_tree_path(MuseicFileList mfilelist, List<Gtk.TreePath> selected) {
+        int i = 0;
+        int[] indexs = new int[selected.length()];
+        foreach (Gtk.TreePath p in selected) {
+            indexs[i] = int.parse(p.to_string());
+            i++;
+        }
+        return mfilelist.get_files_list_from_index(indexs);
     }
 
 }

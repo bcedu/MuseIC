@@ -249,6 +249,11 @@
     <property name="can_focus">False</property>
     <property name="icon_name">edit-select-all</property>
   </object>
+  <object class="GtkImage" id="image5">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">edit-delete</property>
+  </object>
   <object class="GtkGrid" id="mainW">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -716,18 +721,15 @@
       </packing>
     </child>
     <child>
-      <object class="GtkButtonBox" id="footer">
+      <object class="GtkGrid" id="grid3">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="halign">start</property>
-        <property name="valign">end</property>
-        <property name="layout_style">start</property>
         <child>
           <object class="GtkButton" id="editButton">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <property name="opacity">0.98999999999999999</property>
+            <property name="opacity">0.99999999977648257</property>
             <property name="halign">start</property>
             <property name="valign">end</property>
             <property name="image">image4</property>
@@ -736,10 +738,29 @@
             <signal name="clicked" handler="museic_gui_action_edit_files" swapped="no"/>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
+            <property name="left_attach">0</property>
+            <property name="top_attach">0</property>
           </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="deleteButton">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="halign">start</property>
+            <property name="valign">end</property>
+            <property name="image">image5</property>
+            <property name="relief">none</property>
+            <property name="always_show_image">True</property>
+            <signal name="clicked" handler="museic_gui_action_delete_files" swapped="no"/>
+          </object>
+          <packing>
+            <property name="left_attach">1</property>
+            <property name="top_attach">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
         </child>
       </object>
       <packing>

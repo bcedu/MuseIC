@@ -62,6 +62,17 @@ public class MuseicFileList {
         return this.files_list[0:this.nfiles];
     }
 
+    public MuseicFile[] get_files_list_from_index(int[] indexs) {
+        MuseicFile[] files = this.files_list[0:this.nfiles];
+        MuseicFile[] selected = new MuseicFile[indexs.length];
+        int i = 0;
+        foreach (int index in indexs) {
+            selected[i] = files[index];
+            i++;
+        }
+        return selected;
+    }
+
     public MuseicFile next_file() {
         if (this.random_state){
             this.filepos = Random.int_range (0, this.nfiles);
@@ -102,6 +113,42 @@ public class MuseicFileList {
         filepos = -1;
         nfiles = 0;
         files_list = new MuseicFile[4];
+    }
+
+    public void delete_files(MuseicFile[] mfiles) {
+        // delete files from filelist. Update filepos and nfiles.
+        foreach (MuseicFile mfile in mfiles) this.delete_file(mfile);
+    }
+
+    public void delete_file(MuseicFile mfile) {
+        bool deleted = false;
+        int index = 0;
+        MuseicFile[] new_filelist = this.get_files_list();
+        stdout.printf("Searching %s:\n", mfile.path);
+        // Search for the position of the file to delete
+        for (int i = 0; i < new_filelist.length; i++) {
+            stdout.printf("    - Comparing %s with %s\n", new_filelist[i].path, mfile.path);
+            if (new_filelist[i].path == mfile.path) {
+                deleted = true;
+                index = i;
+                break;
+            }
+        }
+        // Move all files after deleted 1 position to left
+        for (int i = index; i < new_filelist.length-1; i++) {
+            new_filelist[i] = new_filelist[i+1];
+        }
+        new_filelist[new_filelist.length-1] = null;
+        if (deleted) {
+            // If we deleted a file update number of files
+            this.nfiles -= 1;
+            if (this.filepos > index) {
+                // If the file we deleted is befor current position, update current position
+                // If it is after, the current position is not afected
+                this.filepos -= 1;
+            }
+            this.files_list = new_filelist;
+        }
     }
 
     public bool has_next() {

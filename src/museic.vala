@@ -223,6 +223,14 @@ public class MuseIC : Gtk.Application {
         this.museic_playlist.clean();
     }
 
+    public void delete_from_filelist(MuseicFile[] mfiles) {
+        this.museic_filelist.delete_files(mfiles);
+    }
+
+    public void delete_from_playlist(MuseicFile[] mfiles) {
+        this.museic_playlist.delete_files(mfiles);
+    }
+
     public MuseicFile[] get_all_filelist_files() {
         // Get all files from filelist
         return this.museic_filelist.get_files_list();
@@ -281,6 +289,10 @@ public class MuseIC : Gtk.Application {
 
     public void clear_library() {
         this.museic_library.clear();
+    }
+
+    public void delete_from_library(MuseicFile[] mfiles) {
+        this.museic_library.delete_files(mfiles);
     }
 
     public void reload_library() {
