@@ -31,6 +31,18 @@
         <screenshot type="default">
             <image>https://raw.githubusercontent.com/bcedu/MuseIC/master/data/museic_client_screenshoot.png</image>
         </screenshot>
+        <screenshot type="default">
+            <image>https://raw.githubusercontent.com/bcedu/MuseIC/master/data/file_search.png</image>
+        </screenshot>
+        <screenshot type="default">
+            <image>https://raw.githubusercontent.com/bcedu/MuseIC/master/data/artists_search.png</image>
+        </screenshot>
+        <screenshot type="default">
+            <image>https://raw.githubusercontent.com/bcedu/MuseIC/master/data/single_file_editor.png</image>
+        </screenshot>
+        <screenshot type="default">
+            <image>https://raw.githubusercontent.com/bcedu/MuseIC/master/data/multi_files_editor.png</image>
+        </screenshot>
     </screenshots>
     <releases>
         <release version="2.0.0" date="2018-05-12">
