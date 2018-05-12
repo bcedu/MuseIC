@@ -60,6 +60,28 @@ public class MuseicLibrary {
         file.create(FileCreateFlags.NONE);
     }
 
+    public void delete_files(MuseicFile[] mfiles) {
+        // delete files from library
+        try {
+            DataInputStream reader = new DataInputStream(this.file.read());
+            DataOutputStream writer = new DataOutputStream (this.file.replace (null, false, FileCreateFlags.NONE));
+            string line;
+            bool deleted = false;
+            while ((line=reader.read_line(null)) != null) {
+                foreach (MuseicFile mfile in mfiles) {
+                    if (mfile.path == line.split(";")[0]) {
+                        deleted = true;
+                        break;
+                    }
+                }
+                if (!deleted) writer.put_string(line+"\n");
+                deleted = false;
+            }
+        }catch (Error e){
+            error("%s", e.message);
+        }
+    }
+
     public string[] get_artists() {
         // Returns a list with all artists of library
         MuseicFileList aux = new MuseicFileList("aux");
