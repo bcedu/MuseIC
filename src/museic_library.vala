@@ -141,9 +141,8 @@ public class MuseicLibrary {
             string line;
             File aux;
             string new_line = "";
-            int changed_files = 0;
             bool changed = false;
-            while ((line=reader.read_line(null)) != null && changed_files < mfiles.length) {
+            while ((line=reader.read_line(null)) != null) {
                 foreach (MuseicFile mfile in mfiles) {
                     if (mfile.path == line.split(";")[0]) {
                         new_line = mfile.path+";";
@@ -153,7 +152,6 @@ public class MuseicLibrary {
                         else new_line += new_artist+";";
                         if (new_album == null) new_line += mfile.album+";";
                         else new_line += new_album+";";
-                        changed_files += 1;
                         changed = true;
                         break;
                     }
