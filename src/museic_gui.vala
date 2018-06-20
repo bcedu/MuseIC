@@ -70,8 +70,9 @@ public class MuseicGui : Gtk.ApplicationWindow {
         header_bar.pack_start  ((builder.get_object ("openFile") as Gtk.ToolButton));
         header_bar.pack_start  ((builder.get_object ("addFile") as Gtk.ToolButton));
         header_bar.pack_start  ((builder.get_object ("helpRemote") as Gtk.ToolButton));
+        header_bar.pack_end    ((builder.get_object ("boxFileTitle") as Gtk.Box));
         // header_bar.pack_end  ((builder.get_object ("reload") as Gtk.ToolButton));
-        header_bar.set_title("MuseIC");
+        header_bar.set_custom_title((builder.get_object ("statusBox") as Gtk.Box));
         header_bar.get_style_context().add_class ("headerbar");
         this.set_titlebar (header_bar);
         // Add main box to window
@@ -122,10 +123,11 @@ public class MuseicGui : Gtk.ApplicationWindow {
         this.show_all ();
         this.show ();
         // Set some more css classes
-        (this.builder.get_object ("statusLabel") as Gtk.LinkButton).get_style_context().add_class ("songtitle");
-        (this.builder.get_object ("statusLabel") as Gtk.LinkButton).set_label("Select a file to play");
+        (this.builder.get_object ("statusLabel") as Gtk.Label).get_style_context().add_class ("songtitle");
+        (this.builder.get_object ("statusLabel") as Gtk.Label).set_label("Select a file to play");
         (this.builder.get_object ("statusLabel1") as Gtk.LinkButton).get_style_context().add_class ("songartist");
         (this.builder.get_object ("statusLabel1") as Gtk.LinkButton).set_label("");
+        (this.builder.get_object ("statusLabel1") as Gtk.LinkButton).hide();
         (this.builder.get_object ("scalebar") as Gtk.Scale).get_style_context().add_class ("streamprogresbar");
         (this.builder.get_object ("timeLabel") as Gtk.Label).get_style_context().add_class ("streamtime");
         (this.builder.get_object ("antButton") as Gtk.Button).get_style_context().add_class ("antButton");
@@ -134,14 +136,17 @@ public class MuseicGui : Gtk.ApplicationWindow {
         (this.builder.get_object ("randButton") as Gtk.Button).get_style_context().add_class ("randButton");
         (this.builder.get_object ("volumebar") as Gtk.Scale).get_style_context().add_class ("volumebar");
         (this.builder.get_object ("label1") as Gtk.Label).get_style_context().add_class ("filelisttitle");
-        (this.builder.get_object ("label2") as Gtk.Label).get_style_context().add_class ("playlisttitle");
+        (this.builder.get_object ("playLabel") as Gtk.Label).get_style_context().add_class ("playlisttitle");
         (this.builder.get_object ("addToPlay") as Gtk.Button).get_style_context().add_class ("addToPlayButton");
         (this.builder.get_object ("separator1") as Gtk.Separator).get_style_context().add_class ("separator1");
         (this.builder.get_object ("statusBox") as Gtk.Box).get_style_context().add_class ("statusBox");
         (this.builder.get_object ("progresBox") as Gtk.Box).get_style_context().add_class ("progresBox");
         (this.builder.get_object ("statusButtons") as Gtk.Box).get_style_context().add_class ("statusButtons");
         (this.builder.get_object ("filelist_chooser") as Gtk.ComboBoxText).get_style_context().add_class ("filelist_chooser");
+        (this.builder.get_object ("filesGridContent") as Gtk.Grid).get_style_context().add_class ("filesGridContent");
         (this.builder.get_object ("footer") as Gtk.Toolbar).get_style_context().add_class ("footbar");
+        (this.builder.get_object ("fileTitle") as Gtk.Box).get_style_context().add_class ("filetitle");
+        (this.builder.get_object ("playTitle") as Gtk.Box).get_style_context().add_class ("filetitle");
         this.museic_shown_filelist = this.museic_app.get_active_filelist();
         // Start time function to update info about stream duration and position each second
         GLib.Timeout.add_seconds (1, update_stream_status);
@@ -433,10 +438,15 @@ public class MuseicGui : Gtk.ApplicationWindow {
         string aux;
         if (faux.album != "unknown") aux = faux.name +" - "+ faux.album;
         else aux = faux.name;
-        (builder.get_object ("statusLabel") as Gtk.LinkButton).set_label (aux);
+        (builder.get_object ("statusLabel") as Gtk.Label).set_label (aux);
         // Update status label 2 with artist
-        if (faux.artist != "unknown") aux = faux.artist;
-        else aux = "";
+        if (faux.artist != "unknown") {
+            (builder.get_object ("statusLabel1") as Gtk.LinkButton).show();
+            aux = faux.artist;
+        } else {
+            aux = "";
+            (builder.get_object ("statusLabel1") as Gtk.LinkButton).hide();
+        }
         (builder.get_object ("statusLabel1") as Gtk.LinkButton).set_label (aux);
         // Update volume bar
         (this.builder.get_object ("volumebar") as Gtk.Scale).set_value (this.museic_app.get_stream_volume());
