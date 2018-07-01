@@ -386,4 +386,12 @@ public class MuseIC : Gtk.Application {
         return this.streamplayer.volume;
     }
 
+    public int get_used_port() {
+        return (int)this.museic_server.get_used_port();
+    }
+
+    public void save_used_port(int new_port){
+        this.museic_server.save_used_port((uint16)new_port);
+    }
+
 }

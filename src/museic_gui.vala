@@ -70,9 +70,10 @@ public class MuseicGui : Gtk.ApplicationWindow {
         header_bar.show_close_button = true;
         header_bar.pack_start  ((builder.get_object ("openFile") as Gtk.ToolButton));
         header_bar.pack_start  ((builder.get_object ("addFile") as Gtk.ToolButton));
+        // header_bar.pack_start  ((builder.get_object ("reload") as Gtk.ToolButton));
         header_bar.pack_start  ((builder.get_object ("helpRemote") as Gtk.ToolButton));
+        header_bar.pack_start  ((builder.get_object ("config") as Gtk.ToolButton));
         header_bar.pack_end    ((builder.get_object ("boxFileTitle") as Gtk.Box));
-        // header_bar.pack_end  ((builder.get_object ("reload") as Gtk.ToolButton));
         header_bar.set_custom_title((builder.get_object ("statusBox") as Gtk.Box));
         header_bar.get_style_context().add_class ("headerbar");
         this.set_titlebar (header_bar);
@@ -549,7 +550,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     [CCode(instance_pos=-1)]
     public void action_help_remote(Gtk.Button button) {
-        string help_string = "Control MuseIC from any device!\n1. Open your favourite browser\n2. Type "+this.museic_app.museic_server.get_server_info()+"\n3. Control MuseIC playback: play/pause, next, previous, etc.\n\nIn order to be able to connect to MuseIC, both devices must be in the same Wifi network.\n";
+        string help_string = "Control MuseIC from any device!\n1. Open your favourite browser\n2. Type "+this.museic_app.museic_server.get_server_info()+"\n3. Control MuseIC playback: play/pause, next, previous, etc.\n\nIn order to be able to connect to MuseIC, both devices must be in the same Wifi network.\n\n\n(hint: if your device can't connect to MuseIC, try changing the listening port in MuseIC configuration.)\n";
 
         var helpw = new Gtk.Popover(button);
 
@@ -563,6 +564,39 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
         helpw.show_all();
     }
+
+    [CCode(instance_pos=-1)]
+    public void action_show_config(Gtk.Button button) {
+        var confpw = new Gtk.Popover(button);
+        confpw.set_position(Gtk.PositionType.BOTTOM);
+        Gtk.Box vbox = new Gtk.Box (Gtk.Orientation.VERTICAL, 1);
+        vbox.margin = 10;
+
+        Gtk.Label lb = new Gtk.Label("Configuration");
+        lb.get_style_context().add_class ("conf_btn_label");
+        Gtk.Box hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 1);
+        hbox.pack_start(lb, true, true, 0);
+        vbox.pack_start (hbox, true, true, 10);
+
+        hbox = new Gtk.Box(Gtk.Orientation.HORIZONTAL, 1);
+        Gtk.Label text = new Gtk.Label("MuseIC is listening on port:");
+        text.get_style_context().add_class ("conf_btn_text");
+        Gtk.Entry entry1 = new Gtk.Entry();
+        entry1.get_style_context().add_class ("conf_btn_entry");
+        entry1.set_text(this.museic_app.get_used_port().to_string());
+        Gtk.Label text2 = new Gtk.Label(" (1024 < port < 65535)");
+        hbox.pack_end(text2, true, true, 10);
+        hbox.pack_end(entry1, false, false, 0);
+        hbox.pack_end(text, true, true, 10);
+        vbox.pack_end (hbox, true, true, 0);
+
+        confpw.add(vbox);
+        confpw.show_all();
+        confpw.closed.connect(() => {
+            this.museic_app.save_used_port(int.parse(entry1.get_text()));
+        });
+    }
+
     [CCode(instance_pos=-1)]
     public void action_reload_library(Gtk.Button button) {
         this.museic_app.reload_library();
