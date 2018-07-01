@@ -26,6 +26,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
     private Gtk.ListStore fileListStore;
     private Gtk.ListStore playListStore;
     private MuseicFileList museic_shown_filelist;
+    private Granite.SeekBar stream_bar;
     // Aux variables needed to open files
     private Gtk.Window files_window;
     private Gtk.FileChooserWidget chooser;
@@ -78,6 +79,14 @@ public class MuseicGui : Gtk.ApplicationWindow {
         // Add main box to window
         this.add (builder.get_object ("mainW") as Gtk.Grid);
         this.height_request = 460;
+
+        // Set stream_bar
+        this.stream_bar = new Granite.SeekBar(0.0);
+        this.stream_bar.scale.change_value.connect((slider, scroll, new_value) => {
+            this.museic_app.set_position((float)new_value);
+            return true;
+        });
+        (this.builder.get_object ("progresBox") as Gtk.Box).pack_start(this.stream_bar, true, true, 0);
         // Set fileListStore
         this.fileListStore = new Gtk.ListStore (6, typeof (string), typeof (string), typeof (string), typeof (string), typeof (string), typeof (Gdk.RGBA));
         var tree = (this.builder.get_object ("fileTree") as Gtk.TreeView);
@@ -128,8 +137,6 @@ public class MuseicGui : Gtk.ApplicationWindow {
         (this.builder.get_object ("statusLabel1") as Gtk.LinkButton).get_style_context().add_class ("songartist");
         (this.builder.get_object ("statusLabel1") as Gtk.LinkButton).set_label("");
         (this.builder.get_object ("statusLabel1") as Gtk.LinkButton).hide();
-        (this.builder.get_object ("scalebar") as Gtk.Scale).get_style_context().add_class ("streamprogresbar");
-        (this.builder.get_object ("timeLabel") as Gtk.Label).get_style_context().add_class ("streamtime");
         (this.builder.get_object ("antButton") as Gtk.Button).get_style_context().add_class ("antButton");
         (this.builder.get_object ("playButton") as Gtk.Button).get_style_context().add_class ("playButton");
         (this.builder.get_object ("segButton") as Gtk.Button).get_style_context().add_class ("segButton");
@@ -364,13 +371,6 @@ public class MuseicGui : Gtk.ApplicationWindow {
         return sfiles;
     }
 
-    [CCode(instance_pos=-1)]
-    public bool action_change_time (Gtk.Scale slider, Gtk.ScrollType scroll, double new_value) {
-        this.museic_app.set_position((float)new_value);
-        slider.adjustment.value = new_value;
-        return true;
-    }
-
     public void update_files_to_tree() {
         this.fileListStore.clear ();
         Gtk.TreeIter iter;
@@ -428,11 +428,11 @@ public class MuseicGui : Gtk.ApplicationWindow {
         if (!this.museic_app.has_files()) return true;
         StreamTimeInfo pos_info = this.museic_app.get_position_str();
         StreamTimeInfo dur_info = this.museic_app.get_duration_str();
-        // Update time label
-        (this.builder.get_object ("timeLabel") as Gtk.Label).set_label (pos_info.minutes+"/"+dur_info.minutes);
-        // Update progres bar
-        double progres = (double)pos_info.nanoseconds/(double)dur_info.nanoseconds;
-        (this.builder.get_object ("scalebar") as Gtk.Scale).set_value (progres);
+
+        // Update Seek bar info. It will automaticlly update the scale and the labels
+        this.stream_bar.playback_duration = (double)(dur_info.nanoseconds / 1000000000.0);
+        this.stream_bar.playback_progress = (double)(pos_info.nanoseconds / 1000000000.0) / this.stream_bar.playback_duration;
+
         // Update status label with filename and album
         MuseicFile faux = this.museic_app.get_current_file();
         string aux;
