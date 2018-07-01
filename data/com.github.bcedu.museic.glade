@@ -60,6 +60,14 @@
       <placeholder/>
     </child>
   </object>
+  <object class="GtkToolButton" id="config">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="label" translatable="yes">toolbutton1</property>
+    <property name="use_underline">True</property>
+    <property name="stock_id">gtk-properties</property>
+    <signal name="clicked" handler="museic_gui_action_show_config" swapped="no"/>
+  </object>
   <object class="GtkGrid" id="editGrid">
     <property name="visible">True</property>
     <property name="can_focus">False</property>

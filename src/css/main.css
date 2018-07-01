@@ -103,3 +103,7 @@
 .footbar {
     background-color: white;
 }
+
+.conf_btn_label {
+  font-weight: bold;
+}
