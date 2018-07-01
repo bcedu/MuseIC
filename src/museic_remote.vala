@@ -39,17 +39,19 @@ public class MuseicServer : GLib.Object {
     }
 
     public void save_used_port(uint16 new_port){
-        File file;
-        try {
-            file = File.new_for_path(this.conf_path);
-            if (file.query_exists()) file.delete ();
-            file.create(FileCreateFlags.NONE);
-            FileIOStream io = file.open_readwrite();
-            io.seek (0, SeekType.END);
-            var writer = new DataOutputStream(io.output_stream);
-            writer.put_string(new_port.to_string());
-            service.add_inet_port (new_port, new Source (new_port));
-        } catch (Error e) {stderr.printf(e.message);}
+        if (new_port > 1024) {
+            File file;
+            try {
+                file = File.new_for_path(this.conf_path);
+                if (file.query_exists()) file.delete ();
+                file.create(FileCreateFlags.NONE);
+                FileIOStream io = file.open_readwrite();
+                io.seek (0, SeekType.END);
+                var writer = new DataOutputStream(io.output_stream);
+                writer.put_string(new_port.to_string());
+                service.add_inet_port (new_port, new Source (new_port));
+            } catch (Error e) {stderr.printf(e.message);}
+        }
     }
 
     private bool accept_connection(SocketConnection connection, Object? source_object) {
