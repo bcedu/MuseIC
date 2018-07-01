@@ -550,7 +550,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
 
     [CCode(instance_pos=-1)]
     public void action_help_remote(Gtk.Button button) {
-        string help_string = "Control MuseIC from any device!\n1. Open your favourite browser\n2. Type "+this.museic_app.museic_server.get_server_info()+"\n3. Control MuseIC playback: play/pause, next, previous, etc.\n\nIn order to be able to connect to MuseIC, both devices must be in the same Wifi network.\n";
+        string help_string = "Control MuseIC from any device!\n1. Open your favourite browser\n2. Type "+this.museic_app.museic_server.get_server_info()+"\n3. Control MuseIC playback: play/pause, next, previous, etc.\n\nIn order to be able to connect to MuseIC, both devices must be in the same Wifi network.\n\n\n(hint: if your device can't connect to MuseIC, try changing the listening port in MuseIC configuration.)\n";
 
         var helpw = new Gtk.Popover(button);
 
@@ -584,6 +584,8 @@ public class MuseicGui : Gtk.ApplicationWindow {
         Gtk.Entry entry1 = new Gtk.Entry();
         entry1.get_style_context().add_class ("conf_btn_entry");
         entry1.set_text(this.museic_app.get_used_port().to_string());
+        Gtk.Label text2 = new Gtk.Label(" (1024 < port < 65535)");
+        hbox.pack_end(text2, true, true, 10);
         hbox.pack_end(entry1, false, false, 0);
         hbox.pack_end(text, true, true, 10);
         vbox.pack_end (hbox, true, true, 0);
