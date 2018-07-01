@@ -10,10 +10,9 @@ public class MuseicServer : GLib.Object {
 		// Create a new SocketService:
 		this.service = new SocketService ();
 
-		// Listen on port 1024 and 1025.
+		// Listen on configured port.
 		// Source is used as source-identifier.
-		service.add_inet_port (1024, new Source (1024));
-		service.add_inet_port (1025, new Source (1025));
+		service.add_inet_port ((uint16)this.get_used_port(), new Source ((uint16)this.get_used_port()));
 
 		// Used to shutdown the program:
 		this.cancellable = new Cancellable ();
@@ -22,6 +21,13 @@ public class MuseicServer : GLib.Object {
 		this.service.incoming.connect(accept_connection);
 
 		this.service.start ();
+    }
+
+    public int get_used_port() {
+        return 1025;
+    }
+
+    public void save_used_port(int new_port){
     }
 
     private bool accept_connection(SocketConnection connection, Object? source_object) {

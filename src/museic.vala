@@ -387,11 +387,11 @@ public class MuseIC : Gtk.Application {
     }
 
     public int get_used_port() {
-        return 1025;
+        return this.museic_server.get_used_port();
     }
 
     public void save_used_port(int new_port){
-
+        this.museic_server.save_used_port(new_port);
     }
 
 }
