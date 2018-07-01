@@ -3,16 +3,18 @@ public class MuseicServer : GLib.Object {
     private MuseIC app;
     private SocketService service;
     private Cancellable cancellable;
+    public string conf_path;
 
     public MuseicServer(MuseIC app) {
         this.app = app;
+        this.conf_path = Environment.get_home_dir()+"/.museic/museic_remote_conf";
 
 		// Create a new SocketService:
 		this.service = new SocketService ();
 
 		// Listen on configured port.
 		// Source is used as source-identifier.
-		service.add_inet_port ((uint16)this.get_used_port(), new Source ((uint16)this.get_used_port()));
+        service.add_inet_port (this.get_used_port(), new Source (this.get_used_port()));
 
 		// Used to shutdown the program:
 		this.cancellable = new Cancellable ();
@@ -23,11 +25,31 @@ public class MuseicServer : GLib.Object {
 		this.service.start ();
     }
 
-    public int get_used_port() {
+    public uint16 get_used_port() {
+        try {
+            File file = File.new_for_path(this.conf_path);
+            DataInputStream reader = new DataInputStream(file.read());
+            string info = reader.read_line(null);
+            uint16 port = (uint16) int.parse(info);
+            return port;
+        } catch (Error e) {
+            stderr.printf(e.message);
+        }
         return 1025;
     }
 
-    public void save_used_port(int new_port){
+    public void save_used_port(uint16 new_port){
+        File file;
+        try {
+            file = File.new_for_path(this.conf_path);
+            if (file.query_exists()) file.delete ();
+            file.create(FileCreateFlags.NONE);
+            FileIOStream io = file.open_readwrite();
+            io.seek (0, SeekType.END);
+            var writer = new DataOutputStream(io.output_stream);
+            writer.put_string(new_port.to_string());
+            service.add_inet_port (new_port, new Source (new_port));
+        } catch (Error e) {stderr.printf(e.message);}
     }
 
     private bool accept_connection(SocketConnection connection, Object? source_object) {
@@ -262,7 +284,7 @@ public class MuseicServer : GLib.Object {
     }
 
     public string get_server_info() {
-        return this.resolve_server_address()+":1025";
+        return this.resolve_server_address()+":"+this.get_used_port().to_string();
     }
 
     public string resolve_server_address() {
