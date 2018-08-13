@@ -43,7 +43,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         Object (application: app, title: "MuseIC");
         museic_app = app;
         // Define main window
-        this.load_window_state();
+        // this.load_window_state();
         this.delete_event.connect(save_window_state);
         // Load interface from file
         this.builder = new Gtk.Builder ();
