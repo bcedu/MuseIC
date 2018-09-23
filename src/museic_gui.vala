@@ -562,6 +562,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         vbox.add(helptext);
         helpw.add (vbox);
 
+        vbox.show_all();
         helpw.popup();
     }
 
@@ -591,6 +592,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         vbox.pack_end (hbox, true, true, 0);
 
         confpw.add(vbox);
+        vbox.show_all();
         confpw.popup();
         confpw.closed.connect(() => {
             this.museic_app.save_used_port(int.parse(entry1.get_text()));
@@ -671,6 +673,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         helpw.add (vbox);
         helpw.vexpand = true;
         helpw.set_position (Gtk.PositionType.BOTTOM);
+        vbox.show_all();
         helpw.popup();
     }
 
@@ -727,6 +730,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         searchpopover.add (scrolled);
         searchpopover.vexpand = true;
         searchpopover.set_position (Gtk.PositionType.BOTTOM);
+        scrolled.show_all();
         searchpopover.popup();
     }
 
