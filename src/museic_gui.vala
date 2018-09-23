@@ -562,7 +562,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         vbox.add(helptext);
         helpw.add (vbox);
 
-        helpw.show_all();
+        helpw.popup();
     }
 
     [CCode(instance_pos=-1)]
@@ -591,7 +591,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         vbox.pack_end (hbox, true, true, 0);
 
         confpw.add(vbox);
-        confpw.show_all();
+        confpw.popup();
         confpw.closed.connect(() => {
             this.museic_app.save_used_port(int.parse(entry1.get_text()));
         });
@@ -671,7 +671,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         helpw.add (vbox);
         helpw.vexpand = true;
         helpw.set_position (Gtk.PositionType.BOTTOM);
-        helpw.show_all();
+        helpw.popup();
     }
 
     private void change_shown_filelist_by_artist(string artist) {
@@ -727,7 +727,7 @@ public class MuseicGui : Gtk.ApplicationWindow {
         searchpopover.add (scrolled);
         searchpopover.vexpand = true;
         searchpopover.set_position (Gtk.PositionType.BOTTOM);
-        searchpopover.show_all();
+        searchpopover.popup();
     }
 
     public bool action_press_key(Gtk.Widget widget, Gdk.EventKey event) {
