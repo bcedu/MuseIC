@@ -45,6 +45,25 @@
         </screenshot>
     </screenshots>
     <releases>
+        <release version="2.1.0" date="2018-09-11">
+            ​<description>
+                ​<p>MuseIC Release</p>
+                <ul>
+                    <li> Compatibility with elementary Juno</li>
+                    <li> UI changes to make it more "elementary style"</li>
+                    <li> Added artists search bar</li>
+                    <li> Added files search bar</li>
+                    <li> Added button to edit metadata: name, artist and album (only for the museic library) </li>
+                    <li> Added button to delete files from the filelist </li>
+                    <li> Improved artists list with scrollbar</li>
+                    <li> Show the duration of each file in the filelist and playlist </li>
+                    <li> Show artist's playlist by clicking current artist </li>
+                    <li> Pressing the name of the current song brings you the current filelist and scrolls you to the song </li>
+                    <li> Hit "space" to make play / pause </li>
+                    <li> Hit right / left change song </li>
+                </ul>
+            ​</description>
+        </release>
         <release version="2.0.2" date="2018-07-13">
             ​<description>
                 ​<p>MuseIC Release</p>
