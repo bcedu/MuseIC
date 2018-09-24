@@ -1,42 +1,42 @@
-.headerbar{
+headerbar, .headerbar{
 }
 
-.fileListStore {
+fileListStore, .fileListStore {
 }
 
-.playListStore {
+playListStore, .playListStore {
 }
 
-.filetitle {
+filetitle, .filetitle {
     border-bottom-width: 1;
     border-bottom-style: solid;
     border-bottom-color: #a6a6a6;
 }
 
-.songtitle {
+songtitle, .songtitle {
     font-size: 10px;
 }
 
-.songartist {
+songartist, .songartist {
     font-size: 8px;
     font-weight: bold;
     padding: 0;
 }
 
-.songartist * {
+songartist *, .songartist * {
     color: #444444;
     text-decoration: none;
 }
 
-.filesGridContent {
+filesGridContent, .filesGridContent {
     border-top-width: 1;
     border-top-style: solid;
     border-top-color: #cccccc;
 }
-.streamtime {
+streamtime, .streamtime {
 }
 
-.antButton{
+antButton, .antButton{
     /*border-color: white;*/
     /*background-color: white;*/
     border-right-width: 0px;
@@ -44,66 +44,66 @@
     border-bottom-right-radius: 0px;
 }
 
-.playButton {
+playButton, .playButton {
     /*border-color: white;*/
     /*background-color: white;*/
     border-radius: 0px;
     border-right-width: 0px;
 }
 
-.segButton {
+segButton, .segButton {
     /*border-color: white;*/
     /*background-color: white;*/
     border-radius: 0px;
     border-right-width: 0px;
 }
 
-.randButton {
+randButton, .randButton {
     /*border-radius: 50%;*/
     /*border-color: white;*/
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
 }
 
-.volumebar {
+volumebar, .volumebar {
     /*background-color: white;*/
     /*border: 0;*/
 }
 
-.filelisttitle {
+filelisttitle, .filelisttitle {
     font-size: 12px;
 }
 
-.playlisttitle {
+playlisttitle, .playlisttitle {
     font-size: 12px;
 }
 
-.filelist_chooser {
+filelist_chooser, .filelist_chooser {
     font-weight: bold;
 }
 
-.addToPlayButton {
+addToPlayButton, .addToPlayButton {
     /*border-radius: 50%;*/
     /*border-color: white;*/
     /*background-color: white;*/
 }
 
-.separator1{
+separator1, .separator1{
 }
 
-.statusBox {
+statusBox, .statusBox {
 }
 
-.progresBox {
+progresBox, .progresBox {
 }
 
-.statusButtons {
+statusButtons, .statusButtons {
 }
 
-.footbar {
+footbar, .footbar {
     background-color: white;
 }
 
-.conf_btn_label {
+conf_btn_label, .conf_btn_label {
   font-weight: bold;
 }
