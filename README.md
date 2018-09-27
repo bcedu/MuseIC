@@ -35,15 +35,6 @@ Install your application with the following commands:
 
 DO NOT DELETE FILES AFTER MANUAL INSTALLATION, THEY ARE NEEDED DURING UNINSTALL PROCESS
 
-### Python Script
-
-Download last release (zip file), extract files and enter to the folder where they where extracted. Then, run the script "cmake_installer.py" from its original location. It must be run as sudo:
-
-- sudo python3 cmake_installer.py
-
-This script simply does the same that you would have done in manual installation. So we give the same advice:
-
-DO NOT DELETE FILES AFTER INSTALLATION, THEY ARE NEEDED DURING UNINSTALL PROCESS
 
 ## Uninstall
 
