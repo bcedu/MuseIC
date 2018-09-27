@@ -17,7 +17,7 @@ add_definitions (-DGETTEXT_PACKAGE="${GETTEXT_PACKAGE}")
 
 set (EXEC_NAME "com.github.bcedu.museic")
 set (RELEASE_NAME "MuseIC")
-set (VERSION "2.1.0")
+set (VERSION "2.1.3")
 set (VERSION_INFO "MuseIC beta version")
 set (ICON "${PKGDATADIR}/data/icons/com.github.bcedu.museic.svg")
 set (HTMLDIR "${PKGDATADIR}/data/html/")
